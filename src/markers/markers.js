@@ -1,8 +1,5 @@
 'use strict';
 
-import {config} from '../player';
-import MediaElementPlayer from '../player';
-
 /**
  * Markers plugin
  *
@@ -14,7 +11,7 @@ import MediaElementPlayer from '../player';
 
 
 // Feature configuration
-Object.assign(config, {
+Object.assign(mejs.MepDefaults, {
 	/**
 	 * Default marker color
 	 * @type {String}

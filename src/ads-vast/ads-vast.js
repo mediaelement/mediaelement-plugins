@@ -1,9 +1,5 @@
 'use strict';
 
-
-import {config} from '../player';
-import MediaElementPlayer from '../player';
-
 /**
  * VAST Ads Plugin
  *
@@ -12,7 +8,7 @@ import MediaElementPlayer from '../player';
 
 
 // Feature configuration
-Object.assign(config, {
+Object.assign(mejs.MepDefaults, {
 	/**
 	 * URL to vast data (http://minotovideo.com/sites/minotovideo.com/files/upload/eday_vast_tag.xml)
 	 * @type {String}

@@ -1,9 +1,5 @@
 'use strict';
 
-import {config} from '../player';
-import MediaElementPlayer from '../player';
-import i18n from '../core/i18n';
-
 /**
  * Skip back button
  *
@@ -12,7 +8,7 @@ import i18n from '../core/i18n';
 
 
 // Feature configuration
-Object.assign(config, {
+Object.assign(mejs.MepDefaults, {
 	/**
 	 * @type {Number}
 	 */
@@ -37,7 +33,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	buildskipback: function (player, controls, layers, media)  {
 		let
 			t = this,
-			defaultTitle = i18n.t('mejs.time-skip-back', t.options.skipBackInterval),
+			defaultTitle = mejs.i18n.t('mejs.time-skip-back', t.options.skipBackInterval),
 			skipTitle = t.options.skipBackText ? t.options.skipBackText.replace('%1', t.options.skipBackInterval) : defaultTitle;
 
 		$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}skip-back-button">` +

@@ -1,10 +1,5 @@
 'use strict';
 
-
-import {config} from '../player';
-import MediaElementPlayer from '../player';
-import i18n from '../core/i18n';
-
 // VAST ads plugin
 // Sponsored by Minoto Video
 
@@ -15,7 +10,7 @@ import i18n from '../core/i18n';
 // ----
 // 2013/02/23		3.5		split into a generic pre-roll plugin
 
-Object.assign(config, {
+Object.assign(mejs.MepDefaults, {
 	// URL to a media file
 	adsPrerollMediaUrl: [],
 
@@ -65,7 +60,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					<a href="#" target="_blank"></a>
 					<div class="${t.options.classPrefix}ads-skip-block">
 						<span class="${t.options.classPrefix}ads-skip-message"></span>
-						<span class="${t.options.classPrefix}ads-skip-button">${i18n.t('mejs.ad-skip')}</span>
+						<span class="${t.options.classPrefix}ads-skip-button">${mejs.i18n.t('mejs.ad-skip')}</span>
 					</div>
 				</div>`)
 		.insertBefore(layers.find(`.${t.options.classPrefix}overlay-play`))
@@ -178,7 +173,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			if (t.options.adsPrerollAdSkipSeconds > 0) {
 
-				t.adsSkipMessage.html(i18n.t('mejs.ad-skip-info').replace('%1', t.options.adsPrerollAdSkipSeconds.toString())).show();
+				t.adsSkipMessage.html(mejs.i18n.t('mejs.ad-skip-info').replace('%1', t.options.adsPrerollAdSkipSeconds.toString())).show();
 				t.adsSkipButton.hide();
 			} else {
 				t.adsSkipMessage.hide();
@@ -201,7 +196,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.adsSkipButton.show();
 				t.adsSkipMessage.hide();
 			} else {
-				t.adsSkipMessage.html(i18n.t('mejs.ad-skip-info').replace('%1', Math.round(t.options.adsPrerollAdSkipSeconds - t.media.currentTime).toString()));
+				t.adsSkipMessage.html(mejs.i18n.t('mejs.ad-skip-info').replace('%1', Math.round(t.options.adsPrerollAdSkipSeconds - t.media.currentTime).toString()));
 			}
 
 		}

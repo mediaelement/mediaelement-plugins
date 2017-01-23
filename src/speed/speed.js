@@ -1,9 +1,5 @@
 'use strict';
 
-import {config} from '../player';
-import MediaElementPlayer from '../player';
-import i18n from '../core/i18n';
-
 /**
  * Speed button
  *
@@ -12,7 +8,7 @@ import i18n from '../core/i18n';
 
 
 // Feature configuration
-Object.assign(config, {
+Object.assign(mejs.MepDefaults, {
 	/**
 	 * The speeds media can be accelerated
 	 *
@@ -59,7 +55,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		let
 			playbackSpeed,
 			inputId,
-			speedTitle = t.options.speedText ? t.options.speedText : i18n.t('mejs.speed-rate'),
+			speedTitle = t.options.speedText ? t.options.speedText : mejs.i18n.t('mejs.speed-rate'),
 			speeds = [],
 			defaultInArray = false,
 			getSpeedNameFromValue = (value) => {

@@ -1,9 +1,5 @@
 'use strict';
 
-import {config} from '../player';
-import MediaElementPlayer from '../player';
-import i18n from '../core/i18n';
-
 /**
  * Postroll plugin
  *
@@ -14,7 +10,7 @@ import i18n from '../core/i18n';
 
 
 // Feature configuration
-Object.assign(config, {
+Object.assign(mejs.MepDefaults, {
 	/**
 	 * @type {String}
 	 */
@@ -35,7 +31,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	buildpostroll: function (player, controls, layers, media)  {
 		let
 			t = this,
-			postrollTitle = t.options.postrollCloseText ? t.options.postrollCloseText : i18n.t('mejs.close'),
+			postrollTitle = t.options.postrollCloseText ? t.options.postrollCloseText : mejs.i18n.t('mejs.close'),
 			postrollLink = t.container.find('link[rel="postroll"]').attr('href');
 
 		if (postrollLink !== undefined) {

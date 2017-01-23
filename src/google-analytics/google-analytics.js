@@ -1,8 +1,5 @@
 'use strict';
 
-import {config} from '../player';
-import MediaElementPlayer from '../player';
-
 /**
  * Google Analytics Plugin
  *
@@ -13,7 +10,7 @@ import MediaElementPlayer from '../player';
 
 
 // Feature configuration
-Object.assign(config, {
+Object.assign(mejs.MepDefaults, {
 	/**
 	 * @type {String}
 	 */

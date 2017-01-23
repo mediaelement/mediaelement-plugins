@@ -1,10 +1,5 @@
 'use strict';
 
-import {config} from '../player';
-import MediaElementPlayer from '../player';
-import i18n from '../core/i18n';
-import {debounce} from '../utils/general';
-
 /**
  * Source chooser button
  *
@@ -13,7 +8,7 @@ import {debounce} from '../utils/general';
 
 
 // Feature configuration
-Object.assign(config, {
+Object.assign(mejs.MepDefaults, {
 	/**
 	 * @type {String}
 	 */
@@ -35,7 +30,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		let
 			t = this,
-			sourceTitle = t.options.sourcechooserText ? t.options.sourcechooserText : i18n.t('mejs.source-chooser'),
+			sourceTitle = t.options.sourcechooserText ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
 			hoverTimeout
 		;
 
@@ -101,7 +96,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			})
 
 			// close menu when tabbing away
-			.on('focusout', debounce(() => { // Safari triggers focusout multiple times
+			.on('focusout', mejs.Utils.debounce(() => { // Safari triggers focusout multiple times
 				// Firefox does NOT support e.relatedTarget to see which element
 				// just lost focus, so wait to find the next focused element
 				setTimeout(() => {

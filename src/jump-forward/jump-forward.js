@@ -1,9 +1,5 @@
 'use strict';
 
-import {config} from '../player';
-import MediaElementPlayer from '../player';
-import i18n from '../core/i18n';
-
 /**
  * Jump forward button
  *
@@ -12,7 +8,7 @@ import i18n from '../core/i18n';
 
 // Jump forward button
 
-Object.assign(config, {
+Object.assign(mejs.MepDefaults, {
 	/**
 	 * @type {Number}
 	 */
@@ -36,7 +32,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	buildjumpforward: function (player, controls, layers, media)  {
 		let
 			t = this,
-			defaultTitle = i18n.t('mejs.time-jump-forward', t.options.jumpForwardInterval),
+			defaultTitle = mejs.i18n.t('mejs.time-jump-forward', t.options.jumpForwardInterval),
 			forwardTitle = t.options.jumpForwardText ? t.options.jumpForwardText.replace('%1', t.options.jumpForwardInterval) : defaultTitle;
 
 		$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}jump-forward-button">` +

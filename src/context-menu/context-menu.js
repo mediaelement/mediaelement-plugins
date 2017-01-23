@@ -1,14 +1,10 @@
 'use strict';
 
-import {config} from '../player';
-import MediaElementPlayer from '../player';
-import i18n from '../core/i18n';
-
 /*
  * ContextMenu
  *
  */
-Object.assign(config, {
+Object.assign(mejs.MepDefaults, {
 		contextMenuItems: [
 			// demo of a fullscreen option
 			{
@@ -20,9 +16,9 @@ Object.assign(config, {
 					}
 
 					if (player.isFullScreen) {
-						return i18n.t('mejs.fullscreen-off');
+						return mejs.i18n.t('mejs.fullscreen-off');
 					} else {
-						return i18n.t('mejs.fullscreen-on');
+						return mejs.i18n.t('mejs.fullscreen-on');
 					}
 				},
 				click: function (player)  {
@@ -37,9 +33,9 @@ Object.assign(config, {
 			{
 				render: function (player)  {
 					if (player.media.muted) {
-						return i18n.t('mejs.unmute');
+						return mejs.i18n.t('mejs.unmute');
 					} else {
-						return i18n.t('mejs.mute');
+						return mejs.i18n.t('mejs.mute');
 					}
 				},
 				click: function (player)  {
@@ -57,7 +53,7 @@ Object.assign(config, {
 			// demo of simple download video
 			{
 				render: function (player)  {
-					return i18n.t('mejs.download-video');
+					return mejs.i18n.t('mejs.download-video');
 				},
 				click: function (player)  {
 					window.location.href = player.media.currentSrc;

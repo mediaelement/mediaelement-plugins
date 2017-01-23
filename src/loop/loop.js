@@ -1,9 +1,5 @@
 'use strict';
 
-import {config} from '../player';
-import MediaElementPlayer from '../player';
-import i18n from '../core/i18n';
-
 /**
  * Loop button
  *
@@ -13,7 +9,7 @@ import i18n from '../core/i18n';
 
 
 // Feature configuration
-Object.assign(config, {
+Object.assign(mejs.MepDefaults, {
 	/**
 	 * @type {String}
 	 */
@@ -33,7 +29,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	buildloop: function (player, controls, layers, media)  {
 		let
 			t = this,
-			loopTitle = t.options.loopText ? t.options.loopText : i18n.t('mejs.loop');
+			loopTitle = t.options.loopText ? t.options.loopText : mejs.i18n.t('mejs.loop');
 
 		$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}loop-button ` +
 			`${((player.options.loop) ? `${t.options.classPrefix}loop-on` : `${t.options.classPrefix}loop-off`)}">` +

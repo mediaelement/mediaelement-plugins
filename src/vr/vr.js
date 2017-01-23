@@ -1,9 +1,5 @@
 // 'use strict';
 //
-// import {config} from '../player';
-// import MediaElementPlayer from '../player';
-// import {renderer} from '../core/renderer';
-//
 // /**
 //  * VR support
 //  *
@@ -12,7 +8,7 @@
 //
 //
 // // Feature configuration
-// Object.assign(config, {
+// Object.assign(mejs.MepDefaults, {
 // 	/**
 // 	 * @type {Boolean}
 // 	 */
@@ -56,7 +52,7 @@
 // 			mediaFiles = [{src: url, type: mejs.Utility.getTypeFromFile(url)}]
 // 		;
 //
-// 		let renderInfo = renderer.select(mediaFiles, ['vr']);
+// 		let renderInfo = mejs.Renderer.select(mediaFiles, ['vr']);
 // 		media.changeRenderer(renderInfo.rendererName, mediaFiles);
 // 	}
 // });
