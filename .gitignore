@@ -1,0 +1,7 @@
+node_modules
+local-build
+# PhpStorm/WebStorm configuration
+.idea/*
+coverage
+npm-debug.log
+tmp
