@@ -1,0 +1,8 @@
+.mejs__stop > button {
+    background-position: -220px 0;
+}
+
+/* For legacy stylesheet */
+.mejs-stop > button {
+    background-position: -220px 0;
+}

@@ -1,0 +1,16 @@
+.mejs__jump-forward-button > button {
+    font-size: 8px;
+    line-height: normal;
+    color: #ffffff;
+    background-position: -180px 0;
+    position: relative;
+}
+
+/* For legacy stylesheet */
+.mejs-jump-forward-button > button {
+    font-size: 8px;
+    line-height: normal;
+    color: #ffffff;
+    background-position: -180px 0;
+    position: relative;
+}
