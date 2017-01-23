@@ -101,12 +101,7 @@ stopText | string | _(empty)_ | Title for Stop button for WARIA purposes
 * Make sure you also write comments about their purpose, and add them into the README file to keep documentation up-to-date.
 * You can also include CSS inside the feature folder, matching the name of the feature JS file and adding CSS styles for "legacy" and BEM naming convention.
 ```css
-.mejs__feature {
-    // all your styles
-}
-
-/* For legacy stylesheet */
-.mejs-feature {
+.mejs__feature, .mejs-feature {
     // all your styles
 }
 ```
