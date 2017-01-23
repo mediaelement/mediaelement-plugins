@@ -4,7 +4,6 @@
 
 This repository contains plugins built for MediaElementJS.
 
-
 ## Ads
 
 Parameter | Type | Default | Description
@@ -89,6 +88,12 @@ Parameter | Type | Default | Description
 ------ | --------- | ------- | --------
 stopText | string | _(empty)_ | Title for Stop button for WARIA purposes
 
+# Node.js
+
+Download it at https://nodejs.org/ and follow the steps to install it, or install `node.js` with `npm`.
+
+Once installed, at the command prompt, type `npm install`, which will download all the necessary tools.
+
 # Guidelines to Contribute
 
 ## General Conventions
@@ -96,6 +101,7 @@ stopText | string | _(empty)_ | Title for Stop button for WARIA purposes
 * Tab size is **8** for indentation.
 * **ALWAYS** make changes to the files in the `/src/` directory, and **NEVER** in `/build/` directory. This is with the sole purpose of facilitating the merging (and further, the compiling) operation, and help people to see changes more easily.
 * Use [JSDoc](http://usejsdoc.org/) conventions to document code. This facilitates the contributions of other developers and ensures more quality in the product.
+* **BEFORE PUSHING** any changes, run `npm run jshint` to ensure code quality.
 * The file for the feature must be placed inside a folder matching its name (i.e, `loop/loop.js`).
 * Update `package.json` with a command under the `script` configuration to make sure it will be bundled and compiled properly. For more reference, [review the file](package.json).
 * Make sure you also write comments about their purpose, and add them into the README file to keep documentation up-to-date.
@@ -166,9 +172,3 @@ All the features are written using `Ecmascript 2015` specifications.
 See`src/` directory, and check how the files were written to ensure compatibility.
 
 **Note**: the `for...of` loop could have been used, but in order to bundle them and reduce the size of the bundled files, it is **strongly recommended to avoid*** its use.
-
-## Node.js
-
-Since `MediaElement.js` uses [Grunt](http://gruntjs.com/) to compile it, Node.js is required. Download it at https://nodejs.org/ and follow the steps to install it, or install `node.js` with `npm`.
-
-Once installed, at the command prompt, type `npm install`, which will download all the necessary tools.

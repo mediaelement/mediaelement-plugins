@@ -25,7 +25,7 @@
     "uglify-js": "^2.4.21"
   },
   "scripts": {
-    "lint": "jshint src/",
+    "jshint": "jshint src/",
     "build": "npm run ads && npm run vast && npm run context && npm run ga && npm run jump && npm run loop && npm run markers && npm run postroll && npm run skip && npm run chooser && npm run speed && npm run stop",
     "ads": "browserify -t browserify-versionify -t [babelify] -p browserify-derequire -p bundle-collapser/plugin src/ads/ads.js > dist/ads/ads.js && uglifyjs dist/ads/ads.js -c sequences=true,dead_code=true,conditionals=true,booleans=true,unused=true,if_return=true,join_vars=true,drop_console=true -m --screw-ie8  > dist/ads/ads.min.js",
     "vast": "browserify -t browserify-versionify -t [babelify] -p browserify-derequire -p bundle-collapser/plugin src/ads-vast/ads-vast.js > dist/ads-vast/ads-vast.js && uglifyjs dist/ads-vast/ads-vast.js -c sequences=true,dead_code=true,conditionals=true,booleans=true,unused=true,if_return=true,join_vars=true,drop_console=true -m --screw-ie8  > dist/ads-vast/ads-vast.min.js",
