@@ -171,4 +171,4 @@ All the features are written using `Ecmascript 2015` specifications.
 
 See`src/` directory, and check how the files were written to ensure compatibility.
 
-**Note**: the `for...of` loop could have been used, but in order to bundle them and reduce the size of the bundled files, it is **strongly recommended to avoid*** its use.
+**Note**: the `for...of` loop could have been used, but in order to bundle them and reduce the size of the bundled files, it is **strongly recommended to avoid** its use.
