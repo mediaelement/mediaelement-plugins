@@ -148,3 +148,7 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 * [Source Chooser](docs/source-chooser.md)
 * [Speed](docs/speed.md)
 * [Stop](docs/stop.md)
+
+# Changelog
+
+Changes available at [Change Log](changelog.md)
