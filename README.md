@@ -4,98 +4,54 @@
 
 This repository contains plugins built for MediaElementJS.
 
-## Ads
+License: [MIT](http://johndyer.mit-license.org/)
 
-Parameter | Type | Default | Description
------- | --------- | ------- | --------
-adsPrerollMediaUrl | array | `[]` | URL to a media file
-adsPrerollAdUrl | array | `[]` | URL for clicking ad 	
-adsPrerollAdEnableSkip | boolean | `false` | If true, allows user to skip the pre-roll ad
-adsPrerollAdSkipSeconds | number | `-1` | If positive number entered, it will only allow skipping after the time has elasped
-indexPreroll | number | `0` | Keep track of the index for the preroll ads to be able to show more than one preroll. Used for VAST3.0 Adpods
-	
-## VAST
+# Table of Contents
 
-Parameter | Type | Default | Description
------- | --------- | ------- | --------
-vastAdTagUrl | string | `x` | Character used to stop speeding media
+* [Installation](#installation)
+* [Guidelines to Contribute](#guidelines)
+    * [Node.js](#nodejs)
+    * [General Conventions](#conventions)
+    * [Template to create a Feature](#template)
+    * [A word on `ES6` for Features](#es6)
+* [Available plugins](#plugins)
 
-## Context Menu
-No API required
+<a id="installation"></a>
+# Installation
 
-## Google Analytics
+Download the package from https://github.com/johndyer/mediaelement-plugins.
 
-Parameter | Type | Default | Description
------- | --------- | ------- | --------
-googleAnalyticsTitle | string | _(empty)_ | GA Title,
-googleAnalyticsCategory | string | `Videos` | GA Category label,
-googleAnalyticsEventPlay | string | `Play` | GA Play label
-googleAnalyticsEventPause | string | `Pause` | GA Pause label
-googleAnalyticsEventEnded | string | `Ended` | GA ended event label
-googleAnalyticsEventTime | string | `Time` | GA time event label
+Reference any plugins you need from `dist` folder and add any configuration related to the plugin. 
 
-## Jump Forward
+For example, if you want to install `Markers` plugin do the following:
+```html
+<script src="/path/to/mediaelement-and-player.min.js"></script>
+<script src="/path/to/dist/markers/markers.min,js"></script>
+<script>
+    $('video').mediaelementplayer({
+    	markerColor: '#ff0000',
+    	// other configuration elements
+    });
+</script>
+```
 
-Parameter | Type | Default | Description
------- | --------- | ------- | --------
-jumpForwardInterval | number | `30` | Seconds to jump forward media
-jumpForwardText | string | _(empty)_ | Title for Jump Forward button for WARIA purposes
+Some of them will contain CSS styles so place them after the main player stylesheet:
+```html
+<link rel="stylesheet" href="/path/to/mediaelementplayer.min.css">
+<link rel="stylesheet" href="/path/to/dist/postroll/postroll.min.css">
+```
 
-## Loop
+<a id="guidelines"></a>
+# Guidelines to Contribute
 
-Parameter | Type | Default | Description
------- | --------- | ------- | --------
-loopText | string | _(empty)_ | Title for Loop button for WARIA purposes when loop feature is activated
-
-## Markers
-
-Parameter | Type | Default | Description
------- | --------- | ------- | --------
-markerColor | string | `#E9BC3D` | Specify the color of marker
-markers | array | `[]` | List of numbers to specify marker times in seconds
-markerCallback | function | `function(media, time) {}` | Callback function invoked when a marker position is reached
-
-## Postroll
-
-Parameter | Type | Default | Description
------- | --------- | ------- | --------
-postrollCloseText | string | _(empty)_ | Title for button to Postroll layer for WARIA purposes
-
-## Skip Back
-
-Parameter | Type | Default | Description
------- | --------- | ------- | --------
-skipBackInterval | number | `30` | Seconds to skip back media
-skipBackText | string | _(empty)_ | Title for Skip Back button for WARIA purposes
-
-## Source Chooser
-
-Parameter | Type | Default | Description
------- | --------- | ------- | --------
-sourcechooserText | string | _(empty)_ | Title for Source Chooser button for WARIA purposes
-
-## Speed
-
-Parameter | Type | Default | Description
------- | --------- | ------- | --------
-speeds | array | `['1.50', '1.25', '1.00', '0.75']` | Enable speeding media; accounts for strings or objects like `[{name: 'Slow', value: '0.75'}, {name: 'Normal', value: '1.00'}, ...]`
-defaultSpeed | number | `1.00` | Initial speed of media	
-speedChar | string | `x` | Character used to stop speeding media
-
-## Stop
-
-Parameter | Type | Default | Description
------- | --------- | ------- | --------
-stopText | string | _(empty)_ | Title for Stop button for WARIA purposes
-
-# Node.js
+<a id="nodejs"></a>
+## Node.js
 
 Download it at https://nodejs.org/ and follow the steps to install it, or install `node.js` with `npm`.
 
 Once installed, at the command prompt, type `npm install`, which will download all the necessary tools.
 
-# Guidelines to Contribute
-
+<a id="conventions"></a>
 ## General Conventions
 
 * Tab size is **8** for indentation.
@@ -112,6 +68,7 @@ Once installed, at the command prompt, type `npm install`, which will download a
 }
 ```
 
+<a id="template"></a>
 ## Template to create a Feature 
 ```javascript
 /**
@@ -165,6 +122,8 @@ Object.assign(MediaElementPlayer.prototype, {
     // Other optional public methods (all documented according to JSDoc specifications)
 });
 ```
+
+<a id="es6"></a>
 ### A word on `ES6` for Features
 
 All the features are written using `Ecmascript 2015` specifications. 
@@ -172,3 +131,20 @@ All the features are written using `Ecmascript 2015` specifications.
 See`src/` directory, and check how the files were written to ensure compatibility.
 
 **Note**: the `for...of` loop could have been used, but in order to bundle them and reduce the size of the bundled files, it is **strongly recommended to avoid** its use.
+
+<a id="plugins"></a>
+## Available plugins
+
+* [Ads](docs/ads.md)
+* [VAST](docs/ads-vast.md)
+* [Context Menu](docs/context-menu.md)
+* [Google Analytics](docs/google-analytics.md)
+* [Jump Forward](docs/jump-forward.md)
+* [Loop](docs/loop.md)
+* [Markers](docs/markers.md)
+* [Postroll](docs/postroll.md)
+* [Preview](docs/preview.md)
+* [Skip Back](docs/skip-back.md)
+* [Source Chooser](docs/source-chooser.md)
+* [Speed](docs/speed.md)
+* [Stop](docs/stop.md)
