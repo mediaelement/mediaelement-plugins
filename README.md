@@ -2,6 +2,8 @@
 
 # MediaElement.js Plugins
 
+[![CDNJS](https://img.shields.io/cdnjs/v/mediaelement-plugins.svg)](https://cdnjs.com/libraries/mediaelement-plugins)
+
 This repository contains plugins built for MediaElementJS.
 
 * Author(s): John Dyer [http://j.hn/](http://j.hn/) and Rafael Miranda [https://github.com/ron666](https://github.com/ron666)
