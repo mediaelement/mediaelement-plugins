@@ -156,5 +156,9 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 			}
 		});
+
+		$(window).on('scroll', function () {
+			t.media.pause();
+		});
 	}
 });
