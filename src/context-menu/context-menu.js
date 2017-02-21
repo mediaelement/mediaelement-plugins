@@ -52,7 +52,7 @@ Object.assign(mejs.MepDefaults, {
 			},
 			// demo of simple download video
 			{
-				render: function (player)  {
+				render: function ()  {
 					return mejs.i18n.t('mejs.download-video');
 				},
 				click: function (player)  {
@@ -65,7 +65,7 @@ Object.assign(mejs.MepDefaults, {
 
 
 Object.assign(MediaElementPlayer.prototype, {
-	buildcontextmenu: function (player, controls, layers, media)  {
+	buildcontextmenu: function (player)  {
 
 		// create context menu
 		player.contextMenu = $(`<div class="${t.options.classPrefix}contextmenu"></div>`)

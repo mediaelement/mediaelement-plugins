@@ -54,7 +54,7 @@ Object.assign(mejs.MepDefaults, {
 	},
 	// demo of simple download video
 	{
-		render: function render(player) {
+		render: function render() {
 			return mejs.i18n.t('mejs.download-video');
 		},
 		click: function click(player) {
@@ -64,7 +64,7 @@ Object.assign(mejs.MepDefaults, {
 });
 
 Object.assign(MediaElementPlayer.prototype, {
-	buildcontextmenu: function buildcontextmenu(player, controls, layers, media) {
+	buildcontextmenu: function buildcontextmenu(player) {
 
 		// create context menu
 		player.contextMenu = $('<div class="' + t.options.classPrefix + 'contextmenu"></div>').appendTo($('body')).hide();

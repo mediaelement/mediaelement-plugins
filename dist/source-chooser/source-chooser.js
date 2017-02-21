@@ -47,7 +47,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		player.sourcechooserButton = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'sourcechooser-button">' + ('<button type="button" role="button" aria-haspopup="true" aria-owns="' + t.id + '" title="' + sourceTitle + '"') + ('aria-label="' + sourceTitle + '"></button>') + ('<div class="' + t.options.classPrefix + 'sourcechooser-selector ' + t.options.classPrefix + 'offscreen" role="menu"') + 'aria-expanded="false" aria-hidden="true">' + '<ul></ul>' + '</div>' + '</div>').appendTo(controls)
+		player.sourcechooserButton = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'sourcechooser-button">' + ('<button type="button" role="button" aria-haspopup="true" aria-owns="' + t.id + '" title="' + sourceTitle + '"') + ('aria-label="' + sourceTitle + '" tabindex="0"></button>') + ('<div class="' + t.options.classPrefix + 'sourcechooser-selector ' + t.options.classPrefix + 'offscreen" role="menu"') + 'aria-expanded="false" aria-hidden="true">' + '<ul></ul>' + '</div>' + '</div>').appendTo(controls)
 
 		// hover
 		.hover(function () {
@@ -117,11 +117,11 @@ Object.assign(MediaElementPlayer.prototype, {
 					media.setSrc(src);
 					media.load();
 
-					media.addEventListener('loadedmetadata', function (e) {
+					media.addEventListener('loadedmetadata', function () {
 						media.currentTime = currentTime;
 					}, true);
 
-					var canPlayAfterSourceSwitchHandler = function canPlayAfterSourceSwitchHandler(e) {
+					var canPlayAfterSourceSwitchHandler = function canPlayAfterSourceSwitchHandler() {
 						if (!paused) {
 							media.play();
 						}

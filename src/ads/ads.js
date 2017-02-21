@@ -44,7 +44,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	// true when the user clicks play for the first time, or if autoplay is set
 	adsPlayerHasStarted: false,
 
-	buildads: function (player, controls, layers, media)  {
+	buildads: function (player, controls, layers)  {
 
 		let t = this;
 
@@ -239,7 +239,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 	},
 
-	adsAdClick: function (e)  {
+	adsAdClick: function ()  {
 		let t = this;
 
 		if (t.media.paused) {

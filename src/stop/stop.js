@@ -33,7 +33,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			stopTitle = t.options.stopText ? t.options.stopText : mejs.i18n.t('mejs.stop');
 
 		$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}stop-button ${t.options.classPrefix}stop">` +
-			`<button type="button" aria-controls="${t.id}" title="${stopTitle}" aria-label="${stopTitle}"></button>` +
+			`<button type="button" aria-controls="${t.id}" title="${stopTitle}" aria-label="${stopTitle}" tabindex="0"></button>` +
 		`</div>`)
 		.appendTo(controls)
 		.click(() => {

@@ -37,7 +37,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}jump-forward-button">` +
 			`<button type="button" aria-controls="${t.id}" title="${forwardTitle}" ` +
-			`aria-label="${forwardTitle}">${t.options.jumpForwardInterval}</button>` +
+			`aria-label="${forwardTitle}" tabindex="0">${t.options.jumpForwardInterval}</button>` +
 		`</div>`)
 		// append it to the toolbar
 		.appendTo(controls)

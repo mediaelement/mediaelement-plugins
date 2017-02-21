@@ -103,7 +103,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.speedButton =
 			$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}speed-button">` +
 				`<button type="button" aria-controls="${t.id}" title="${speedTitle}" ` +
-					`aria-label="${speedTitle}">${getSpeedNameFromValue(t.options.defaultSpeed)}</button>` +
+					`aria-label="${speedTitle}" tabindex="0">${getSpeedNameFromValue(t.options.defaultSpeed)}</button>` +
 				`<div class="${t.options.classPrefix}speed-selector ${t.options.classPrefix}offscreen">` +
 					`<ul class="${t.options.classPrefix}speed-selector-list"></ul>` +
 				`</div>` +
@@ -143,7 +143,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				.css('top', (-1 * player.speedSelector.height()) + 'px')
 			;
 		})
-		.on('mouseleave focusout', (e) => {
+		.on('mouseleave focusout', () => {
 			player.speedSelector.addClass(`${t.options.classPrefix}offscreen`);
 		})
 		// handle clicks to the language radio buttons
@@ -176,7 +176,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			e.stopPropagation();
 		});
 
-		media.addEventListener('loadedmetadata', (e) => {
+		media.addEventListener('loadedmetadata', () => {
 			if (playbackSpeed) {
 				media.playbackRate = parseFloat(playbackSpeed);
 			}

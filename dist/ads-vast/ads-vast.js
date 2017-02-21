@@ -152,7 +152,6 @@ Object.assign(MediaElementPlayer.prototype, {
 	loadAdTagInfoProxy: function loadAdTagInfoProxy() {
 		var t = this,
 		    protocol = location.protocol,
-		    hostname = location.hostname,
 		    query = 'select * from xml where url="' + encodeURI(t.options.vastAdTagUrl) + '"',
 		    yahooUrl = 'http' + (/^https/.test(protocol) ? 's' : '') + '://query.yahooapis.com/v1/public/yql?format=xml&q=' + query;
 

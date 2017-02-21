@@ -26,14 +26,14 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildloop: function (player, controls, layers, media)  {
+	buildloop: function (player, controls)  {
 		let
 			t = this,
 			loopTitle = t.options.loopText ? t.options.loopText : mejs.i18n.t('mejs.loop');
 
 		$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}loop-button ` +
 			`${((player.options.loop) ? `${t.options.classPrefix}loop-on` : `${t.options.classPrefix}loop-off`)}">` +
-			`<button type="button" aria-controls="${t.id}" title="${loopTitle}" aria-label="${loopTitle}"></button>` +
+			`<button type="button" aria-controls="${t.id}" title="${loopTitle}" aria-label="${loopTitle}" tabindex="0"></button>` +
 		`</div>`)
 		// append it to the toolbar
 		.appendTo(controls)

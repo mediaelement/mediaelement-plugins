@@ -96,7 +96,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.clearspeed(player);
 
-		player.speedButton = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'speed-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + speedTitle + '" ') + ('aria-label="' + speedTitle + '">' + getSpeedNameFromValue(t.options.defaultSpeed) + '</button>') + ('<div class="' + t.options.classPrefix + 'speed-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'speed-selector-list"></ul>') + '</div>' + '</div>').appendTo(controls);
+		player.speedButton = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'speed-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + speedTitle + '" ') + ('aria-label="' + speedTitle + '" tabindex="0">' + getSpeedNameFromValue(t.options.defaultSpeed) + '</button>') + ('<div class="' + t.options.classPrefix + 'speed-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'speed-selector-list"></ul>') + '</div>' + '</div>').appendTo(controls);
 
 		for (var _i = 0, il = speeds.length; _i < il; _i++) {
 
@@ -117,7 +117,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		// hover or keyboard focus
 		player.speedButton.on('mouseenter focusin', function () {
 			player.speedSelector.removeClass(t.options.classPrefix + 'offscreen').height(player.speedSelector.find('ul').outerHeight(true)).css('top', -1 * player.speedSelector.height() + 'px');
-		}).on('mouseleave focusout', function (e) {
+		}).on('mouseleave focusout', function () {
 			player.speedSelector.addClass(t.options.classPrefix + 'offscreen');
 		})
 		// handle clicks to the language radio buttons
@@ -138,7 +138,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			e.stopPropagation();
 		});
 
-		media.addEventListener('loadedmetadata', function (e) {
+		media.addEventListener('loadedmetadata', function () {
 			if (playbackSpeed) {
 				media.playbackRate = parseFloat(playbackSpeed);
 			}

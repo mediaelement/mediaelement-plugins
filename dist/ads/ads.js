@@ -45,7 +45,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	// true when the user clicks play for the first time, or if autoplay is set
 	adsPlayerHasStarted: false,
 
-	buildads: function buildads(player, controls, layers, media) {
+	buildads: function buildads(player, controls, layers) {
 
 		var t = this;
 
@@ -222,7 +222,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.container.trigger('mejsprerollmainstarted');
 	},
 
-	adsAdClick: function adsAdClick(e) {
+	adsAdClick: function adsAdClick() {
 		var t = this;
 
 		if (t.media.paused) {

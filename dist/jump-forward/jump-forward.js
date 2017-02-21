@@ -35,7 +35,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		    defaultTitle = mejs.i18n.t('mejs.time-jump-forward', t.options.jumpForwardInterval),
 		    forwardTitle = t.options.jumpForwardText ? t.options.jumpForwardText.replace('%1', t.options.jumpForwardInterval) : defaultTitle;
 
-		$('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'jump-forward-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + forwardTitle + '" ') + ('aria-label="' + forwardTitle + '">' + t.options.jumpForwardInterval + '</button>') + '</div>')
+		$('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'jump-forward-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + forwardTitle + '" ') + ('aria-label="' + forwardTitle + '" tabindex="0">' + t.options.jumpForwardInterval + '</button>') + '</div>')
 		// append it to the toolbar
 		.appendTo(controls)
 		// add a click toggle event

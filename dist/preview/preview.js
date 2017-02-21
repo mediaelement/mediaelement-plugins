@@ -58,7 +58,7 @@ Object.assign(MediaElementPlayer.prototype, {
   * @param {$} layers
   * @param {HTMLElement} media
   */
-	buildpreview: function buildpreview(player, controls, layers, media) {
+	buildpreview: function buildpreview(player) {
 		var t = this;
 
 		// fade-in/out should be available for both video/audio

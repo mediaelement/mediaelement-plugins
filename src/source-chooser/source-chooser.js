@@ -51,7 +51,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.sourcechooserButton =
 			$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}sourcechooser-button">` +
 				`<button type="button" role="button" aria-haspopup="true" aria-owns="${t.id}" title="${sourceTitle}"` +
-					`aria-label="${sourceTitle}"></button>` +
+					`aria-label="${sourceTitle}" tabindex="0"></button>` +
 				`<div class="${t.options.classPrefix}sourcechooser-selector ${t.options.classPrefix}offscreen" role="menu"` +
 					`aria-expanded="false" aria-hidden="true">` +
 					`<ul></ul>` +
@@ -127,11 +127,11 @@ Object.assign(MediaElementPlayer.prototype, {
 					media.setSrc(src);
 					media.load();
 
-					media.addEventListener('loadedmetadata', (e) => {
+					media.addEventListener('loadedmetadata', () => {
 						media.currentTime = currentTime;
 					}, true);
 
-					let canPlayAfterSourceSwitchHandler = (e) => {
+					let canPlayAfterSourceSwitchHandler = () => {
 						if (!paused) {
 							media.play();
 						}
