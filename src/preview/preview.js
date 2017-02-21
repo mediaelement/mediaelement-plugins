@@ -48,7 +48,12 @@ Object.assign(mejs.MepDefaults, {
 	 * Whether reset or not the media
 	 * @type {Boolean}
 	 */
-	pauseOnlyOnPreview: false
+	pauseOnlyOnPreview: false,
+	/**
+	 * Delay in milliseconds to start previewing media
+	 * @type {Number}
+	 */
+	delayPreview: 0
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -140,7 +145,10 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 
 				if (t.media.paused) {
-					t.media.play();
+					setTimeout(function() {
+						t.media.play();
+					}, t.options.delayPreview);
+
 				}
 			}
 
