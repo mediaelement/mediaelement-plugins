@@ -43,7 +43,12 @@ Object.assign(mejs.MepDefaults, {
 	 * Percentage in decimals in which media will fade in/out (i.e., 0.02 = 2%)
 	 * @type {Number}
 	 */
-	fadePercent: 0.02
+	fadePercent: 0.02,
+	/**
+	 * Whether reset or not the media
+	 * @type {Boolean}
+	 */
+	pauseOnlyOnPreview: false
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -144,7 +149,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (!$(e.target).is(t.container) && !$(e.target).closest(t.container).length) {
 				if (!t.media.paused) {
 					t.media.pause();
-					t.media.setCurrentTime(0);
+
+					if (!t.options.pauseOnlyOnPreview) {
+						t.media.setCurrentTime(0);
+					}
 				}
 			}
 		});
