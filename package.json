@@ -22,12 +22,12 @@
     "bundle-collapser": "^1.2.1",
     "cssnano": "^3.8.0",
     "cssnano-cli": "^1.0.5",
-    "jshint": "^2.9.4",
+    "eslint": "^3.16.0",
     "uglify-js": "^2.4.21"
   },
   "scripts": {
-    "jshint": "jshint src/",
-    "build": "npm run ads && npm run vast && npm run context && npm run ga && npm run jump && npm run loop && npm run markers && npm run postroll && npm run skip && npm run chooser && npm run speed && npm run stop",
+    "eslint": "eslint src/",
+    "build": "npm run ads && npm run vast && npm run context && npm run ga && npm run jump && npm run loop && npm run markers && npm run postroll && npm run skip && npm run chooser && npm run speed && npm run stop && npm run preview",
     "ads": "postcss -u autoprefixer -r src/ads/ads.css && cp src/ads/ads.css dist/ads/ads.css && cssnano dist/ads/ads.css dist/ads/ads.min.css && browserify -t browserify-versionify -t [babelify] -p browserify-derequire -p bundle-collapser/plugin src/ads/ads.js > dist/ads/ads.js && uglifyjs dist/ads/ads.js -c sequences=true,dead_code=true,conditionals=true,booleans=true,unused=true,if_return=true,join_vars=true,drop_console=true -m --screw-ie8  > dist/ads/ads.min.js",
     "vast": "browserify -t browserify-versionify -t [babelify] -p browserify-derequire -p bundle-collapser/plugin src/ads-vast/ads-vast.js > dist/ads-vast/ads-vast.js && uglifyjs dist/ads-vast/ads-vast.js -c sequences=true,dead_code=true,conditionals=true,booleans=true,unused=true,if_return=true,join_vars=true,drop_console=true -m --screw-ie8  > dist/ads-vast/ads-vast.min.js",
     "context": "postcss -u autoprefixer -r src/context-menu/context-menu.css && cp src/context-menu/context-menu.css dist/context-menu/context-menu.css && cssnano dist/context-menu/context-menu.css dist/context-menu/context-menu.min.css && browserify -t browserify-versionify -t [babelify] -p browserify-derequire -p bundle-collapser/plugin src/context-menu/context-menu.js > dist/context-menu/context-menu.js && uglifyjs dist/context-menu/context-menu.js -c sequences=true,dead_code=true,conditionals=true,booleans=true,unused=true,if_return=true,join_vars=true,drop_console=true -m --screw-ie8  > dist/context-menu/context-menu.min.js",
