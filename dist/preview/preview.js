@@ -69,63 +69,115 @@ Object.assign(MediaElementPlayer.prototype, {
   * @param {HTMLElement} media
   */
 	buildpreview: function buildpreview(player) {
-		var t = this;
+		var initFadeIn = false,
+		    initFadeOut = false;
+
+		var t = this,
+		    fadeInCallback = function fadeInCallback() {
+			if (t.options.fadeInAudioInterval) {
+
+				if (Math.floor(t.media.currentTime) < t.options.fadeIntAudioStart) {
+					t.media.setVolume(0);
+					t.media.setMuted(true);
+				}
+
+				if (Math.floor(t.media.currentTime) === t.options.fadeInAudioStart) {
+					(function () {
+
+						initFadeIn = true;
+
+						var volume = 0,
+						    audioInterval = t.options.fadeInAudioInterval,
+						    interval = setInterval(function () {
+
+							// Increase volume by step as long as it is below 1
+							if (volume < 1) {
+								volume += t.options.fadePercent;
+								if (volume > 1) {
+									volume = 1;
+								}
+
+								// limit to 2 decimal places
+								t.media.setVolume(volume.toFixed(2));
+							} else {
+								// Stop firing interval when 1 is reached
+								clearInterval(interval);
+								interval = null;
+								t.media.setMuted(false);
+								setTimeout(function () {
+									initFadeIn = false;
+								}, 300);
+							}
+						}, audioInterval);
+					})();
+				}
+			}
+		},
+		    fadeOutCallback = function fadeOutCallback() {
+			if (t.options.fadeOutAudioInterval) {
+
+				if (Math.floor(t.media.currentTime) < t.options.fadeOutAudioStart) {
+					t.media.setVolume(1);
+					t.media.setMuted(false);
+				}
+
+				if (Math.floor(t.media.currentTime) === t.options.fadeOutAudioStart) {
+					(function () {
+
+						initFadeOut = true;
+
+						var volume = 1,
+						    audioInterval = t.options.fadeOutAudioInterval,
+						    interval = setInterval(function () {
+
+							// Increase volume by step as long as it is above 0
+
+							if (volume > 0) {
+								volume -= t.options.fadePercent;
+								if (volume < 0) {
+									volume = 0;
+								}
+
+								// limit to 2 decimal places
+								t.media.setVolume(volume.toFixed(2));
+							} else {
+								// Stop firing interval when 0 is reached
+								clearInterval(interval);
+								interval = null;
+								t.media.setMuted(false);
+								setTimeout(function () {
+									initFadeOut = false;
+								}, 300);
+							}
+						}, audioInterval);
+					})();
+				}
+			}
+		};
+
+		if (t.options.muteOnPreviewMode || t.options.fadeInAudioInterval) {
+			t.media.setVolume(0);
+			t.media.setMuted(true);
+		} else if (t.options.fadeOutAudioInterval) {
+			t.media.setVolume(1);
+			t.media.setMuted(false);
+		}
 
 		// fade-in/out should be available for both video/audio
 		t.media.addEventListener('timeupdate', function () {
-			if (t.options.fadeInAudioInterval && Math.floor(t.media.currentTime) === t.options.fadeInAudioStart) {
-				(function () {
 
-					t.media.setVolume(0);
-
-					var volume = 0,
-					    audioInterval = t.options.fadeInAudioInterval,
-					    interval = setInterval(function () {
-
-						// Increase volume by step as long as it is below 1
-
-						if (volume < 1) {
-							volume += t.options.fadePercent;
-							if (volume > 1) {
-								volume = 1;
-							}
-
-							// limit to 2 decimal places
-							t.media.setVolume(volume.toFixed(2));
-						} else {
-							// Stop firing interval when 1 is reached
-							clearInterval(interval);
-						}
-					}, audioInterval);
-				})();
+			if (initFadeIn) {
+				t.media.removeEventListener('timeupdate', fadeInCallback);
+				return;
 			}
 
-			if (t.options.fadeOutAudioInterval && Math.floor(t.media.currentTime) === t.options.fadeOutAudioStart) {
-				(function () {
-
-					t.media.setVolume(1);
-
-					var volume = 1,
-					    audioInterval = t.options.fadeOutAudioInterval,
-					    interval = setInterval(function () {
-
-						// Increase volume by step as long as it is above 0
-
-						if (volume > 0) {
-							volume -= t.options.fadePercent;
-							if (volume < 0) {
-								volume = 0;
-							}
-
-							// limit to 2 decimal places
-							t.media.setVolume(volume.toFixed(2));
-						} else {
-							// Stop firing interval when 0 is reached
-							clearInterval(interval);
-						}
-					}, audioInterval);
-				})();
+			if (initFadeOut) {
+				t.media.removeEventListener('timeupdate', fadeOutCallback);
+				return;
 			}
+
+			fadeInCallback();
+			fadeOutCallback();
 		});
 
 		// preview is only for video
@@ -137,15 +189,13 @@ Object.assign(MediaElementPlayer.prototype, {
 		$('body').on('mouseover', function (e) {
 
 			if ($(e.target).is(t.container) || $(e.target).closest(t.container).length) {
-				if (t.options.muteOnPreviewMode) {
-					t.media.setMuted(true);
-				}
-
 				if (t.media.paused) {
 					setTimeout(function () {
 						t.media.play();
 					}, t.options.delayPreview);
 				}
+			} else if (!t.media.paused) {
+				t.media.pause();
 			}
 		}).on('mouseout', function (e) {
 
@@ -161,7 +211,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 
 		$(window).on('scroll', function () {
-			t.media.pause();
+			if (!t.media.paused) {
+				t.media.pause();
+			}
 		});
 	}
 });

@@ -4,6 +4,8 @@
 
 * Integrated ESLint and fixed some bugs found @ron666
 * Added `tabindex` to buttons to improve accessibility @ron666
+* Fixed issue with `Preview` plugin that caused audio fade-in jittery @ron666
+* Added `pauseOnlyOnPreview` and `delayPreview` configuration elements for `Preview` plugin @ron666
 
 *1.1.0 (2017/01/30)*
 
