@@ -192,11 +192,12 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		// show/hide controls
+		let timeout;
 		$('body').on('mouseover', function (e) {
 
 			if ($(e.target).is(t.container) || $(e.target).closest(t.container).length) {
 				if (t.media.paused) {
-					setTimeout(function () {
+					timeout = setTimeout(function () {
 						t.media.play();
 					}, t.options.delayPreview);
 
@@ -215,6 +216,9 @@ Object.assign(MediaElementPlayer.prototype, {
 						t.media.setCurrentTime(0);
 					}
 				}
+
+				clearTimeout(timeout);
+				timeout = null;
 			}
 		});
 
