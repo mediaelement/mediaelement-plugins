@@ -1,5 +1,9 @@
 ### Version History
 
+*1.2.1 (2017/03/??)*
+
+* Fixed issue with `Preview` plugin when using delay and moving out of player @ron666
+
 *1.2.0 (2017/02/21)*
 
 * Integrated ESLint and fixed some bugs found @ron666

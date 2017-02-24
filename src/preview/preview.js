@@ -70,7 +70,9 @@ Object.assign(MediaElementPlayer.prototype, {
 	buildpreview: function (player) {
 		let
 			initFadeIn = false,
-			initFadeOut = false
+			initFadeOut = false,
+			timeout,
+			mouseOver = false
 		;
 
 		const
@@ -192,23 +194,33 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		// show/hide controls
-		let timeout;
 		$('body').on('mouseover', function (e) {
 
 			if ($(e.target).is(t.container) || $(e.target).closest(t.container).length) {
+				mouseOver = true;
 				if (t.media.paused) {
 					timeout = setTimeout(function () {
-						t.media.play();
+						if (mouseOver) {
+							t.media.play();
+						} else {
+							clearTimeout(timeout);
+							timeout = null;
+						}
 					}, t.options.delayPreview);
 
 				}
-			} else if (!t.media.paused) {
-				t.media.pause();
+			} else {
+				mouseOver = false;
+				clearTimeout(timeout);
+				timeout = null;
+				if (!t.media.paused) {
+					t.media.pause();
+				}
 			}
 
 		}).on('mouseout', function (e) {
-
 			if (!$(e.target).is(t.container) && !$(e.target).closest(t.container).length) {
+				mouseOver = false;
 				if (!t.media.paused) {
 					t.media.pause();
 
@@ -223,6 +235,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 
 		$(window).on('scroll', function () {
+			mouseOver = false;
 			if (!t.media.paused) {
 				t.media.pause();
 			}
