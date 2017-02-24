@@ -3,6 +3,7 @@
 *1.2.1 (2017/03/??)*
 
 * Fixed issue with `Preview` plugin when using delay and moving out of player @ron666
+* Integrated loading spinner in the `Preview` plugin for usability purposes @ron666
 
 *1.2.0 (2017/02/21)*
 
