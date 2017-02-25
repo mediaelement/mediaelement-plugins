@@ -31,7 +31,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			t = this,
 			loopTitle = t.options.loopText ? t.options.loopText : mejs.i18n.t('mejs.loop');
 
-		$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}loop-button ` +
+		const loop = $(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}loop-button ` +
 			`${((player.options.loop) ? `${t.options.classPrefix}loop-on` : `${t.options.classPrefix}loop-off`)}">` +
 			`<button type="button" aria-controls="${t.id}" title="${loopTitle}" aria-label="${loopTitle}" tabindex="0"></button>` +
 		`</div>`)
