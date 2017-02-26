@@ -4,7 +4,7 @@
 
 * Fixed issue with `Preview` plugin when using delay and moving out of player @ron666
 * Integrated loading spinner in the `Preview` plugin for usability purposes @ron666
-* Fixed typo in `Loop` plugin @ron666
+* Fixed typo and off-style button in `Loop` plugin @ron666
 * Integrated workflow to configure empty text on WARIA text elements @ron666
 * Fixed issues with Node tasks to bring missing stylesheets in `dist` folder @ron666
 
