@@ -1,5 +1,9 @@
 ### Version History
 
+*1.3.0 (2017/??/??)*
+
+* Integrated Chromecast support @ron666
+
 *1.2.1 (2017/02/26)*
 
 * Fixed issue with `Preview` plugin when using delay and moving out of player @ron666
