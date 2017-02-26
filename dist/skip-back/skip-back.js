@@ -15,9 +15,9 @@ Object.assign(mejs.MepDefaults, {
   */
 	skipBackInterval: 30,
 	/**
-  * @type {String}
+  * @type {?String}
   */
-	skipBackText: ''
+	skipBackText: null
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -34,7 +34,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	buildskipback: function buildskipback(player, controls, layers, media) {
 		var t = this,
 		    defaultTitle = mejs.i18n.t('mejs.time-skip-back', t.options.skipBackInterval),
-		    skipTitle = t.options.skipBackText ? t.options.skipBackText.replace('%1', t.options.skipBackInterval) : defaultTitle;
+		    skipTitle = mejs.Utils.isString(t.options.skipBackText) ? t.options.skipBackText.replace('%1', t.options.skipBackInterval) : defaultTitle;
 
 		$('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'skip-back-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + skipTitle + '" aria-label="' + skipTitle + '" tabindex="0">') + (t.options.skipBackInterval + '</button>') + '</div>')
 		// append it to the toolbar

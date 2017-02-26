@@ -5,6 +5,7 @@
 * Fixed issue with `Preview` plugin when using delay and moving out of player @ron666
 * Integrated loading spinner in the `Preview` plugin for usability purposes @ron666
 * Fixed typo in `Loop` plugin @ron666
+* Integrated workflow to configure empty text on WARIA text elements @ron666
 
 *1.2.0 (2017/02/21)*
 

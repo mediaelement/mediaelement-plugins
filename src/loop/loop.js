@@ -11,9 +11,9 @@
 // Feature configuration
 Object.assign(mejs.MepDefaults, {
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
-	loopText: ''
+	loopText: null
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -29,7 +29,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	buildloop: function (player, controls)  {
 		let
 			t = this,
-			loopTitle = t.options.loopText ? t.options.loopText : mejs.i18n.t('mejs.loop');
+			loopTitle = mejs.Utils.isString(t.options.loopText) ? t.options.loopText : mejs.i18n.t('mejs.loop');
 
 		const loop = $(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}loop-button ` +
 			`${((player.options.loop) ? `${t.options.classPrefix}loop-on` : `${t.options.classPrefix}loop-off`)}">` +

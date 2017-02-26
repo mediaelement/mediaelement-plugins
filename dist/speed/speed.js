@@ -27,7 +27,7 @@ Object.assign(mejs.MepDefaults, {
   */
 	speedChar: 'x',
 	/**
-  * @type {String}
+  * @type {?String}
   */
 	speedText: ''
 });
@@ -53,7 +53,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		var playbackSpeed = void 0,
 		    inputId = void 0,
-		    speedTitle = t.options.speedText ? t.options.speedText : mejs.i18n.t('mejs.speed-rate'),
+		    speedTitle = mejs.Utils.isString(t.options.speedText) ? t.options.speedText : mejs.i18n.t('mejs.speed-rate'),
 		    speeds = [],
 		    defaultInArray = false,
 		    getSpeedNameFromValue = function getSpeedNameFromValue(value) {

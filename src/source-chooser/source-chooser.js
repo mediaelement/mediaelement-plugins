@@ -10,9 +10,9 @@
 // Feature configuration
 Object.assign(mejs.MepDefaults, {
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
-	sourcechooserText: ''
+	sourcechooserText: null
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -30,7 +30,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		let
 			t = this,
-			sourceTitle = t.options.sourcechooserText ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
+			sourceTitle = mejs.Utils.isString(t.options.sourcechooserText) ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
 			hoverTimeout
 		;
 

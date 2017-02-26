@@ -11,9 +11,9 @@
 // Feature configuration
 Object.assign(mejs.MepDefaults, {
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
-	stopText: ''
+	stopText: null
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -30,7 +30,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	buildstop: function (player, controls, layers, media)  {
 		let
 			t = this,
-			stopTitle = t.options.stopText ? t.options.stopText : mejs.i18n.t('mejs.stop');
+			stopTitle = mejs.Utils.isString(t.options.stopText) ? t.options.stopText : mejs.i18n.t('mejs.stop');
 
 		$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}stop-button ${t.options.classPrefix}stop">` +
 			`<button type="button" aria-controls="${t.id}" title="${stopTitle}" aria-label="${stopTitle}" tabindex="0"></button>` +

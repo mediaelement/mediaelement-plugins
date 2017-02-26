@@ -14,9 +14,9 @@ Object.assign(mejs.MepDefaults, {
 	 */
 	jumpForwardInterval: 30,
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
-	jumpForwardText: ''
+	jumpForwardText: null
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -33,7 +33,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		let
 			t = this,
 			defaultTitle = mejs.i18n.t('mejs.time-jump-forward', t.options.jumpForwardInterval),
-			forwardTitle = t.options.jumpForwardText ? t.options.jumpForwardText.replace('%1', t.options.jumpForwardInterval) : defaultTitle;
+			forwardTitle = mejs.Utils.isString(t.options.jumpForwardText) ? t.options.jumpForwardText.replace('%1', t.options.jumpForwardInterval) : defaultTitle;
 
 		$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}jump-forward-button">` +
 			`<button type="button" aria-controls="${t.id}" title="${forwardTitle}" ` +

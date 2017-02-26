@@ -12,9 +12,9 @@
 // Feature configuration
 Object.assign(mejs.MepDefaults, {
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
-	postrollCloseText: ''
+	postrollCloseText: null
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -31,7 +31,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	buildpostroll: function (player, controls, layers)  {
 		let
 			t = this,
-			postrollTitle = t.options.postrollCloseText ? t.options.postrollCloseText : mejs.i18n.t('mejs.close'),
+			postrollTitle = mejs.Utils.isString(t.options.postrollCloseText) ? t.options.postrollCloseText : mejs.i18n.t('mejs.close'),
 			postrollLink = t.container.find('link[rel="postroll"]').attr('href');
 
 		if (postrollLink !== undefined) {
