@@ -1,5 +1,9 @@
 ### Version History
 
+*1.2.2 (2017/??/??)*
+
+* Added translation files for all the plugins that required it and added documentation @ron666 
+
 *1.2.1 (2017/02/26)*
 
 * Fixed issue with `Preview` plugin when using delay and moving out of player @ron666
