@@ -208,7 +208,9 @@ if (mejs.i18n['zh-CN'] !== undefined) {
         mejs.i18n['zh-CN']["mejs.id1"] = "";
 }
 ```
-**NOTE**: The more languages are integrated on MediaElementPlayer, the bigger this template will become. So account for more languages.
+**NOTE**: The more languages are integrated on `MediaElementPlayer`, the bigger this template will become. So account for more languages.
+
+Also, if you are adding a new language to `MediaElementPlayer`, you will need to add it in all the existing `i18n` files in the same way described in the template above. 
 
 <a id="es6"></a>
 ### A word on `ES6` for Features
