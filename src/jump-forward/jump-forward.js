@@ -6,7 +6,8 @@
  * This feature creates a button to forward media a specific number of seconds.
  */
 
-// Jump forward button
+// Translations (English required)
+mejs.i18n.en["mejs.time-jump-forward"] = ["Jump forward 1 second", "Jump forward %1 seconds"];
 
 Object.assign(mejs.MepDefaults, {
 	/**

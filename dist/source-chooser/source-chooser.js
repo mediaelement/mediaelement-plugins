@@ -7,8 +7,11 @@
  * This feature creates a button to speed media in different levels.
  */
 
-// Feature configuration
+// Translations (English required)
 
+mejs.i18n.en["mejs.source-chooser"] = "Source Chooser";
+
+// Feature configuration
 Object.assign(mejs.MepDefaults, {
 	/**
   * @type {?String}
@@ -47,7 +50,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		player.sourcechooserButton = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'sourcechooser-button">' + ('<button type="button" role="button" aria-haspopup="true" aria-owns="' + t.id + '" title="' + sourceTitle + '"') + ('aria-label="' + sourceTitle + '" tabindex="0"></button>') + ('<div class="' + t.options.classPrefix + 'sourcechooser-selector ' + t.options.classPrefix + 'offscreen" role="menu"') + 'aria-expanded="false" aria-hidden="true">' + '<ul></ul>' + '</div>' + '</div>').appendTo(controls)
+		player.sourcechooserButton = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "sourcechooser-button\">" + ("<button type=\"button\" role=\"button\" aria-haspopup=\"true\" aria-owns=\"" + t.id + "\" title=\"" + sourceTitle + "\"") + ("aria-label=\"" + sourceTitle + "\" tabindex=\"0\"></button>") + ("<div class=\"" + t.options.classPrefix + "sourcechooser-selector " + t.options.classPrefix + "offscreen\" role=\"menu\"") + "aria-expanded=\"false\" aria-hidden=\"true\">" + "<ul></ul>" + "</div>" + "</div>").appendTo(controls)
 
 		// hover
 		.hover(function () {
@@ -70,12 +73,12 @@ Object.assign(MediaElementPlayer.prototype, {
 						// space sends the click event in Firefox
 						player.showSourcechooserSelector();
 					}
-					$(this).find('.' + t.options.classPrefix + 'sourcechooser-selector').find('input[type=radio]:checked').first().focus();
+					$(this).find("." + t.options.classPrefix + "sourcechooser-selector").find('input[type=radio]:checked').first().focus();
 					break;
 				case 13:
 					// enter
 					player.showSourcechooserSelector();
-					$(this).find('.' + t.options.classPrefix + 'sourcechooser-selector').find('input[type=radio]:checked').first().focus();
+					$(this).find("." + t.options.classPrefix + "sourcechooser-selector").find('input[type=radio]:checked').first().focus();
 					break;
 				case 27:
 					// esc
@@ -93,7 +96,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			// Firefox does NOT support e.relatedTarget to see which element
 			// just lost focus, so wait to find the next focused element
 			setTimeout(function () {
-				var parent = $(document.activeElement).closest('.' + t.options.classPrefix + 'sourcechooser-selector');
+				var parent = $(document.activeElement).closest("." + t.options.classPrefix + "sourcechooser-selector");
 				if (!parent.length) {
 					// focus is outside the control; close menu
 					player.hideSourcechooserSelector();
@@ -105,7 +108,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		.on('click', 'input[type=radio]', function () {
 			// set aria states
 			$(this).attr('aria-selected', true).attr('checked', 'checked');
-			$(this).closest('.' + t.options.classPrefix + 'sourcechooser-selector').find('input[type=radio]').not(this).attr('aria-selected', 'false').removeAttr('checked');
+			$(this).closest("." + t.options.classPrefix + "sourcechooser-selector").find('input[type=radio]').not(this).attr('aria-selected', 'false').removeAttr('checked');
 
 			var src = this.value;
 
@@ -135,9 +138,9 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// Handle click so that screen readers can toggle the menu
 		.on('click', 'button', function () {
-			if ($(this).siblings('.' + t.options.classPrefix + 'sourcechooser-selector').hasClass(t.options.classPrefix + 'offscreen')) {
+			if ($(this).siblings("." + t.options.classPrefix + "sourcechooser-selector").hasClass(t.options.classPrefix + "offscreen")) {
 				player.showSourcechooserSelector();
-				$(this).siblings('.' + t.options.classPrefix + 'sourcechooser-selector').find('input[type=radio]:checked').first().focus();
+				$(this).siblings("." + t.options.classPrefix + "sourcechooser-selector").find('input[type=radio]:checked').first().focus();
 			} else {
 				player.hideSourcechooserSelector();
 			}
@@ -165,7 +168,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 		type = type.split('/')[1];
 
-		t.sourcechooserButton.find('ul').append($('<li>' + ('<input type="radio" name="' + t.id + '_sourcechooser" id="' + t.id + '_sourcechooser_' + label + type + '"') + ('role="menuitemradio" value="' + src + '" ' + (isCurrent ? 'checked="checked"' : '') + ' aria-selected="' + isCurrent + '"/>') + ('<label for="' + t.id + '_sourcechooser_' + label + type + '" aria-hidden="true">' + label + ' (' + type + ')</label>') + '</li>'));
+		t.sourcechooserButton.find('ul').append($("<li>" + ("<input type=\"radio\" name=\"" + t.id + "_sourcechooser\" id=\"" + t.id + "_sourcechooser_" + label + type + "\"") + ("role=\"menuitemradio\" value=\"" + src + "\" " + (isCurrent ? 'checked="checked"' : '') + " aria-selected=\"" + isCurrent + "\"/>") + ("<label for=\"" + t.id + "_sourcechooser_" + label + type + "\" aria-hidden=\"true\">" + label + " (" + type + ")</label>") + "</li>"));
 
 		t.adjustSourcechooserBox();
 	},
@@ -176,7 +179,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	adjustSourcechooserBox: function adjustSourcechooserBox() {
 		var t = this;
 		// adjust the size of the outer box
-		t.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector').height(t.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector ul').outerHeight(true));
+		t.sourcechooserButton.find("." + t.options.classPrefix + "sourcechooser-selector").height(t.sourcechooserButton.find("." + t.options.classPrefix + "sourcechooser-selector ul").outerHeight(true));
 	},
 
 	/**
@@ -186,11 +189,11 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		var t = this;
 
-		if (t.sourcechooserButton === undefined || !t.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector').find('input[type=radio]').length) {
+		if (t.sourcechooserButton === undefined || !t.sourcechooserButton.find("." + t.options.classPrefix + "sourcechooser-selector").find('input[type=radio]').length) {
 			return;
 		}
 
-		t.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector').addClass(t.options.classPrefix + 'offscreen').attr('aria-expanded', 'false').attr('aria-hidden', 'true').find('input[type=radio]') // make radios not focusable
+		t.sourcechooserButton.find("." + t.options.classPrefix + "sourcechooser-selector").addClass(t.options.classPrefix + "offscreen").attr('aria-expanded', 'false').attr('aria-hidden', 'true').find('input[type=radio]') // make radios not focusable
 		.attr('tabindex', '-1');
 	},
 
@@ -201,11 +204,11 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		var t = this;
 
-		if (t.sourcechooserButton === undefined || !t.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector').find('input[type=radio]').length) {
+		if (t.sourcechooserButton === undefined || !t.sourcechooserButton.find("." + t.options.classPrefix + "sourcechooser-selector").find('input[type=radio]').length) {
 			return;
 		}
 
-		t.sourcechooserButton.find('.' + t.options.classPrefix + 'sourcechooser-selector').removeClass(t.options.classPrefix + 'offscreen').attr('aria-expanded', 'true').attr('aria-hidden', 'false').find('input[type=radio]').attr('tabindex', '0');
+		t.sourcechooserButton.find("." + t.options.classPrefix + "sourcechooser-selector").removeClass(t.options.classPrefix + "offscreen").attr('aria-expanded', 'true').attr('aria-hidden', 'false').find('input[type=radio]').attr('tabindex', '0');
 	}
 });
 

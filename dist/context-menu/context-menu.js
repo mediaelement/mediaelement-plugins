@@ -1,11 +1,16 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
 
+// Translations (English required)
+
+mejs.i18n.en["mejs.fullscreen-off"] = "Turn off Fullscreen";
+mejs.i18n.en["mejs.fullscreen-on"] = "Go Fullscreen";
+mejs.i18n.en["mejs.download-video"] = "Download Video";
+
 /*
  * ContextMenu
  *
  */
-
 Object.assign(mejs.MepDefaults, {
 	contextMenuItems: [
 	// demo of a fullscreen option
@@ -67,7 +72,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	buildcontextmenu: function buildcontextmenu(player) {
 
 		// create context menu
-		player.contextMenu = $('<div class="' + t.options.classPrefix + 'contextmenu"></div>').appendTo($('body')).hide();
+		player.contextMenu = $("<div class=\"" + t.options.classPrefix + "contextmenu\"></div>").appendTo($('body')).hide();
 
 		// create events for showing context menu
 		player.container.on('contextmenu', function (e) {
@@ -133,14 +138,14 @@ Object.assign(MediaElementPlayer.prototype, {
 			var item = items[i];
 
 			if (item.isSeparator) {
-				html += '<div class="' + t.options.classPrefix + 'contextmenu-separator"></div>';
+				html += "<div class=\"" + t.options.classPrefix + "contextmenu-separator\"></div>";
 			} else {
 
 				var rendered = item.render(t);
 
 				// render can return null if the item doesn't need to be used at the moment
 				if (rendered !== null && rendered !== undefined) {
-					html += '<div class="' + t.options.classPrefix + 'contextmenu-item"' + ('data-itemindex="' + i + '" id="element-' + Math.random() * 1000000 + '">' + rendered + '</div>');
+					html += "<div class=\"" + t.options.classPrefix + "contextmenu-item\"" + ("data-itemindex=\"" + i + "\" id=\"element-" + Math.random() * 1000000 + "\">" + rendered + "</div>");
 				}
 			}
 		}
@@ -149,7 +154,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.contextMenu.empty().append($(html)).css({ top: y, left: x }).show();
 
 		// bind events
-		t.contextMenu.find('.' + t.options.classPrefix + 'contextmenu-item').each(function () {
+		t.contextMenu.find("." + t.options.classPrefix + "contextmenu-item").each(function () {
 
 			// which one is this?
 			var $dom = $(this),

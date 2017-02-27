@@ -11,6 +11,11 @@
 // ----
 // 2013/02/23		3.5		split into a generic pre-roll plugin
 
+// Translations (English required)
+
+mejs.i18n.en["mejs.ad-skip"] = "Skip ad";
+mejs.i18n.en["mejs.ad-skip-info"] = ["Skip in 1 second", "Skip in %1 seconds"];
+
 Object.assign(mejs.MepDefaults, {
 	// URL to a media file
 	adsPrerollMediaUrl: [],
@@ -56,13 +61,13 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		// add layer for ad links and skipping
-		player.adsLayer = $('<div class="' + t.options.classPrefix + 'layer ' + t.options.classPrefix + 'overlay\n\t\t\t\t' + t.options.classPrefix + 'ads">\n\t\t\t\t\t<a href="#" target="_blank"></a>\n\t\t\t\t\t<div class="' + t.options.classPrefix + 'ads-skip-block">\n\t\t\t\t\t\t<span class="' + t.options.classPrefix + 'ads-skip-message"></span>\n\t\t\t\t\t\t<span class="' + t.options.classPrefix + 'ads-skip-button">' + mejs.i18n.t('mejs.ad-skip') + '</span>\n\t\t\t\t\t</div>\n\t\t\t\t</div>').insertBefore(layers.find('.' + t.options.classPrefix + 'overlay-play')).hide();
+		player.adsLayer = $("<div class=\"" + t.options.classPrefix + "layer " + t.options.classPrefix + "overlay\n\t\t\t\t" + t.options.classPrefix + "ads\">\n\t\t\t\t\t<a href=\"#\" target=\"_blank\"></a>\n\t\t\t\t\t<div class=\"" + t.options.classPrefix + "ads-skip-block\">\n\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "ads-skip-message\"></span>\n\t\t\t\t\t\t<span class=\"" + t.options.classPrefix + "ads-skip-button\">" + mejs.i18n.t('mejs.ad-skip') + "</span>\n\t\t\t\t\t</div>\n\t\t\t\t</div>").insertBefore(layers.find("." + t.options.classPrefix + "overlay-play")).hide();
 
 		player.adsLayer.find('a').on('click', $.proxy(t.adsAdClick, t));
 
-		player.adsSkipBlock = player.adsLayer.find('.' + t.options.classPrefix + 'ads-skip-block').hide();
-		player.adsSkipMessage = player.adsLayer.find('.' + t.options.classPrefix + 'ads-skip-message').hide();
-		player.adsSkipButton = player.adsLayer.find('.' + t.options.classPrefix + 'ads-skip-button').on('click', $.proxy(t.adsSkipClick, t));
+		player.adsSkipBlock = player.adsLayer.find("." + t.options.classPrefix + "ads-skip-block").hide();
+		player.adsSkipMessage = player.adsLayer.find("." + t.options.classPrefix + "ads-skip-message").hide();
+		player.adsSkipButton = player.adsLayer.find("." + t.options.classPrefix + "ads-skip-button").on('click', $.proxy(t.adsSkipClick, t));
 
 		// create proxies (only needed for events we want to remove later)
 		t.adsMediaTryingToStartProxy = $.proxy(t.adsMediaTryingToStart, t);
@@ -133,7 +138,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		setTimeout(function () {
-			t.controls.find('.' + t.options.classPrefix + 'duration').html(mejs.Utils.secondsToTimeCode(newDuration, t.options.alwaysShowHours));
+			t.controls.find("." + t.options.classPrefix + "duration").html(mejs.Utils.secondsToTimeCode(newDuration, t.options.alwaysShowHours));
 		}, 250);
 	},
 
@@ -259,7 +264,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		var img = new Image(),
 		    rnd = Math.round(Math.random() * 100000);
 
-		img.src = url + (url.includes('?') ? '&' : '?') + ('random' + rnd + '=' + rnd);
+		img.src = url + (url.includes('?') ? '&' : '?') + ("random" + rnd + "=" + rnd);
 		img.loaded = function () {
 			img = null;
 		};

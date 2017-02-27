@@ -9,8 +9,11 @@
  * `<link href="/path/to/action_to_display_content" rel="postroll">`
  */
 
-// Feature configuration
+// Translations (English required)
 
+mejs.i18n.en["mejs.close"] = "Close";
+
+// Feature configuration
 Object.assign(mejs.MepDefaults, {
 	/**
   * @type {?String}
@@ -35,14 +38,14 @@ Object.assign(MediaElementPlayer.prototype, {
 		    postrollLink = t.container.find('link[rel="postroll"]').attr('href');
 
 		if (postrollLink !== undefined) {
-			player.postroll = $('<div class="' + t.options.classPrefix + 'postroll-layer ' + t.options.classPrefix + 'layer">' + ('<a class="' + t.options.classPrefix + 'postroll-close" onclick="$(this).parent().hide();return false;">') + ('' + postrollTitle) + '</a>' + ('<div class="' + t.options.classPrefix + 'postroll-layer-content"></div>') + '</div>').prependTo(layers).hide();
+			player.postroll = $("<div class=\"" + t.options.classPrefix + "postroll-layer " + t.options.classPrefix + "layer\">" + ("<a class=\"" + t.options.classPrefix + "postroll-close\" onclick=\"$(this).parent().hide();return false;\">") + ("" + postrollTitle) + "</a>" + ("<div class=\"" + t.options.classPrefix + "postroll-layer-content\"></div>") + "</div>").prependTo(layers).hide();
 
 			t.media.addEventListener('ended', function () {
 				$.ajax({
 					dataType: 'html',
 					url: postrollLink,
 					success: function success(data) {
-						layers.find('.' + t.options.classPrefix + 'postroll-layer-content').html(data);
+						layers.find("." + t.options.classPrefix + "postroll-layer-content").html(data);
 					}
 				});
 				player.postroll.show();

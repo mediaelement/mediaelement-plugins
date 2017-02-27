@@ -8,8 +8,11 @@
  * if activated
  */
 
-// Feature configuration
+// Translations (English required)
 
+mejs.i18n.en["mejs.loop"] = "Toggle Loop";
+
+// Feature configuration
 Object.assign(mejs.MepDefaults, {
 	/**
   * @type {?String}
@@ -31,16 +34,16 @@ Object.assign(MediaElementPlayer.prototype, {
 		var t = this,
 		    loopTitle = mejs.Utils.isString(t.options.loopText) ? t.options.loopText : mejs.i18n.t('mejs.loop');
 
-		var loop = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'loop-button ' + ((player.options.loop ? t.options.classPrefix + 'loop-on' : t.options.classPrefix + 'loop-off') + '">') + ('<button type="button" aria-controls="' + t.id + '" title="' + loopTitle + '" aria-label="' + loopTitle + '" tabindex="0"></button>') + '</div>')
+		var loop = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "loop-button " + ((player.options.loop ? t.options.classPrefix + "loop-on" : t.options.classPrefix + "loop-off") + "\">") + ("<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + loopTitle + "\" aria-label=\"" + loopTitle + "\" tabindex=\"0\"></button>") + "</div>")
 		// append it to the toolbar
 		.appendTo(controls)
 		// add a click toggle event
 		.click(function () {
 			player.options.loop = !player.options.loop;
 			if (player.options.loop) {
-				loop.removeClass(t.options.classPrefix + 'loop-off').addClass(t.options.classPrefix + 'loop-on');
+				loop.removeClass(t.options.classPrefix + "loop-off").addClass(t.options.classPrefix + "loop-on");
 			} else {
-				loop.removeClass(t.options.classPrefix + 'loop-on').addClass(t.options.classPrefix + 'loop-off');
+				loop.removeClass(t.options.classPrefix + "loop-on").addClass(t.options.classPrefix + "loop-off");
 			}
 		});
 	}

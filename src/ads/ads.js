@@ -10,6 +10,10 @@
 // ----
 // 2013/02/23		3.5		split into a generic pre-roll plugin
 
+// Translations (English required)
+mejs.i18n.en["mejs.ad-skip"] = "Skip ad";
+mejs.i18n.en["mejs.ad-skip-info"] = ["Skip in 1 second", "Skip in %1 seconds"];
+
 Object.assign(mejs.MepDefaults, {
 	// URL to a media file
 	adsPrerollMediaUrl: [],

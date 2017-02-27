@@ -6,6 +6,8 @@
  * This feature creates a button to rewind media a specific number of seconds.
  */
 
+// Translations (English required)
+mejs.i18n.en["mejs.time-skip-back"] = ["Skip back 1 second", "Skip back %1 seconds"];
 
 // Feature configuration
 Object.assign(mejs.MepDefaults, {

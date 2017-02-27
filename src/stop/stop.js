@@ -7,6 +7,8 @@
  * it to the initial position.
  */
 
+// Translations (English required)
+mejs.i18n.en["mejs.stop"] = "Stop";
 
 // Feature configuration
 Object.assign(mejs.MepDefaults, {

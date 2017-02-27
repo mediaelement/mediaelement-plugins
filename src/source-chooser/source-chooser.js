@@ -6,6 +6,8 @@
  * This feature creates a button to speed media in different levels.
  */
 
+// Translations (English required)
+mejs.i18n.en["mejs.source-chooser"] = "Source Chooser";
 
 // Feature configuration
 Object.assign(mejs.MepDefaults, {

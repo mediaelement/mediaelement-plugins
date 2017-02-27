@@ -8,6 +8,8 @@
  * `<link href="/path/to/action_to_display_content" rel="postroll">`
  */
 
+// Translations (English required)
+mejs.i18n.en["mejs.close"] = "Close";
 
 // Feature configuration
 Object.assign(mejs.MepDefaults, {

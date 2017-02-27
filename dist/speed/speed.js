@@ -7,8 +7,11 @@
  * This feature creates a button to speed media in different levels.
  */
 
-// Feature configuration
+// Translations (English required)
 
+mejs.i18n.en["mejs.speed-rate"] = "Speed Rate";
+
+// Feature configuration
 Object.assign(mejs.MepDefaults, {
 	/**
   * The speeds media can be accelerated
@@ -69,7 +72,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			if (typeof s === 'string') {
 				speeds.push({
-					name: '' + s + t.options.speedChar,
+					name: "" + s + t.options.speedChar,
 					value: s
 				});
 				if (s === t.options.defaultSpeed) {
@@ -96,13 +99,13 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.clearspeed(player);
 
-		player.speedButton = $('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'speed-button">' + ('<button type="button" aria-controls="' + t.id + '" title="' + speedTitle + '" ') + ('aria-label="' + speedTitle + '" tabindex="0">' + getSpeedNameFromValue(t.options.defaultSpeed) + '</button>') + ('<div class="' + t.options.classPrefix + 'speed-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'speed-selector-list"></ul>') + '</div>' + '</div>').appendTo(controls);
+		player.speedButton = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "speed-button\">" + ("<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + speedTitle + "\" ") + ("aria-label=\"" + speedTitle + "\" tabindex=\"0\">" + getSpeedNameFromValue(t.options.defaultSpeed) + "</button>") + ("<div class=\"" + t.options.classPrefix + "speed-selector " + t.options.classPrefix + "offscreen\">") + ("<ul class=\"" + t.options.classPrefix + "speed-selector-list\"></ul>") + "</div>" + "</div>").appendTo(controls);
 
 		for (var _i = 0, il = speeds.length; _i < il; _i++) {
 
-			inputId = t.id + '-speed-' + speeds[_i].value;
+			inputId = t.id + "-speed-" + speeds[_i].value;
 
-			player.speedButton.find('ul').append($('<li class="' + t.options.classPrefix + 'speed-selector-list-item">' + ('<input class="' + t.options.classPrefix + 'speed-selector-input" type="radio" name="' + t.id + '_speed"') + ('disabled="disabled" value="' + speeds[_i].value + '" id="' + inputId + '"  ') + ((speeds[_i].value === t.options.defaultSpeed ? ' checked="checked"' : '') + '/>') + ('<label class="' + t.options.classPrefix + 'speed-selector-label') + ((speeds[_i].value === t.options.defaultSpeed ? ' ' + t.options.classPrefix + 'speed-selected' : '') + '">') + (speeds[_i].name + '</label>') + '</li>'));
+			player.speedButton.find('ul').append($("<li class=\"" + t.options.classPrefix + "speed-selector-list-item\">" + ("<input class=\"" + t.options.classPrefix + "speed-selector-input\" type=\"radio\" name=\"" + t.id + "_speed\"") + ("disabled=\"disabled\" value=\"" + speeds[_i].value + "\" id=\"" + inputId + "\"  ") + ((speeds[_i].value === t.options.defaultSpeed ? ' checked="checked"' : '') + "/>") + ("<label class=\"" + t.options.classPrefix + "speed-selector-label") + ((speeds[_i].value === t.options.defaultSpeed ? " " + t.options.classPrefix + "speed-selected" : '') + "\">") + (speeds[_i].name + "</label>") + "</li>"));
 		}
 
 		playbackSpeed = t.options.defaultSpeed;
@@ -112,13 +115,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			$(this).prop('disabled', false);
 		});
 
-		player.speedSelector = player.speedButton.find('.' + t.options.classPrefix + 'speed-selector');
+		player.speedSelector = player.speedButton.find("." + t.options.classPrefix + "speed-selector");
 
 		// hover or keyboard focus
 		player.speedButton.on('mouseenter focusin', function () {
-			player.speedSelector.removeClass(t.options.classPrefix + 'offscreen').height(player.speedSelector.find('ul').outerHeight(true)).css('top', -1 * player.speedSelector.height() + 'px');
+			player.speedSelector.removeClass(t.options.classPrefix + "offscreen").height(player.speedSelector.find('ul').outerHeight(true)).css('top', -1 * player.speedSelector.height() + 'px');
 		}).on('mouseleave focusout', function () {
-			player.speedSelector.addClass(t.options.classPrefix + 'offscreen');
+			player.speedSelector.addClass(t.options.classPrefix + "offscreen");
 		})
 		// handle clicks to the language radio buttons
 		.on('click', 'input[type=radio]', function () {
@@ -127,10 +130,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			playbackSpeed = newSpeed;
 			media.playbackRate = parseFloat(newSpeed);
-			player.speedButton.find('button').html(getSpeedNameFromValue(newSpeed)).end().find('.' + t.options.classPrefix + 'speed-selected').removeClass(t.options.classPrefix + 'speed-selected').end().find('input[type="radio"]');
+			player.speedButton.find('button').html(getSpeedNameFromValue(newSpeed)).end().find("." + t.options.classPrefix + "speed-selected").removeClass(t.options.classPrefix + "speed-selected").end().find('input[type="radio"]');
 
-			self.prop('checked', true).siblings('.' + t.options.classPrefix + 'speed-selector-label').addClass(t.options.classPrefix + 'speed-selected');
-		}).on('click', '.' + t.options.classPrefix + 'speed-selector-label', function () {
+			self.prop('checked', true).siblings("." + t.options.classPrefix + "speed-selector-label").addClass(t.options.classPrefix + "speed-selected");
+		}).on('click', "." + t.options.classPrefix + "speed-selector-label", function () {
 			$(this).siblings('input[type="radio"]').trigger('click');
 		})
 		//Allow up/down arrow to change the selected radio without changing the volume.
