@@ -32,13 +32,18 @@ Object.assign(MediaElementPlayer.prototype, {
   */
 	buildloop: function buildloop(player, controls) {
 		var t = this,
-		    loopTitle = mejs.Utils.isString(t.options.loopText) ? t.options.loopText : mejs.i18n.t('mejs.loop');
+		    loopTitle = mejs.Utils.isString(t.options.loopText) ? t.options.loopText : mejs.i18n.t('mejs.loop'),
+		    loop = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "loop-button " + ((player.options.loop ? t.options.classPrefix + "loop-on" : t.options.classPrefix + "loop-off") + "\">") + ("<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + loopTitle + "\" aria-label=\"" + loopTitle + "\" tabindex=\"0\"></button>") + "</div>");
 
-		var loop = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "loop-button " + ((player.options.loop ? t.options.classPrefix + "loop-on" : t.options.classPrefix + "loop-off") + "\">") + ("<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + loopTitle + "\" aria-label=\"" + loopTitle + "\" tabindex=\"0\"></button>") + "</div>")
-		// append it to the toolbar
-		.appendTo(controls)
+		if (t.featurePosition['loop'] !== undefined) {
+			loop.insertAfter(controls.children(":eq(" + (t.featurePosition['loop'] - 1) + ")"));
+		} else {
+			loop.appendTo(controls);
+			t.featurePosition['loop'] = controls.children("." + t.options.classPrefix + "loop-button").index();
+		}
+
 		// add a click toggle event
-		.click(function () {
+		loop.click(function () {
 			player.options.loop = !player.options.loop;
 			if (player.options.loop) {
 				loop.removeClass(t.options.classPrefix + "loop-off").addClass(t.options.classPrefix + "loop-on");
