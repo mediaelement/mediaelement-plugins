@@ -1,8 +1,9 @@
 ### Version History
 
-*1.2.2 (2017/??/??)*
+*1.2.2 (2017/03/01)*
 
 * Added translation files for all the plugins that required it and added documentation @ron666 
+* Added worfklow to preserve order of control elements when certain features are reset @ron666
 
 *1.2.1 (2017/02/26)*
 
