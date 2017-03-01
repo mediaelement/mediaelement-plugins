@@ -34,10 +34,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		var t = this,
 		    sourceTitle = mejs.Utils.isString(t.options.sourcechooserText) ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
-		    hoverTimeout = void 0;
+		    sources = [];
 
 		// add to list
-		var sources = [];
+		var hoverTimeout = void 0;
 
 		for (var j in this.node.children) {
 			var s = this.node.children[j];
@@ -50,10 +50,17 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		player.sourcechooserButton = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "sourcechooser-button\">" + ("<button type=\"button\" role=\"button\" aria-haspopup=\"true\" aria-owns=\"" + t.id + "\" title=\"" + sourceTitle + "\"") + ("aria-label=\"" + sourceTitle + "\" tabindex=\"0\"></button>") + ("<div class=\"" + t.options.classPrefix + "sourcechooser-selector " + t.options.classPrefix + "offscreen\" role=\"menu\"") + "aria-expanded=\"false\" aria-hidden=\"true\">" + "<ul></ul>" + "</div>" + "</div>").appendTo(controls)
+		player.sourcechooserButton = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "sourcechooser-button\">" + ("<button type=\"button\" role=\"button\" aria-haspopup=\"true\" aria-owns=\"" + t.id + "\" title=\"" + sourceTitle + "\"") + ("aria-label=\"" + sourceTitle + "\" tabindex=\"0\"></button>") + ("<div class=\"" + t.options.classPrefix + "sourcechooser-selector " + t.options.classPrefix + "offscreen\" role=\"menu\"") + "aria-expanded=\"false\" aria-hidden=\"true\">" + "<ul></ul>" + "</div>" + "</div>");
+
+		if (t.featurePosition['sourcechooser'] !== undefined) {
+			player.sourcechooserButton.insertAfter(controls.children(":eq(" + (t.featurePosition['sourcechooser'] - 1) + ")"));
+		} else {
+			player.sourcechooserButton.appendTo(controls);
+			t.featurePosition['sourcechooser'] = controls.children("." + t.options.classPrefix + "sourcechooser-button").index();
+		}
 
 		// hover
-		.hover(function () {
+		player.sourcechooserButton.hover(function () {
 			clearTimeout(hoverTimeout);
 			player.showSourcechooserSelector();
 		}, function () {

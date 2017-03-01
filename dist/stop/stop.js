@@ -33,9 +33,17 @@ Object.assign(MediaElementPlayer.prototype, {
   */
 	buildstop: function buildstop(player, controls, layers, media) {
 		var t = this,
-		    stopTitle = mejs.Utils.isString(t.options.stopText) ? t.options.stopText : mejs.i18n.t('mejs.stop');
+		    stopTitle = mejs.Utils.isString(t.options.stopText) ? t.options.stopText : mejs.i18n.t('mejs.stop'),
+		    button = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "stop-button " + t.options.classPrefix + "stop\">" + ("<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + stopTitle + "\" aria-label=\"" + stopTitle + "\" tabindex=\"0\"></button>") + "</div>");
 
-		$("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "stop-button " + t.options.classPrefix + "stop\">" + ("<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + stopTitle + "\" aria-label=\"" + stopTitle + "\" tabindex=\"0\"></button>") + "</div>").appendTo(controls).click(function () {
+		if (t.featurePosition['stop'] !== undefined) {
+			button.insertAfter(controls.children(":eq(" + (t.featurePosition['stop'] - 1) + ")"));
+		} else {
+			button.appendTo(controls);
+			t.featurePosition['stop'] = controls.children("." + t.options.classPrefix + "stop-button").index();
+		}
+
+		button.click(function () {
 			if (!media.paused) {
 				media.pause();
 			}

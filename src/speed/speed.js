@@ -45,10 +45,10 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {HTMLElement} media
 	 */
 	buildspeed: function (player, controls, layers, media)  {
-		let
+		const
 			t = this,
 			isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/) !== null
-			;
+		;
 
 		if (!isNative) {
 			return;
@@ -109,8 +109,14 @@ Object.assign(MediaElementPlayer.prototype, {
 				`<div class="${t.options.classPrefix}speed-selector ${t.options.classPrefix}offscreen">` +
 					`<ul class="${t.options.classPrefix}speed-selector-list"></ul>` +
 				`</div>` +
-			`</div>`)
-		.appendTo(controls);
+			`</div>`);
+
+		if (t.featurePosition['speed'] !== undefined) {
+			player.speedButton.insertAfter(controls.children(`:eq(${(t.featurePosition['speed'] - 1)})`));
+		} else {
+			player.speedButton.appendTo(controls);
+			t.featurePosition['speed'] = controls.children(`.${t.options.classPrefix}speed-button`).index();
+		}
 
 		for (let i = 0, il = speeds.length; i<il; i++) {
 

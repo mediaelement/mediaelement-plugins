@@ -33,19 +33,25 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {HTMLElement} media
 	 */
 	buildskipback: function (player, controls, layers, media)  {
-		let
+		const
 			t = this,
 			defaultTitle = mejs.i18n.t('mejs.time-skip-back', t.options.skipBackInterval),
-			skipTitle = mejs.Utils.isString(t.options.skipBackText) ? t.options.skipBackText.replace('%1', t.options.skipBackInterval) : defaultTitle;
+			skipTitle = mejs.Utils.isString(t.options.skipBackText) ? t.options.skipBackText.replace('%1', t.options.skipBackInterval) : defaultTitle,
+			button = $(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}skip-back-button">` +
+				`<button type="button" aria-controls="${t.id}" title="${skipTitle}" aria-label="${skipTitle}" tabindex="0">` +
+					`${t.options.skipBackInterval}</button>` +
+			`</div>`)
+		;
 
-		$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}skip-back-button">` +
-			`<button type="button" aria-controls="${t.id}" title="${skipTitle}" aria-label="${skipTitle}" tabindex="0">` +
-				`${t.options.skipBackInterval}</button>` +
-		`</div>`)
-		// append it to the toolbar
-		.appendTo(controls)
+		if (t.featurePosition['skipback'] !== undefined) {
+			button.insertAfter(controls.children(`:eq(${(t.featurePosition['skipback'] - 1)})`));
+		} else {
+			button.appendTo(controls);
+			t.featurePosition['skipback'] = controls.children(`.${t.options.classPrefix}skip-back-button`).index();
+		}
+
 		// add a click toggle event
-		.click(function() {
+		button.click(function() {
 			if (media.duration) {
 				media.setCurrentTime(Math.max(media.currentTime - t.options.skipBackInterval, 0));
 				$(this).find('button').blur();
