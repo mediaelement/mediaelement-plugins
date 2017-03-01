@@ -30,14 +30,14 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	buildsourcechooser: function (player, controls, layers, media)  {
 
-		const
+		let
 			t = this,
 			sourceTitle = mejs.Utils.isString(t.options.sourcechooserText) ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
-			sources = []
+			hoverTimeout
 		;
 
 		// add to list
-		let hoverTimeout;
+		let sources = [];
 
 		for (let j in this.node.children) {
 			let s = this.node.children[j];
@@ -58,17 +58,10 @@ Object.assign(MediaElementPlayer.prototype, {
 					`aria-expanded="false" aria-hidden="true">` +
 					`<ul></ul>` +
 				`</div>` +
-			`</div>`);
+			`</div>`)
+			.appendTo(controls)
 
-		if (t.featurePosition['sourcechooser'] !== undefined) {
-			player.sourcechooserButton.insertAfter(controls.children(`:eq(${(t.featurePosition['sourcechooser'] - 1)})`));
-		} else {
-			player.sourcechooserButton.appendTo(controls);
-			t.featurePosition['sourcechooser'] = controls.children(`.${t.options.classPrefix}sourcechooser-button`).index();
-		}
-
-		// hover
-		player.sourcechooserButton
+			// hover
 			.hover(() => {
 				clearTimeout(hoverTimeout);
 				player.showSourcechooserSelector();

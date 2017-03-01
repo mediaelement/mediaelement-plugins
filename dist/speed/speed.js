@@ -99,14 +99,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.clearspeed(player);
 
-		player.speedButton = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "speed-button\">" + ("<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + speedTitle + "\" ") + ("aria-label=\"" + speedTitle + "\" tabindex=\"0\">" + getSpeedNameFromValue(t.options.defaultSpeed) + "</button>") + ("<div class=\"" + t.options.classPrefix + "speed-selector " + t.options.classPrefix + "offscreen\">") + ("<ul class=\"" + t.options.classPrefix + "speed-selector-list\"></ul>") + "</div>" + "</div>");
-
-		if (t.featurePosition['speed'] !== undefined) {
-			player.speedButton.insertAfter(controls.children(":eq(" + (t.featurePosition['speed'] - 1) + ")"));
-		} else {
-			player.speedButton.appendTo(controls);
-			t.featurePosition['speed'] = controls.children("." + t.options.classPrefix + "speed-button").index();
-		}
+		player.speedButton = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "speed-button\">" + ("<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + speedTitle + "\" ") + ("aria-label=\"" + speedTitle + "\" tabindex=\"0\">" + getSpeedNameFromValue(t.options.defaultSpeed) + "</button>") + ("<div class=\"" + t.options.classPrefix + "speed-selector " + t.options.classPrefix + "offscreen\">") + ("<ul class=\"" + t.options.classPrefix + "speed-selector-list\"></ul>") + "</div>" + "</div>").appendTo(controls);
 
 		for (var _i = 0, il = speeds.length; _i < il; _i++) {
 
