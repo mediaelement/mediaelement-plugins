@@ -52,12 +52,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		player.sourcechooserButton = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "sourcechooser-button\">" + ("<button type=\"button\" role=\"button\" aria-haspopup=\"true\" aria-owns=\"" + t.id + "\" title=\"" + sourceTitle + "\"") + ("aria-label=\"" + sourceTitle + "\" tabindex=\"0\"></button>") + ("<div class=\"" + t.options.classPrefix + "sourcechooser-selector " + t.options.classPrefix + "offscreen\" role=\"menu\"") + "aria-expanded=\"false\" aria-hidden=\"true\">" + "<ul></ul>" + "</div>" + "</div>");
 
-		if (t.featurePosition['sourcechooser'] !== undefined) {
-			player.sourcechooserButton.insertAfter(controls.children(":eq(" + (t.featurePosition['sourcechooser'] - 1) + ")"));
-		} else {
-			player.sourcechooserButton.appendTo(controls);
-			t.featurePosition['sourcechooser'] = controls.children("." + t.options.classPrefix + "sourcechooser-button").index();
-		}
+		t.addControlElement(player.sourcechooserButton, 'sourcechooser');
 
 		// hover
 		player.sourcechooserButton.hover(function () {

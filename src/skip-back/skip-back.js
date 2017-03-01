@@ -43,12 +43,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			`</div>`)
 		;
 
-		if (t.featurePosition['skipback'] !== undefined) {
-			button.insertAfter(controls.children(`:eq(${(t.featurePosition['skipback'] - 1)})`));
-		} else {
-			button.appendTo(controls);
-			t.featurePosition['skipback'] = controls.children(`.${t.options.classPrefix}skip-back-button`).index();
-		}
+		t.addControlElement(button, 'skipback');
 
 		// add a click toggle event
 		button.click(function() {

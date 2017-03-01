@@ -1,5 +1,9 @@
 ### Version History
 
+*1.2.3 (2017/03/01)*
+
+* Improved way to add control elements by using new `addControlElement()` method @ron666
+
 *1.2.2 (2017/03/01)*
 
 * Added translation files for all the plugins that required it and added documentation @ron666 

@@ -40,12 +40,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		    skipTitle = mejs.Utils.isString(t.options.skipBackText) ? t.options.skipBackText.replace('%1', t.options.skipBackInterval) : defaultTitle,
 		    button = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "skip-back-button\">" + ("<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + skipTitle + "\" aria-label=\"" + skipTitle + "\" tabindex=\"0\">") + (t.options.skipBackInterval + "</button>") + "</div>");
 
-		if (t.featurePosition['skipback'] !== undefined) {
-			button.insertAfter(controls.children(":eq(" + (t.featurePosition['skipback'] - 1) + ")"));
-		} else {
-			button.appendTo(controls);
-			t.featurePosition['skipback'] = controls.children("." + t.options.classPrefix + "skip-back-button").index();
-		}
+		t.addControlElement(button, 'skipback');
 
 		// add a click toggle event
 		button.click(function () {

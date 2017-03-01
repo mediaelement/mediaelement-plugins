@@ -111,12 +111,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				`</div>` +
 			`</div>`);
 
-		if (t.featurePosition['speed'] !== undefined) {
-			player.speedButton.insertAfter(controls.children(`:eq(${(t.featurePosition['speed'] - 1)})`));
-		} else {
-			player.speedButton.appendTo(controls);
-			t.featurePosition['speed'] = controls.children(`.${t.options.classPrefix}speed-button`).index();
-		}
+		t.addControlElement(player.speedButton, 'speed');
 
 		for (let i = 0, il = speeds.length; i<il; i++) {
 

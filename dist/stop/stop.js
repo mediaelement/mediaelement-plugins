@@ -36,12 +36,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		    stopTitle = mejs.Utils.isString(t.options.stopText) ? t.options.stopText : mejs.i18n.t('mejs.stop'),
 		    button = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "stop-button " + t.options.classPrefix + "stop\">" + ("<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + stopTitle + "\" aria-label=\"" + stopTitle + "\" tabindex=\"0\"></button>") + "</div>");
 
-		if (t.featurePosition['stop'] !== undefined) {
-			button.insertAfter(controls.children(":eq(" + (t.featurePosition['stop'] - 1) + ")"));
-		} else {
-			button.appendTo(controls);
-			t.featurePosition['stop'] = controls.children("." + t.options.classPrefix + "stop-button").index();
-		}
+		t.addControlElement(button, 'stop');
 
 		button.click(function () {
 			if (!media.paused) {

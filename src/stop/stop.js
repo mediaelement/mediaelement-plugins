@@ -38,12 +38,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			`</div>`)
 		;
 
-		if (t.featurePosition['stop'] !== undefined) {
-			button.insertAfter(controls.children(`:eq(${(t.featurePosition['stop'] - 1)})`));
-		} else {
-			button.appendTo(controls);
-			t.featurePosition['stop'] = controls.children(`.${t.options.classPrefix}stop-button`).index();
-		}
+		t.addControlElement(button, 'stop');
 
 		button.click(() => {
 			if (!media.paused) {

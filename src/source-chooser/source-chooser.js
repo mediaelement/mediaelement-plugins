@@ -60,12 +60,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				`</div>` +
 			`</div>`);
 
-		if (t.featurePosition['sourcechooser'] !== undefined) {
-			player.sourcechooserButton.insertAfter(controls.children(`:eq(${(t.featurePosition['sourcechooser'] - 1)})`));
-		} else {
-			player.sourcechooserButton.appendTo(controls);
-			t.featurePosition['sourcechooser'] = controls.children(`.${t.options.classPrefix}sourcechooser-button`).index();
-		}
+		t.addControlElement(player.sourcechooserButton, 'sourcechooser');
 
 		// hover
 		player.sourcechooserButton

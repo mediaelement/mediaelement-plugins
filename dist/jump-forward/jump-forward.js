@@ -39,12 +39,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		    forwardTitle = mejs.Utils.isString(t.options.jumpForwardText) ? t.options.jumpForwardText.replace('%1', t.options.jumpForwardInterval) : defaultTitle,
 		    button = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "jump-forward-button\">" + ("<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + forwardTitle + "\" ") + ("aria-label=\"" + forwardTitle + "\" tabindex=\"0\">" + t.options.jumpForwardInterval + "</button>") + "</div>");
 
-		if (t.featurePosition['jumpforward'] !== undefined) {
-			button.insertAfter(controls.children(":eq(" + (t.featurePosition['jumpforward'] - 1) + ")"));
-		} else {
-			button.appendTo(controls);
-			t.featurePosition['jumpforward'] = controls.children("." + t.options.classPrefix + "jump-forward-button").index();
-		}
+		t.addControlElement(button, 'jumpforward');
 
 		// add a click toggle event
 		button.click(function () {

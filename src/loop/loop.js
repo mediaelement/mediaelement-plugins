@@ -38,12 +38,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			`</div>`)
 		;
 
-		if (t.featurePosition['loop'] !== undefined) {
-			loop.insertAfter(controls.children(`:eq(${(t.featurePosition['loop'] - 1)})`));
-		} else {
-			loop.appendTo(controls);
-			t.featurePosition['loop'] = controls.children(`.${t.options.classPrefix}loop-button`).index();
-		}
+		t.addControlElement(loop, 'loop');
 
 		// add a click toggle event
 		loop.click(() => {
