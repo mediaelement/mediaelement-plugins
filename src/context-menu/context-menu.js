@@ -70,35 +70,41 @@ Object.assign(mejs.MepDefaults, {
 
 
 Object.assign(MediaElementPlayer.prototype, {
+
+	isContextMenuEnabled: true,
+
+	contextMenuTimeout: null,
+
 	buildcontextmenu: function (player)  {
 
 		// create context menu
-		player.contextMenu = $(`<div class="${t.options.classPrefix}contextmenu"></div>`)
-		.appendTo($('body'))
-		.hide();
+		player.contextMenu = document.createElement('div');
+		player.contextMenu.className = `${t.options.classPrefix}contextmenu`;
+		player.contextMenu.style.display = 'none';
+
+		document.body.appendChild(player.contextMenu);
 
 		// create events for showing context menu
-		player.container.on('contextmenu', (e) => {
+		player.container.addEventListener('contextmenu', (e) => {
 			if (player.isContextMenuEnabled) {
-				e.preventDefault();
 				player.renderContextMenu(e.clientX - 1, e.clientY - 1);
-				return false;
+				e.preventDefault();
+				e.stopPropagation();
 			}
 		});
-		player.container.on('click', () => {
-			player.contextMenu.hide();
+		player.container.addEventListener('click', () => {
+			player.contextMenu.style.display = 'none';
 		});
-		player.contextMenu.on('mouseleave', () => {
+		player.contextMenu.addEventListener('mouseleave', () => {
 			player.startContextMenuTimer();
 
 		});
 	},
 
 	cleancontextmenu: function (player)  {
-		player.contextMenu.remove();
+		player.contextMenu.parentNode.removeChild(player.contextMenu);
 	},
 
-	isContextMenuEnabled: true,
 	enableContextMenu: function ()  {
 		this.isContextMenuEnabled = true;
 	},
@@ -106,9 +112,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		this.isContextMenuEnabled = false;
 	},
 
-	contextMenuTimeout: null,
 	startContextMenuTimer: function ()  {
-		let t = this;
+		const t = this;
 
 		t.killContextMenuTimer();
 
@@ -127,65 +132,68 @@ Object.assign(MediaElementPlayer.prototype, {
 	},
 
 	hideContextMenu: function ()  {
-		this.contextMenu.hide();
+		this.contextMenu.style.display = 'none';
 	},
 
 	renderContextMenu: function (x, y)  {
 
 		// alway re-render the items so that things like "turn fullscreen on" and "turn fullscreen off" are always written correctly
-		let t = this,
+		let
+			t = this,
 			html = '',
-			items = t.options.contextMenuItems;
+			items = t.options.contextMenuItems
+		;
 
-		for (let i = 0, il = items.length; i < il; i++) {
+		for (let i = 0, total = items.length; i < total; i++) {
 
-			let item = items[i];
+			const item = items[i];
 
 			if (item.isSeparator) {
 				html += `<div class="${t.options.classPrefix}contextmenu-separator"></div>`;
 			} else {
 
-				let rendered = item.render(t);
+				const rendered = item.render(t);
 
 				// render can return null if the item doesn't need to be used at the moment
 				if (rendered !== null && rendered !== undefined) {
-					html += `<div class="${t.options.classPrefix}contextmenu-item"` +
-							`data-itemindex="${i}" id="element-${(Math.random() * 1000000)}">${rendered}</div>`;
+					html += `<div class="${t.options.classPrefix}contextmenu-item" data-itemindex="${i}" id="element-${(Math.random() * 1000000)}">${rendered}</div>`;
 				}
 			}
 		}
 
 		// position and show the context menu
-		t.contextMenu
-			.empty()
-			.append($(html))
-			.css({top: y, left: x})
-			.show();
+		t.contextMenu.innerHTML = html;
+		t.contextMenu.style.top = y;
+		t.contextMenu.style.left = x;
+		t.contextMenu.style.display = 'block';
 
 		// bind events
-		t.contextMenu.find(`.${t.options.classPrefix}contextmenu-item`).each(function() {
+		const contextItems = t.contextMenu.querySelectorAll(`.${t.options.classPrefix}contextmenu-item`);
+		for (let i = 0, total = contextItems.length; i < total; i++) {
 
 			// which one is this?
-			let $dom = $(this),
-				itemIndex = parseInt($dom.data('itemindex'), 10),
-				item = t.options.contextMenuItems[itemIndex];
+			const
+				menuItem = contextItems[i],
+				itemIndex = parseInt(menuItem.getAttribute('data-itemindex'), 10),
+				item = t.options.contextMenuItems[itemIndex]
+			;
 
 			// bind extra functionality?
 			if (typeof item.show !== 'undefined') {
-				item.show($dom, t);
+				item.show(menuItem, t);
 			}
 
 			// bind click action
-			$dom.click(() => {
+			menuItem.addEventListener('click', () => {
 				// perform click action
 				if (typeof item.click !== 'undefined') {
 					item.click(t);
 				}
 
 				// close
-				t.contextMenu.hide();
+				t.contextMenu.style.display = 'none';
 			});
-		});
+		}
 
 		// stop the controls from hiding
 		setTimeout(() => {

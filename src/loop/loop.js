@@ -32,23 +32,23 @@ Object.assign(MediaElementPlayer.prototype, {
 		const
 			t = this,
 			loopTitle = mejs.Utils.isString(t.options.loopText) ? t.options.loopText : mejs.i18n.t('mejs.loop'),
-			loop = $(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}loop-button ` +
-				`${((player.options.loop) ? `${t.options.classPrefix}loop-on` : `${t.options.classPrefix}loop-off`)}">` +
-				`<button type="button" aria-controls="${t.id}" title="${loopTitle}" aria-label="${loopTitle}" tabindex="0"></button>` +
-			`</div>`)
+			loop = document.createElement('div')
 		;
+
+		loop.className = `${t.options.classPrefix}button ${t.options.classPrefix}loop-button ${((player.options.loop) ? `${t.options.classPrefix}loop-on` : `${t.options.classPrefix}loop-off`)}`;
+		loop.innerHTML = `<button type="button" aria-controls="${t.id}" title="${loopTitle}" aria-label="${loopTitle}" tabindex="0"></button>`;
 
 		t.addControlElement(loop, 'loop');
 
 		// add a click toggle event
-		loop.click(() => {
+		loop.addEventListener('click', () => {
 			player.options.loop = !player.options.loop;
 			if (player.options.loop) {
-				loop.removeClass(`${t.options.classPrefix}loop-off`)
-				.addClass(`${t.options.classPrefix}loop-on`);
+				mejs.Utils.removeClass(loop, `${t.options.classPrefix}loop-off`);
+				mejs.Utils.addClass(loop, `${t.options.classPrefix}loop-on`);
 			} else {
-				loop.removeClass(`${t.options.classPrefix}loop-on`)
-				.addClass(`${t.options.classPrefix}loop-off`);
+				mejs.Utils.removeClass(loop`${t.options.classPrefix}loop-on`);
+				mejs.Utils.addClass(loop, `${t.options.classPrefix}loop-off`);
 			}
 		});
 	}

@@ -60,15 +60,15 @@ Object.assign(MediaElementPlayer.prototype, {
 	},
 
 	vastSetupEvents: function ()  {
-		let t = this;
+		const t = this;
 
 
 		// START: preroll
-		t.container.on('mejsprerollstarted', () => {
+		t.container.addEventListener('mejsprerollstarted', () => {
 
 			if (t.vastAdTags.length > 0) {
 
-				let adTag = t.vastAdTags[0];
+				const adTag = t.vastAdTags[0];
 
 				// always fire this event
 				if (adTag.trackingEvents.start) {
@@ -78,7 +78,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				// only do impressions once
 				if (!adTag.shown && adTag.impressions.length > 0) {
 
-					for (let i = 0, il = adTag.impressions.length; i < il; i++) {
+					for (let i = 0, total = adTag.impressions.length; i < total; i++) {
 						t.adsLoadUrl(adTag.impressions[i]);
 					}
 				}
@@ -106,7 +106,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	vastSetAdTagUrl: function (url)  {
 
-		let t = this;
+		const t = this;
 
 		// set and reset
 		t.options.vastAdTagUrl = url;
@@ -119,7 +119,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 */
 	vastLoadAdTagInfo: function ()  {
-		let t = this;
+		const t = this;
 
 		// set this to stop playback
 		t.adsDataIsLoading = true;
@@ -133,43 +133,36 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 */
 	loadAdTagInfoDirect: function ()  {
-		let t = this;
+		const t = this;
 
-		$.ajax({
-			url: t.options.vastAdTagUrl,
-			crossDomain: true,
-			success: function (data)  {
+		mejs.Utils.ajax(t.options.vastAdTagUrl, (data)  => {
 				t.vastParseVastData(data);
-			},
-			error: function (err)  {
-				console.log('vast3:direct:error', err);
+			}, (err)  => {
+				console.error('vast3:direct:error', err);
 
 				// fallback to Yahoo proxy
 				t.loadAdTagInfoProxy();
 			}
-		});
+		);
 	},
 
 	/**
 	 *
 	 */
 	loadAdTagInfoProxy: function ()  {
-		let t = this,
+		const
+			t = this,
 			protocol = location.protocol,
 			query = `select * from xml where url="${encodeURI(t.options.vastAdTagUrl)}"`,
-			yahooUrl = `http${(/^https/.test(protocol) ? 's' : '')}://query.yahooapis.com/v1/public/yql?format=xml&q=${query}`;
+			yahooUrl = `http${(/^https/.test(protocol) ? 's' : '')}://query.yahooapis.com/v1/public/yql?format=xml&q=${query}`
+		;
 
-
-		$.ajax({
-			url: yahooUrl,
-			crossDomain: true,
-			success: function (data)  {
+		mejs.Utils.ajax(yahooUrl, (data) => {
 				t.vastParseVastData(data);
-			},
-			error: function (err)  {
-				console.log('vast:proxy:yahoo:error', err);
+			}, (err)  => {
+				console.error('vast:proxy:yahoo:error', err);
 			}
-		});
+		);
 	},
 
 	/**
@@ -178,66 +171,64 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	vastParseVastData: function (data)  {
 
-		let t = this;
-
+		const t = this;
 
 		// clear out data
 		t.vastAdTags = [];
 		t.options.indexPreroll = 0;
 
-		$(data).find('Ad').each((index, node) => {
+		const ads = data.querySelectorAll('Ad');
 
-			let
-				adNode = $(node),
-
+		for (let i = 0, total = ads.length; i < total; i++) {
+			const
+				adNode = ads[i],
 				adTag = {
-					id: adNode.attr('id'),
-					title: $.trim(adNode.find('AdTitle').text()),
-					description: $.trim(adNode.find('Description').text()),
+					id: adNode.getAttribute('id'),
+					title: adNode.querySelector('AdTitle').innerText.trim(),
+					description: adNode.querySelector('Description').innerText.trim(),
 					impressions: [],
-					clickThrough: $.trim(adNode.find('ClickThrough').text()),
+					clickThrough: adNode.querySelector('ClickThrough').innerText.trim(),
 					mediaFiles: [],
 					trackingEvents: {},
-
 					// internal tracking if it's been used
 					shown: false
-				};
+				},
+				impressions = adNode.querySelectorAll('Impression'),
+				mediaFiles = adNode.querySelectorAll('MediaFile'),
+				trackFiles = adNode.querySelectorAll('Tracking')
+			;
 
 			t.vastAdTags.push(adTag);
 
+			for (let j = 0, impressionsTotal = impressions.length; i < impressionsTotal; i++) {
+				adTag.impressions.push(impressions[j].innerText.trim());
+			}
 
-			// parse all needed nodes
-			adNode.find('Impression').each(function() {
-				adTag.impressions.push($.trim($(this).text()));
-			});
+			for (let j = 0, tracksTotal = trackFiles.length; i < tracksTotal; i++) {
+				const trackingEvent = trackFiles[j];
+				adTag.trackingEvents[trackingEvent.getAttribute('event')] = trackingEvent.innerText.trim();
+			}
 
-			adNode.find('Tracking').each((index, node) => {
-				let trackingEvent = $(node);
-
-				adTag.trackingEvents[trackingEvent.attr('event')] = $.trim(trackingEvent.text());
-
-			});
-
-
-			adNode.find('MediaFile').each((index, node) => {
-				let mediaFile = $(node),
-					type = mediaFile.attr('type');
+			for (let j = 0, mediaFilesTotal = mediaFiles.length; i < mediaFilesTotal; i++) {
+				const
+					mediaFile = mediaFiles[j],
+					type = mediaFile.attr('type')
+				;
 
 				if (t.media.canPlayType(type).toString().replace(/no/, '').replace(/false/, '') !== '') {
 
 					adTag.mediaFiles.push({
-						id: mediaFile.attr('id'),
-						delivery: mediaFile.attr('delivery'),
-						type: mediaFile.attr('type'),
-						bitrate: mediaFile.attr('bitrate'),
-						width: mediaFile.attr('width'),
-						height: mediaFile.attr('height'),
-						url: $.trim(mediaFile.text())
+						id: mediaFile.getAttribute('id'),
+						delivery: mediaFile.getAttribute('delivery'),
+						type: mediaFile.getAttribute('type'),
+						bitrate: mediaFile.getAttribute('bitrate'),
+						width: mediaFile.getAttribute('width'),
+						height: mediaFile.getAttribute('height'),
+						url: mediaFile.innerText.trim()
 					});
 				}
-			});
-
-		});
+			}
+		}
 
 		// DONE
 		t.vastLoaded();
@@ -247,12 +238,11 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 */
 	vastLoaded: function ()  {
-		let t = this;
+		const t = this;
 
 		t.vastAdTagIsLoaded = true;
 		t.vastAdTagIsLoading = false;
 		t.adsDataIsLoading = false;
-
 		t.vastStartPreroll();
 	},
 
@@ -260,7 +250,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 */
 	vastStartPreroll: function ()  {
-		let t = this;
+		const t = this;
 
 		// if we have a media URL, then send it up to the ads plugin as a preroll
 		// load up the vast ads to be played before the selected media.

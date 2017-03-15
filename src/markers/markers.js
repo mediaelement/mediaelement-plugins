@@ -53,8 +53,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		;
 
 		for (let i = 0, total = player.options.markers.length; i < total; ++i) {
-			controls.find(`.${t.options.classPrefix}time-total`)
-				.append('<span class="' + `${t.options.classPrefix}time-marker"></span>`);
+			controls.querySelector(`.${t.options.classPrefix}time-total`).innerHTML += '<span class="' + `${t.options.classPrefix}time-marker"></span>`;
 		}
 
 		media.addEventListener('durationchange', () => {
@@ -71,7 +70,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 
 			if (player.options.markers.length) {
-				for (let i = 0; i < player.options.markers.length; ++i) {
+				for (let i = 0, total = player.options.markers.length; i < total; ++i) {
 					currentMarker = Math.floor(player.options.markers[i]);
 					if (currentPos === currentMarker && currentMarker !== lastMarkerCallBack) {
 						player.options.markerCallback(media, media.currentTime); //Fires the callback function
@@ -86,22 +85,22 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 * Create markers in the progress bar
 	 *
-	 * @param {$} controls
+	 * @param {HTMLElement} controls
 	 */
 	setmarkers: function (controls)  {
-		let
-			t = this,
-			left
-		;
+
+		const t = this;
 
 		for (let i = 0, total = t.options.markers.length; i < total; ++i) {
 			if (Math.floor(t.options.markers[i]) <= t.media.duration && Math.floor(t.options.markers[i]) >= 0) {
-				left = 100 * Math.floor(t.options.markers[i]) / t.media.duration;
-				$(controls.find(`.${t.options.classPrefix}time-marker`)[i]).css({
-					'width': '1px',
-					'left': `${left}%`,
-					'background': t.options.markerColor
-				});
+				const
+					left = 100 * Math.floor(t.options.markers[i]) / t.media.duration,
+					marker = controls.querySelector(`.${t.options.classPrefix}time-marker`)[i]
+				;
+
+				marker.style.width = '1px';
+				marker.style.left = `${left}%`;
+				marker.style.background = t.options.markerColor;
 			}
 		}
 

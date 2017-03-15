@@ -39,8 +39,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		// add to list
 		var hoverTimeout = void 0;
 
-		for (var j in this.node.children) {
-			var s = this.node.children[j];
+		for (var j = 0, total = t.node.childNodes; i < total; i++) {
+			var s = t.node.childNodes[j];
 			if (s.nodeName === 'SOURCE') {
 				sources.push(s);
 			}
@@ -50,107 +50,134 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		player.sourcechooserButton = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "sourcechooser-button\">" + ("<button type=\"button\" role=\"button\" aria-haspopup=\"true\" aria-owns=\"" + t.id + "\" title=\"" + sourceTitle + "\"") + ("aria-label=\"" + sourceTitle + "\" tabindex=\"0\"></button>") + ("<div class=\"" + t.options.classPrefix + "sourcechooser-selector " + t.options.classPrefix + "offscreen\" role=\"menu\"") + "aria-expanded=\"false\" aria-hidden=\"true\">" + "<ul></ul>" + "</div>" + "</div>");
+		player.sourcechooserButton = document.createElement('div');
+		player.sourcechooserButton.className = t.options.classPrefix + "button " + t.options.classPrefix + "sourcechooser-button";
+		player.sourcechooserButton.innerHTML = "<button type=\"button\" role=\"button\" aria-haspopup=\"true\" aria-owns=\"" + t.id + "\" title=\"" + sourceTitle + "\" aria-label=\"" + sourceTitle + "\" tabindex=\"0\"></button>" + ("<div class=\"" + t.options.classPrefix + "sourcechooser-selector " + t.options.classPrefix + "offscreen\" role=\"menu\" aria-expanded=\"false\" aria-hidden=\"true\"><ul></ul></div>");
 
 		t.addControlElement(player.sourcechooserButton, 'sourcechooser');
 
 		// hover
-		player.sourcechooserButton.hover(function () {
+		player.sourcechooserButton.addEventListener('mouseover', function () {
 			clearTimeout(hoverTimeout);
 			player.showSourcechooserSelector();
-		}, function () {
+		});
+		player.sourcechooserButton.addEventListener('mouseout', function () {
 			hoverTimeout = setTimeout(function () {
 				player.hideSourcechooserSelector();
 			}, 500);
-		})
+		});
 
 		// keyboard menu activation
-		.on('keydown', function (e) {
-			var keyCode = e.which || e.keyCode || 0;
+		player.sourcechooserButton.addEventListener('keydown', function (e) {
 
-			switch (keyCode) {
-				case 32:
-					// space
-					if (!mejs.MediaFeatures.isFirefox) {
-						// space sends the click event in Firefox
+			if (t.options.keyActions.length) {
+				var keyCode = e.which || e.keyCode || 0;
+
+				switch (keyCode) {
+					case 32:
+						// space
+						if (!mejs.MediaFeatures.isFirefox) {
+							// space sends the click event in Firefox
+							player.showSourcechooserSelector();
+						}
+						player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
+						break;
+					case 13:
+						// enter
 						player.showSourcechooserSelector();
-					}
-					$(this).find("." + t.options.classPrefix + "sourcechooser-selector").find('input[type=radio]:checked').first().focus();
-					break;
-				case 13:
-					// enter
-					player.showSourcechooserSelector();
-					$(this).find("." + t.options.classPrefix + "sourcechooser-selector").find('input[type=radio]:checked').first().focus();
-					break;
-				case 27:
-					// esc
-					player.hideSourcechooserSelector();
-					$(this).find('button').focus();
-					break;
-				default:
-					return true;
+						player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
+						break;
+					case 27:
+						// esc
+						player.hideSourcechooserSelector();
+						player.sourcechooserButton.querySelector('button').focus();
+						break;
+					default:
+						return true;
+				}
+
+				e.preventDefault();
+				e.stopPropagation();
 			}
-		})
+		});
 
 		// close menu when tabbing away
-		.on('focusout', mejs.Utils.debounce(function () {
+		player.sourcechooserButton.addEventListener('focusout', mejs.Utils.debounce(function () {
 			// Safari triggers focusout multiple times
 			// Firefox does NOT support e.relatedTarget to see which element
 			// just lost focus, so wait to find the next focused element
 			setTimeout(function () {
-				var parent = $(document.activeElement).closest("." + t.options.classPrefix + "sourcechooser-selector");
-				if (!parent.length) {
+				var parent = document.activeElement.closest("." + t.options.classPrefix + "sourcechooser-selector");
+				if (!parent) {
 					// focus is outside the control; close menu
 					player.hideSourcechooserSelector();
 				}
 			}, 0);
-		}, 100))
+		}, 100));
 
-		// handle clicks to the source radio buttons
-		.on('click', 'input[type=radio]', function () {
-			// set aria states
-			$(this).attr('aria-selected', true).attr('checked', 'checked');
-			$(this).closest("." + t.options.classPrefix + "sourcechooser-selector").find('input[type=radio]').not(this).attr('aria-selected', 'false').removeAttr('checked');
+		var radios = player.sourcechooserButton.querySelectorAll('input[type=radio]');
 
-			var src = this.value;
+		var _loop = function _loop(_i2, _total) {
+			// handle clicks to the source radio buttons
+			radios[_i2].addEventListener('click', function () {
+				// set aria states
+				this.setAttribute('aria-selected', true);
+				this.checked = true;
 
-			if (media.currentSrc !== src) {
-				(function () {
-					var currentTime = media.currentTime;
-					var paused = media.paused;
-					media.pause();
-					media.setSrc(src);
-					media.load();
+				var otherRadios = this.closest("." + t.options.classPrefix + "sourcechooser-selector").querySelectorAll('input[type=radio]');
 
-					media.addEventListener('loadedmetadata', function () {
-						media.currentTime = currentTime;
-					}, true);
+				for (var _j = 0, radioTotal = otherRadios.length; _j < radioTotal; _i2++) {
+					if (otherRadios[_i2] !== this) {
+						otherRadios[_i2].setAttribute('aria-selected', 'false');
+						otherRadios[_i2].removeAttribute('checked');
+					}
+				}
 
-					var canPlayAfterSourceSwitchHandler = function canPlayAfterSourceSwitchHandler() {
-						if (!paused) {
-							media.play();
-						}
-						media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler, true);
-					};
-					media.addEventListener('canplay', canPlayAfterSourceSwitchHandler, true);
-					media.load();
-				})();
-			}
-		})
+				var src = this.value;
+
+				if (media.currentSrc !== src) {
+					(function () {
+						var paused = media.paused,
+						    canPlayAfterSourceSwitchHandler = function canPlayAfterSourceSwitchHandler() {
+							if (!paused) {
+								media.play();
+							}
+							media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler, true);
+						};
+
+						var currentTime = media.currentTime;
+
+						media.pause();
+						media.setSrc(src);
+						media.load();
+						media.addEventListener('loadedmetadata', function () {
+							media.currentTime = currentTime;
+						}, true);
+						media.addEventListener('canplay', canPlayAfterSourceSwitchHandler, true);
+						media.load();
+					})();
+				}
+			});
+			_i = _i2;
+		};
+
+		for (var _i = 0, _total = radios.length; _i < _total; _i++) {
+			_loop(_i, _total);
+		}
 
 		// Handle click so that screen readers can toggle the menu
-		.on('click', 'button', function () {
-			if ($(this).siblings("." + t.options.classPrefix + "sourcechooser-selector").hasClass(t.options.classPrefix + "offscreen")) {
+		player.sourcechooserButton.querySelector('button').addEventListener('click', function () {
+			if (mejs.Utils.hasClass(mejs.Utils.siblings(this, "." + t.options.classPrefix + "sourcechooser-selector"), t.options.classPrefix + "offscreen")) {
 				player.showSourcechooserSelector();
-				$(this).siblings("." + t.options.classPrefix + "sourcechooser-selector").find('input[type=radio]:checked').first().focus();
+				player.sourcechooserButton.querySelectorAll('input[type=radio]:checked').focus();
 			} else {
 				player.hideSourcechooserSelector();
 			}
 		});
 
-		for (var i in sources) {
-			var src = sources[i];
-			if (src.type !== undefined && src.nodeName === 'SOURCE' && media.canPlayType !== null) {
+		for (var _i3 = 0, _total2 = sources.length; _i3 < _total2; _i3++) {
+			var src = sources[_i3];
+			if (src.type !== undefined && src.nodeName === 'SOURCE' && typeof media.canPlayType === 'function') {
 				player.addSourceButton(src.src, src.title, src.type, media.src === src.src);
 			}
 		}
@@ -170,7 +197,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 		type = type.split('/')[1];
 
-		t.sourcechooserButton.find('ul').append($("<li>" + ("<input type=\"radio\" name=\"" + t.id + "_sourcechooser\" id=\"" + t.id + "_sourcechooser_" + label + type + "\"") + ("role=\"menuitemradio\" value=\"" + src + "\" " + (isCurrent ? 'checked="checked"' : '') + " aria-selected=\"" + isCurrent + "\"/>") + ("<label for=\"" + t.id + "_sourcechooser_" + label + type + "\" aria-hidden=\"true\">" + label + " (" + type + ")</label>") + "</li>"));
+		t.sourcechooserButton.querySelector('ul').innerHTML += "<li>" + ("<input type=\"radio\" name=\"" + t.id + "_sourcechooser\" id=\"" + t.id + "_sourcechooser_" + label + type + "\"") + ("role=\"menuitemradio\" value=\"" + src + "\" " + (isCurrent ? 'checked="checked"' : '') + " aria-selected=\"" + isCurrent + "\"/>") + ("<label for=\"" + t.id + "_sourcechooser_" + label + type + "\" aria-hidden=\"true\">" + label + " (" + type + ")</label>") + "</li>";
 
 		t.adjustSourcechooserBox();
 	},
@@ -181,7 +208,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	adjustSourcechooserBox: function adjustSourcechooserBox() {
 		var t = this;
 		// adjust the size of the outer box
-		t.sourcechooserButton.find("." + t.options.classPrefix + "sourcechooser-selector").height(t.sourcechooserButton.find("." + t.options.classPrefix + "sourcechooser-selector ul").outerHeight(true));
+		t.sourcechooserButton.querySelector("." + t.options.classPrefix + "sourcechooser-selector").style.height = parseFloat(t.sourcechooserButton.querySelector("." + t.options.classPrefix + "sourcechooser-selector ul").offsetHeight) + "px";
 	},
 
 	/**
@@ -191,12 +218,20 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		var t = this;
 
-		if (t.sourcechooserButton === undefined || !t.sourcechooserButton.find("." + t.options.classPrefix + "sourcechooser-selector").find('input[type=radio]').length) {
+		if (t.sourcechooserButton === undefined || !t.sourcechooserButton.querySelector('input[type=radio]')) {
 			return;
 		}
 
-		t.sourcechooserButton.find("." + t.options.classPrefix + "sourcechooser-selector").addClass(t.options.classPrefix + "offscreen").attr('aria-expanded', 'false').attr('aria-hidden', 'true').find('input[type=radio]') // make radios not focusable
-		.attr('tabindex', '-1');
+		var selector = t.sourcechooserButton.querySelector("." + t.options.classPrefix + "sourcechooser-selector"),
+		    radios = selector.querySelectorAll('input[type=radio]');
+		selector.setAttribute('aria-expanded', 'false');
+		selector.setAttribute('aria-hidden', 'true');
+		mejs.Utils.addClass(selector, t.options.classPrefix + "offscreen");
+
+		// make radios not focusable
+		for (var _i4 = 0, total = radios.length; _i4 < total; _i4++) {
+			radios[_i4].setAttribute('tabindex', '-1');
+		}
 	},
 
 	/**
@@ -206,11 +241,20 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		var t = this;
 
-		if (t.sourcechooserButton === undefined || !t.sourcechooserButton.find("." + t.options.classPrefix + "sourcechooser-selector").find('input[type=radio]').length) {
+		if (t.sourcechooserButton === undefined || !t.sourcechooserButton.querySelector('input[type=radio]')) {
 			return;
 		}
 
-		t.sourcechooserButton.find("." + t.options.classPrefix + "sourcechooser-selector").removeClass(t.options.classPrefix + "offscreen").attr('aria-expanded', 'true').attr('aria-hidden', 'false').find('input[type=radio]').attr('tabindex', '0');
+		var selector = t.sourcechooserButton.querySelector("." + t.options.classPrefix + "sourcechooser-selector"),
+		    radios = selector.querySelectorAll('input[type=radio]');
+		selector.setAttribute('aria-expanded', 'true');
+		selector.setAttribute('aria-hidden', 'false');
+		mejs.Utils.removeClass(selector, t.options.classPrefix + "offscreen");
+
+		// make radios not focusable
+		for (var _i5 = 0, total = radios.length; _i5 < total; _i5++) {
+			radios[_i5].setAttribute('tabindex', '0');
+		}
 	}
 });
 

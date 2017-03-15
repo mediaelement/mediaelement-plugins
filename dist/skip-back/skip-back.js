@@ -38,15 +38,18 @@ Object.assign(MediaElementPlayer.prototype, {
 		var t = this,
 		    defaultTitle = mejs.i18n.t('mejs.time-skip-back', t.options.skipBackInterval),
 		    skipTitle = mejs.Utils.isString(t.options.skipBackText) ? t.options.skipBackText.replace('%1', t.options.skipBackInterval) : defaultTitle,
-		    button = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "skip-back-button\">" + ("<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + skipTitle + "\" aria-label=\"" + skipTitle + "\" tabindex=\"0\">") + (t.options.skipBackInterval + "</button>") + "</div>");
+		    button = document.createElement('div');
+
+		button.className = t.options.classPrefix + "button " + t.options.classPrefix + "skip-back-button";
+		button.innerHTML = "<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + skipTitle + "\" aria-label=\"" + skipTitle + "\" tabindex=\"0\">" + t.options.skipBackInterval + "</button>";
 
 		t.addControlElement(button, 'skipback');
 
 		// add a click toggle event
-		button.click(function () {
+		button.addEventListener('click', function () {
 			if (media.duration) {
 				media.setCurrentTime(Math.max(media.currentTime - t.options.skipBackInterval, 0));
-				$(this).find('button').blur();
+				this.querySelector('button').blur();
 			}
 		});
 	}
