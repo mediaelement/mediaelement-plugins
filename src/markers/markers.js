@@ -53,7 +53,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		;
 
 		for (let i = 0, total = player.options.markers.length; i < total; ++i) {
-			controls.querySelector(`.${t.options.classPrefix}time-total`).innerHTML += '<span class="' + `${t.options.classPrefix}time-marker"></span>`;
+			const marker = document.createElement('span');
+			marker.className = `${t.options.classPrefix}time-marker`;
+			controls.querySelector(`.${t.options.classPrefix}time-total`).appendChild(marker);
 		}
 
 		media.addEventListener('durationchange', () => {
@@ -89,13 +91,16 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	setmarkers: function (controls)  {
 
-		const t = this;
+		const
+			t = this,
+			markers = controls.querySelectorAll(`.${t.options.classPrefix}time-marker`)
+		;
 
 		for (let i = 0, total = t.options.markers.length; i < total; ++i) {
 			if (Math.floor(t.options.markers[i]) <= t.media.duration && Math.floor(t.options.markers[i]) >= 0) {
 				const
 					left = 100 * Math.floor(t.options.markers[i]) / t.media.duration,
-					marker = controls.querySelector(`.${t.options.classPrefix}time-marker`)[i]
+					marker = markers[i]
 				;
 
 				marker.style.width = '1px';
