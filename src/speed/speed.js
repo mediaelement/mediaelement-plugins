@@ -143,10 +143,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// hover or keyboard focus
 		for (let i = 0, total = inEvents.length; i < total; i++) {
-			player.speedSelector.addEventListener(inEvents[i], function () {
-				mejs.Utils.removeClass(this, `${t.options.classPrefix}offscreen`);
-				this.style.height = `${player.speedSelector.querySelector('ul').offsetHeight}px`;
-				this.style.top = `${(-1 * player.speedSelector.height())}px`;
+			player.speedButton.addEventListener(inEvents[i], function () {
+				mejs.Utils.removeClass(player.speedSelector, `${t.options.classPrefix}offscreen`);
+				player.speedSelector.style.height = player.speedSelector.querySelector('ul').offsetHeight;
+				player.speedSelector.style.top = `${(-1 * parseFloat(player.speedSelector.offsetHeight))}px`;
 			});
 		}
 
@@ -168,10 +168,13 @@ Object.assign(MediaElementPlayer.prototype, {
 				playbackSpeed = newSpeed;
 				media.playbackRate = parseFloat(newSpeed);
 				player.speedButton.querySelector('button').innerHTML = (getSpeedNameFromValue(newSpeed));
-				mejs.Utils.removeClass(player.speedButton.querySelector(`.${t.options.classPrefix}speed-selected`)`${t.options.classPrefix}speed-selected`);
+				const selected = player.speedButton.querySelectorAll(`.${t.options.classPrefix}speed-selected`);
+				for (let i = 0, total = selected.length; i < total; i++) {
+					mejs.Utils.removeClass(selected[i], `${t.options.classPrefix}speed-selected`);
+				}
 
 				self.checked = true;
-				const siblings = mejs.Utils.siblings(self, (el) => mejs.hasClass(el, `${t.options.classPrefix}speed-selector-label`));
+				const siblings = mejs.Utils.siblings(self, (el) => mejs.Utils.hasClass(el, `${t.options.classPrefix}speed-selector-label`));
 				for (let j = 0, total = siblings.length; j < total; j++) {
 					mejs.Utils.addClass(siblings[j], `${t.options.classPrefix}speed-selected`);
 				}
@@ -181,8 +184,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		for (let i = 0, total = labels.length; i < total; i++) {
 			labels[i].addEventListener('click',  function () {
 				const
-					radio = siblings(this, (el) => el.tagName === 'INPUT')[0],
-					event = createEvent('click', radio)
+					radio = mejs.Utils.siblings(this, (el) => el.tagName === 'INPUT')[0],
+					event = mejs.Utils.createEvent('click', radio)
 				;
 				radio.dispatchEvent(event);
 			});

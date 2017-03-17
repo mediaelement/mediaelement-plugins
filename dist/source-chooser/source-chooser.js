@@ -34,13 +34,14 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		var t = this,
 		    sourceTitle = mejs.Utils.isString(t.options.sourcechooserText) ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
-		    sources = [];
+		    sources = [],
+		    children = t.node.childNodes;
 
 		// add to list
 		var hoverTimeout = void 0;
 
-		for (var j = 0, total = t.node.childNodes; i < total; i++) {
-			var s = t.node.childNodes[j];
+		for (var i = 0, total = children.length; i < total; i++) {
+			var s = children[i];
 			if (s.nodeName === 'SOURCE') {
 				sources.push(s);
 			}
@@ -126,7 +127,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				var otherRadios = this.closest("." + t.options.classPrefix + "sourcechooser-selector").querySelectorAll('input[type=radio]');
 
-				for (var _j = 0, radioTotal = otherRadios.length; _j < radioTotal; _i2++) {
+				for (var j = 0, radioTotal = otherRadios.length; j < radioTotal; _i2++) {
 					if (otherRadios[_i2] !== this) {
 						otherRadios[_i2].setAttribute('aria-selected', 'false');
 						otherRadios[_i2].removeAttribute('checked');
@@ -229,8 +230,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		mejs.Utils.addClass(selector, t.options.classPrefix + "offscreen");
 
 		// make radios not focusable
-		for (var _i4 = 0, total = radios.length; _i4 < total; _i4++) {
-			radios[_i4].setAttribute('tabindex', '-1');
+		for (var i = 0, total = radios.length; i < total; i++) {
+			radios[i].setAttribute('tabindex', '-1');
 		}
 	},
 
@@ -252,8 +253,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		mejs.Utils.removeClass(selector, t.options.classPrefix + "offscreen");
 
 		// make radios not focusable
-		for (var _i5 = 0, total = radios.length; _i5 < total; _i5++) {
-			radios[_i5].setAttribute('tabindex', '0');
+		for (var i = 0, total = radios.length; i < total; i++) {
+			radios[i].setAttribute('tabindex', '0');
 		}
 	}
 });

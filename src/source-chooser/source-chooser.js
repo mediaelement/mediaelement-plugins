@@ -33,14 +33,15 @@ Object.assign(MediaElementPlayer.prototype, {
 		const
 			t = this,
 			sourceTitle = mejs.Utils.isString(t.options.sourcechooserText) ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
-			sources = []
+			sources = [],
+			children = t.node.childNodes
 		;
 
 		// add to list
 		let hoverTimeout;
 
-		for (let j = 0, total = t.node.childNodes; i < total; i++) {
-			const s = t.node.childNodes[j];
+		for (let i = 0, total = children.length; i < total; i++) {
+			const s = children[i];
 			if (s.nodeName === 'SOURCE') {
 				sources.push(s);
 			}

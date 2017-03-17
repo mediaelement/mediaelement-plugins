@@ -35,9 +35,9 @@ Object.assign(MediaElementPlayer.prototype, {
 	buildpostroll: function buildpostroll(player, controls, layers) {
 		var t = this,
 		    postrollTitle = mejs.Utils.isString(t.options.postrollCloseText) ? t.options.postrollCloseText : mejs.i18n.t('mejs.close'),
-		    postrollLink = t.container.querySelector('link[rel="postroll"]').getAttribute('href');
+		    postrollLink = t.container.querySelector('link[rel="postroll"]');
 
-		if (postrollLink !== undefined) {
+		if (postrollLink) {
 			player.postroll = document.createElement('div');
 			player.postroll.className = t.options.classPrefix + "postroll-layer " + t.options.classPrefix + "layer";
 			player.postroll.innerHTML = "<a class=\"" + t.options.classPrefix + "postroll-close\" href=\"#\">" + postrollTitle + "</a>" + ("<div class=\"" + t.options.classPrefix + "postroll-layer-content\"></div>");
@@ -52,7 +52,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			});
 
 			t.media.addEventListener('ended', function () {
-				mejs.Utils.ajax(postrollLink, 'html', function (data) {
+				mejs.Utils.ajax(postrollLink.getAttribute('href'), 'html', function (data) {
 					layers.querySelector("." + t.options.classPrefix + "postroll-layer-content").innerHTML = data;
 				});
 				player.postroll.style.display = 'block';

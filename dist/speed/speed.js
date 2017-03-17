@@ -9,12 +9,6 @@
 
 // Translations (English required)
 
-var _templateObject = _taggedTemplateLiteral(["", "speed-selected"], ["", "speed-selected"]);
-
-function _taggedTemplateLiteral(strings, raw) {
-	return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
-}
-
 mejs.i18n.en["mejs.speed-rate"] = "Speed Rate";
 
 // Feature configuration
@@ -133,10 +127,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// hover or keyboard focus
 		for (var _i2 = 0, _total2 = inEvents.length; _i2 < _total2; _i2++) {
-			player.speedSelector.addEventListener(inEvents[_i2], function () {
-				mejs.Utils.removeClass(this, t.options.classPrefix + "offscreen");
-				this.style.height = player.speedSelector.querySelector('ul').offsetHeight + "px";
-				this.style.top = -1 * player.speedSelector.height() + "px";
+			player.speedButton.addEventListener(inEvents[_i2], function () {
+				mejs.Utils.removeClass(player.speedSelector, t.options.classPrefix + "offscreen");
+				player.speedSelector.style.height = player.speedSelector.querySelector('ul').offsetHeight;
+				player.speedSelector.style.top = -1 * parseFloat(player.speedSelector.offsetHeight) + "px";
 			});
 		}
 
@@ -156,24 +150,27 @@ Object.assign(MediaElementPlayer.prototype, {
 				playbackSpeed = newSpeed;
 				media.playbackRate = parseFloat(newSpeed);
 				player.speedButton.querySelector('button').innerHTML = getSpeedNameFromValue(newSpeed);
-				mejs.Utils.removeClass(player.speedButton.querySelector("." + t.options.classPrefix + "speed-selected")(_templateObject, t.options.classPrefix));
+				var selected = player.speedButton.querySelectorAll("." + t.options.classPrefix + "speed-selected");
+				for (var _i5 = 0, _total5 = selected.length; _i5 < _total5; _i5++) {
+					mejs.Utils.removeClass(selected[_i5], t.options.classPrefix + "speed-selected");
+				}
 
 				self.checked = true;
 				var siblings = mejs.Utils.siblings(self, function (el) {
-					return mejs.hasClass(el, t.options.classPrefix + "speed-selector-label");
+					return mejs.Utils.hasClass(el, t.options.classPrefix + "speed-selector-label");
 				});
-				for (var j = 0, _total5 = siblings.length; j < _total5; j++) {
+				for (var j = 0, _total6 = siblings.length; j < _total6; j++) {
 					mejs.Utils.addClass(siblings[j], t.options.classPrefix + "speed-selected");
 				}
 			});
 		}
 
-		for (var _i5 = 0, _total6 = labels.length; _i5 < _total6; _i5++) {
-			labels[_i5].addEventListener('click', function () {
-				var radio = siblings(this, function (el) {
+		for (var _i6 = 0, _total7 = labels.length; _i6 < _total7; _i6++) {
+			labels[_i6].addEventListener('click', function () {
+				var radio = mejs.Utils.siblings(this, function (el) {
 					return el.tagName === 'INPUT';
 				})[0],
-				    event = createEvent('click', radio);
+				    event = mejs.Utils.createEvent('click', radio);
 				radio.dispatchEvent(event);
 			});
 		}

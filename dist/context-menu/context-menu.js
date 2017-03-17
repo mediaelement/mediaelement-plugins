@@ -12,9 +12,10 @@ mejs.i18n.en["mejs.download-video"] = "Download Video";
  *
  */
 Object.assign(mejs.MepDefaults, {
-	contextMenuItems: [
-	// demo of a fullscreen option
-	{
+	isContextMenuEnabled: true,
+	contextMenuTimeout: null,
+	contextMenuItems: [{
+		// demo of a fullscreen option
 		render: function render(player) {
 
 			// check for fullscreen plugin
@@ -70,15 +71,15 @@ Object.assign(mejs.MepDefaults, {
 
 Object.assign(MediaElementPlayer.prototype, {
 
-	isContextMenuEnabled: true,
-
-	contextMenuTimeout: null,
-
 	buildcontextmenu: function buildcontextmenu(player) {
+
+		if (document.querySelector("." + player.options.classPrefix + "contextmenu")) {
+			return;
+		}
 
 		// create context menu
 		player.contextMenu = document.createElement('div');
-		player.contextMenu.className = t.options.classPrefix + "contextmenu";
+		player.contextMenu.className = player.options.classPrefix + "contextmenu";
 		player.contextMenu.style.display = 'none';
 
 		document.body.appendChild(player.contextMenu);
