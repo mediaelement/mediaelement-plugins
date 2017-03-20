@@ -70,7 +70,6 @@ Object.assign(mejs.MepDefaults, {
 });
 
 Object.assign(MediaElementPlayer.prototype, {
-
 	buildcontextmenu: function buildcontextmenu(player) {
 
 		if (document.querySelector("." + player.options.classPrefix + "contextmenu")) {
@@ -99,18 +98,15 @@ Object.assign(MediaElementPlayer.prototype, {
 			player.startContextMenuTimer();
 		});
 	},
-
 	cleancontextmenu: function cleancontextmenu(player) {
 		player.contextMenu.parentNode.removeChild(player.contextMenu);
 	},
-
 	enableContextMenu: function enableContextMenu() {
 		this.isContextMenuEnabled = true;
 	},
 	disableContextMenu: function disableContextMenu() {
 		this.isContextMenuEnabled = false;
 	},
-
 	startContextMenuTimer: function startContextMenuTimer() {
 		var t = this;
 
@@ -129,11 +125,9 @@ Object.assign(MediaElementPlayer.prototype, {
 			timer = null;
 		}
 	},
-
 	hideContextMenu: function hideContextMenu() {
 		this.contextMenu.style.display = 'none';
 	},
-
 	renderContextMenu: function renderContextMenu(x, y) {
 
 		// alway re-render the items so that things like "turn fullscreen on" and "turn fullscreen off" are always written correctly

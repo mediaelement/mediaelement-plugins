@@ -32,7 +32,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildskipback: function (player, controls, layers, media)  {
+	buildskipback (player, controls, layers, media)  {
 		const
 			t = this,
 			defaultTitle = mejs.i18n.t('mejs.time-skip-back', t.options.skipBackInterval),

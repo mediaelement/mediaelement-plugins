@@ -83,6 +83,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		}, false);
 	},
+
 	/**
   * Create markers in the progress bar
   *

@@ -66,8 +66,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.adsLayer.innerHTML = "<a href=\"#\" target=\"_blank\"></a>" + ("<div class=\"" + t.options.classPrefix + "ads-skip-block\">") + ("<span class=\"" + t.options.classPrefix + "ads-skip-message\"></span>") + ("<span class=\"" + t.options.classPrefix + "ads-skip-button\">" + mejs.i18n.t('mejs.ad-skip') + "</span>") + "</div>";
 		player.adsLayer.style.display = 'none';
 
-		var playButton = layers.querySelector("." + t.options.classPrefix + "overlay-play");
-		playButton.parentNode.insertBefore(player.adsLayer, playButton);
+		layers.insertBefore(player.adsLayer, layers.querySelector("." + t.options.classPrefix + "overlay-play"));
 
 		player.adsLayer.querySelector('a').addEventListener('click', t.adsAdClick);
 
@@ -78,17 +77,23 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.adsSkipButton = player.adsLayer.querySelector("." + t.options.classPrefix + "ads-skip-button");
 		player.adsSkipButton.addEventListener('click', t.adsSkipClick);
 
+		// create proxies (only needed for events we want to remove later)
+		t.adsMediaTryingToStartProxy = t.adsMediaTryingToStart.bind(t);
+		t.adsPrerollStartedProxy = t.adsPrerollStarted.bind(t);
+		t.adsPrerollMetaProxy = t.adsPrerollMeta.bind(t);
+		t.adsPrerollUpdateProxy = t.adsPrerollUpdate.bind(t);
+		t.adsPrerollEndedProxy = t.adsPrerollEnded.bind(t);
+
 		// check for start
-		t.media.addEventListener('play', t.adsMediaTryingToStart);
-		t.media.addEventListener('playing', t.adsMediaTryingToStart);
-		t.media.addEventListener('canplay', t.adsMediaTryingToStart);
-		t.media.addEventListener('loadedmetadata', t.adsMediaTryingToStart);
+		t.media.addEventListener('play', t.adsMediaTryingToStartProxy);
+		t.media.addEventListener('playing', t.adsMediaTryingToStartProxy);
+		t.media.addEventListener('canplay', t.adsMediaTryingToStartProxy);
+		t.media.addEventListener('loadedmetadata', t.adsMediaTryingToStartProxy);
 
 		if (t.options.indexPreroll < t.options.adsPrerollMediaUrl.length) {
 			t.adsStartPreroll();
 		}
 	},
-
 	adsMediaTryingToStart: function adsMediaTryingToStart() {
 
 		var t = this;
@@ -100,15 +105,14 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.adsPlayerHasStarted = true;
 	},
-
 	adsStartPreroll: function adsStartPreroll() {
 
 		var t = this;
 
-		t.media.addEventListener('loadedmetadata', t.adsPrerollMeta);
-		t.media.addEventListener('playing', t.adsPrerollStarted);
-		t.media.addEventListener('ended', t.adsPrerollEnded);
-		t.media.addEventListener('timeupdate', t.adsPrerollUpdate);
+		t.media.addEventListener('loadedmetadata', t.adsPrerollMetaProxy);
+		t.media.addEventListener('playing', t.adsPrerollStartedProxy);
+		t.media.addEventListener('ended', t.adsPrerollEndedProxy);
+		t.media.addEventListener('timeupdate', t.adsPrerollUpdateProxy);
 
 		// change URLs to the preroll ad. Only save the video to be shown on first
 		// ad showing.
@@ -126,7 +130,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.media.play();
 		}
 	},
-
 	adsPrerollMeta: function adsPrerollMeta() {
 
 		var t = this;
@@ -144,10 +147,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.controls.querySelector("." + t.options.classPrefix + "duration").innerHTML = mejs.Utils.secondsToTimeCode(newDuration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
 		}, 250);
 	},
-
 	adsPrerollStarted: function adsPrerollStarted() {
 		var t = this;
-		t.media.removeEventListener('playing', t.adsPrerollStarted);
+
+		t.media.removeEventListener('playing', t.adsPrerollStartedProxy);
 
 		// turn off controls until the preroll is done
 		t.disableControls();
@@ -178,10 +181,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		// send click events
-		var event = mejs.createEvent('mejsprerollstarted', t.container);
+		var event = mejs.Utils.createEvent('mejsprerollstarted', t.container);
 		t.container.dispatchEvent(event);
 	},
-
 	adsPrerollUpdate: function adsPrerollUpdate() {
 		var t = this;
 
@@ -195,14 +197,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		}
 
-		var event = mejs.createEvent('mejsprerolltimeupdate', t.container);
+		var event = mejs.Utils.createEvent('mejsprerolltimeupdate', t.container);
 		t.container.dispatchEvent(event);
 	},
-
 	adsPrerollEnded: function adsPrerollEnded() {
 		var t = this;
 
-		var event = mejs.createEvent('mejsprerollended', t.container);
+		var event = mejs.Utils.createEvent('mejsprerollended', t.container);
 		t.container.dispatchEvent(event);
 
 		t.options.indexPreroll++;
@@ -212,7 +213,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.adRestoreMainMedia();
 		}
 	},
-
 	adRestoreMainMedia: function adRestoreMainMedia() {
 		var t = this;
 
@@ -226,14 +226,13 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.adsLayer.style.display = 'none';
 
-		t.media.removeEventListener('ended', t.adsPrerollEnded);
-		t.media.removeEventListener('loadedmetadata', t.adsPrerollMeta);
-		t.media.removeEventListener('timeupdate', t.adsPrerollUpdate);
+		t.media.removeEventListener('ended', t.adsPrerollEndedProxy);
+		t.media.removeEventListener('loadedmetadata', t.adsPrerollMetaProxy);
+		t.media.removeEventListener('timeupdate', t.adsPrerollUpdateProxy);
 
-		var event = mejs.createEvent('mejsprerollmainstarted', t.container);
+		var event = mejs.Utils.createEvent('mejsprerollmainstarted', t.container);
 		t.container.dispatchEvent(event);
 	},
-
 	adsAdClick: function adsAdClick() {
 		var t = this;
 
@@ -243,17 +242,16 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.media.pause();
 		}
 
-		var event = mejs.createEvent('mejsprerolladsclicked', t.container);
+		var event = mejs.Utils.createEvent('mejsprerolladsclicked', t.container);
 		t.container.dispatchEvent(event);
 	},
-
 	adsSkipClick: function adsSkipClick() {
 		var t = this;
 
-		var event = mejs.createEvent('mejsprerollskipclicked', t.container);
+		var event = mejs.Utils.createEvent('mejsprerollskipclicked', t.container);
 		t.container.dispatchEvent(event);
 
-		event = mejs.createEvent('mejsprerollended', t.container);
+		event = mejs.Utils.createEvent('mejsprerollended', t.container);
 		t.container.dispatchEvent(event);
 
 		t.options.indexPreroll++;

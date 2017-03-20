@@ -49,6 +49,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		var t = this;
 
+		if (!t.isVideo) {
+			return;
+		}
+
 		// begin loading
 		if (t.options.vastAdTagUrl !== '') {
 			t.vastLoadAdTagInfo();
@@ -59,7 +63,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.vastSetupEvents();
 	},
-
 	vastSetupEvents: function vastSetupEvents() {
 		var t = this;
 
@@ -88,7 +91,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 
 		// END: preroll
-		t.container.on('mejsprerollended', function () {
+		t.container.addEventListener('mejsprerollended', function () {
 
 			if (t.vastAdTags.length > 0 && t.options.indexPreroll < t.vastAdTags.length && t.vastAdTags[t.options.indexPreroll].trackingEvents.complete) {
 				t.adsLoadUrl(t.vastAdTags[t.options.indexPreroll].trackingEvents.complete);
@@ -131,7 +134,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	loadAdTagInfoDirect: function loadAdTagInfoDirect() {
 		var t = this;
 
-		mejs.Utils.ajax(t.options.vastAdTagUrl, function (data) {
+		mejs.Utils.ajax(t.options.vastAdTagUrl, 'xml', function (data) {
 			t.vastParseVastData(data);
 		}, function (err) {
 			console.error('vast3:direct:error', err);
@@ -150,7 +153,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		    query = 'select * from xml where url="' + encodeURI(t.options.vastAdTagUrl) + '"',
 		    yahooUrl = 'http' + (/^https/.test(protocol) ? 's' : '') + '://query.yahooapis.com/v1/public/yql?format=xml&q=' + query;
 
-		mejs.Utils.ajax(yahooUrl, function (data) {
+		mejs.Utils.ajax(yahooUrl, 'xml', function (data) {
 			t.vastParseVastData(data);
 		}, function (err) {
 			console.error('vast:proxy:yahoo:error', err);
@@ -169,41 +172,43 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.vastAdTags = [];
 		t.options.indexPreroll = 0;
 
-		var ads = data.querySelectorAll('Ad');
+		var parser = new DOMParser(),
+		    xmlDoc = parser.parseFromString(data, 'text/xml'),
+		    ads = xmlDoc.getElementsByTagName('Ad');
 
 		for (var i = 0, total = ads.length; i < total; i++) {
 			var adNode = ads[i],
 			    adTag = {
 				id: adNode.getAttribute('id'),
-				title: adNode.querySelector('AdTitle').innerText.trim(),
-				description: adNode.querySelector('Description').innerText.trim(),
+				title: adNode.getElementsByTagName('AdTitle')[0].textContent.trim(),
+				description: adNode.getElementsByTagName('Description')[0].textContent.trim(),
 				impressions: [],
-				clickThrough: adNode.querySelector('ClickThrough').innerText.trim(),
+				clickThrough: adNode.getElementsByTagName('ClickThrough')[0].textContent.trim(),
 				mediaFiles: [],
 				trackingEvents: {},
 				// internal tracking if it's been used
 				shown: false
 			},
-			    impressions = adNode.querySelectorAll('Impression'),
-			    mediaFiles = adNode.querySelectorAll('MediaFile'),
-			    trackFiles = adNode.querySelectorAll('Tracking');
+			    impressions = adNode.getElementsByTagName('Impression'),
+			    mediaFiles = adNode.getElementsByTagName('MediaFile'),
+			    trackFiles = adNode.getElementsByTagName('Tracking');
 
 			t.vastAdTags.push(adTag);
 
-			for (var j = 0, impressionsTotal = impressions.length; i < impressionsTotal; i++) {
-				adTag.impressions.push(impressions[j].innerText.trim());
+			for (var j = 0, impressionsTotal = impressions.length; j < impressionsTotal; j++) {
+				adTag.impressions.push(impressions[j].textContent.trim());
 			}
 
-			for (var _j = 0, tracksTotal = trackFiles.length; i < tracksTotal; i++) {
+			for (var _j = 0, tracksTotal = trackFiles.length; _j < tracksTotal; _j++) {
 				var trackingEvent = trackFiles[_j];
-				adTag.trackingEvents[trackingEvent.getAttribute('event')] = trackingEvent.innerText.trim();
+				adTag.trackingEvents[trackingEvent.getAttribute('event')] = trackingEvent.textContent.trim();
 			}
 
-			for (var _j2 = 0, mediaFilesTotal = mediaFiles.length; i < mediaFilesTotal; i++) {
+			for (var _j2 = 0, mediaFilesTotal = mediaFiles.length; _j2 < mediaFilesTotal; _j2++) {
 				var mediaFile = mediaFiles[_j2],
-				    type = mediaFile.attr('type');
+				    type = mediaFile.getAttribute('type');
 
-				if (t.media.canPlayType(type).toString().replace(/no/, '').replace(/false/, '') !== '') {
+				if (t.media.canPlayType(type) !== '' || t.media.canPlayType(type).match(/(no|false)/) === null) {
 
 					adTag.mediaFiles.push({
 						id: mediaFile.getAttribute('id'),
@@ -212,7 +217,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						bitrate: mediaFile.getAttribute('bitrate'),
 						width: mediaFile.getAttribute('width'),
 						height: mediaFile.getAttribute('height'),
-						url: mediaFile.innerText.trim()
+						url: mediaFile.textContent.trim()
 					});
 				}
 			}
@@ -251,7 +256,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 		t.adsStartPreroll();
 	}
-
 });
 
 },{}]},{},[1]);

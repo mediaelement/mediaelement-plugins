@@ -24,7 +24,7 @@ Object.assign(mejs.MepDefaults, {
 	/**
 	 * @type {Function}
 	 */
-	markerCallback: function ()  {
+	markerCallback ()  {
 	}
 });
 
@@ -38,7 +38,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildmarkers: function (player, controls, layers, media)  {
+	buildmarkers (player, controls, layers, media)  {
 
 		if (!player.options.markers.length) {
 			return;
@@ -89,7 +89,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {HTMLElement} controls
 	 */
-	setmarkers: function (controls)  {
+	setmarkers (controls)  {
 
 		const
 			t = this,

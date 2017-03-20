@@ -28,7 +28,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildsourcechooser: function (player, controls, layers, media)  {
+	buildsourcechooser (player, controls, layers, media)  {
 
 		const
 			t = this,
@@ -185,7 +185,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {String} type
 	 * @param {Boolean} isCurrent
 	 */
-	addSourceButton: function (src, label, type, isCurrent)  {
+	addSourceButton (src, label, type, isCurrent)  {
 		const t = this;
 		if (label === '' || label === undefined) {
 			label = src;
@@ -204,7 +204,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	adjustSourcechooserBox: function ()  {
+	adjustSourcechooserBox ()  {
 		const t = this;
 		// adjust the size of the outer box
 		t.sourcechooserButton.querySelector(`.${t.options.classPrefix}sourcechooser-selector`).style.height =
@@ -214,7 +214,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	hideSourcechooserSelector: function ()  {
+	hideSourcechooserSelector ()  {
 
 		const t = this;
 
@@ -239,7 +239,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	showSourcechooserSelector: function ()  {
+	showSourcechooserSelector ()  {
 
 		const t = this;
 

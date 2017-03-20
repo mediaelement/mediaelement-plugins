@@ -28,7 +28,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildloop: function (player, controls)  {
+	buildloop (player, controls)  {
 		const
 			t = this,
 			loopTitle = mejs.Utils.isString(t.options.loopText) ? t.options.loopText : mejs.i18n.t('mejs.loop'),

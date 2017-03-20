@@ -14,7 +14,7 @@ Object.assign(mejs.MepDefaults, {
 	contextMenuTimeout: null,
 	contextMenuItems: [{
 		// demo of a fullscreen option
-			render: function (player) {
+			render (player) {
 
 				// check for fullscreen plugin
 				if (player.enterFullScreen === undefined) {
@@ -27,7 +27,7 @@ Object.assign(mejs.MepDefaults, {
 					return mejs.i18n.t('mejs.fullscreen-on');
 				}
 			},
-			click: function (player) {
+			click (player) {
 				if (player.isFullScreen) {
 					player.exitFullScreen();
 				} else {
@@ -37,14 +37,14 @@ Object.assign(mejs.MepDefaults, {
 		},
 		// demo of a mute/unmute button
 		{
-			render: function (player) {
+			render (player) {
 				if (player.media.muted) {
 					return mejs.i18n.t('mejs.unmute');
 				} else {
 					return mejs.i18n.t('mejs.mute');
 				}
 			},
-			click: function (player) {
+			click (player) {
 				if (player.media.muted) {
 					player.setMuted(false);
 				} else {
@@ -58,10 +58,10 @@ Object.assign(mejs.MepDefaults, {
 		},
 		// demo of simple download video
 		{
-			render: function () {
+			render () {
 				return mejs.i18n.t('mejs.download-video');
 			},
-			click: function (player) {
+			click (player) {
 				window.location.href = player.media.currentSrc;
 			}
 		}]
@@ -71,7 +71,7 @@ Object.assign(mejs.MepDefaults, {
 
 Object.assign(MediaElementPlayer.prototype, {
 
-	buildcontextmenu: function (player) {
+	buildcontextmenu (player) {
 
 		if (document.querySelector(`.${player.options.classPrefix}contextmenu`)) {
 			return;
@@ -101,18 +101,18 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 	},
 
-	cleancontextmenu: function (player) {
+	cleancontextmenu (player) {
 		player.contextMenu.parentNode.removeChild(player.contextMenu);
 	},
 
-	enableContextMenu: function () {
+	enableContextMenu () {
 		this.isContextMenuEnabled = true;
 	},
-	disableContextMenu: function () {
+	disableContextMenu () {
 		this.isContextMenuEnabled = false;
 	},
 
-	startContextMenuTimer: function () {
+	startContextMenuTimer () {
 		const t = this;
 
 		t.killContextMenuTimer();
@@ -122,7 +122,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.killContextMenuTimer();
 		}, 750);
 	},
-	killContextMenuTimer: function () {
+	killContextMenuTimer () {
 		let timer = this.contextMenuTimer;
 
 		if (timer !== null && timer !== undefined) {
@@ -131,11 +131,11 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 	},
 
-	hideContextMenu: function () {
+	hideContextMenu () {
 		this.contextMenu.style.display = 'none';
 	},
 
-	renderContextMenu: function (x, y) {
+	renderContextMenu (x, y) {
 
 		// alway re-render the items so that things like "turn fullscreen on" and "turn fullscreen off" are always written correctly
 		let

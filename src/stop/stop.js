@@ -29,7 +29,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildstop: function (player, controls, layers, media)  {
+	buildstop (player, controls, layers, media)  {
 		const
 			t = this,
 			stopTitle = mejs.Utils.isString(t.options.stopText) ? t.options.stopText : mejs.i18n.t('mejs.stop'),

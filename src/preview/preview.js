@@ -67,7 +67,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildpreview: function (player) {
+	buildpreview (player) {
 		let
 			initFadeIn = false,
 			initFadeOut = false,

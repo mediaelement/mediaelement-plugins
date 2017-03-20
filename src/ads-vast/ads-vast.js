@@ -44,9 +44,13 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildvast: function (player, controls, layers, media)  {
+	buildvast (player, controls, layers, media)  {
 
-		let t = this;
+		const t = this;
+
+		if (!t.isVideo) {
+			return;
+		}
 
 		// begin loading
 		if (t.options.vastAdTagUrl !== '') {
@@ -59,7 +63,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.vastSetupEvents();
 	},
 
-	vastSetupEvents: function ()  {
+	vastSetupEvents ()  {
 		const t = this;
 
 
@@ -89,7 +93,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 
 		// END: preroll
-		t.container.on('mejsprerollended', () => {
+		t.container.addEventListener('mejsprerollended', () => {
 
 			if (t.vastAdTags.length > 0 && t.options.indexPreroll < t.vastAdTags.length &&
 				t.vastAdTags[t.options.indexPreroll].trackingEvents.complete) {
@@ -104,7 +108,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {String} url
 	 */
-	vastSetAdTagUrl: function (url)  {
+	vastSetAdTagUrl (url)  {
 
 		const t = this;
 
@@ -118,7 +122,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	vastLoadAdTagInfo: function ()  {
+	vastLoadAdTagInfo ()  {
 		const t = this;
 
 		// set this to stop playback
@@ -132,10 +136,10 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	loadAdTagInfoDirect: function ()  {
+	loadAdTagInfoDirect ()  {
 		const t = this;
 
-		mejs.Utils.ajax(t.options.vastAdTagUrl, (data)  => {
+		mejs.Utils.ajax(t.options.vastAdTagUrl, 'xml', (data)  => {
 				t.vastParseVastData(data);
 			}, (err)  => {
 				console.error('vast3:direct:error', err);
@@ -149,7 +153,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	loadAdTagInfoProxy: function ()  {
+	loadAdTagInfoProxy ()  {
 		const
 			t = this,
 			protocol = location.protocol,
@@ -157,7 +161,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			yahooUrl = `http${(/^https/.test(protocol) ? 's' : '')}://query.yahooapis.com/v1/public/yql?format=xml&q=${query}`
 		;
 
-		mejs.Utils.ajax(yahooUrl, (data) => {
+		mejs.Utils.ajax(yahooUrl, 'xml', (data) => {
 				t.vastParseVastData(data);
 			}, (err)  => {
 				console.error('vast:proxy:yahoo:error', err);
@@ -169,7 +173,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {jQuery} data
 	 */
-	vastParseVastData: function (data)  {
+	vastParseVastData (data)  {
 
 		const t = this;
 
@@ -177,45 +181,49 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.vastAdTags = [];
 		t.options.indexPreroll = 0;
 
-		const ads = data.querySelectorAll('Ad');
+		const
+			parser = new DOMParser(),
+			xmlDoc = parser.parseFromString(data, 'text/xml'),
+			ads = xmlDoc.getElementsByTagName('Ad')
+		;
 
 		for (let i = 0, total = ads.length; i < total; i++) {
 			const
 				adNode = ads[i],
 				adTag = {
 					id: adNode.getAttribute('id'),
-					title: adNode.querySelector('AdTitle').innerText.trim(),
-					description: adNode.querySelector('Description').innerText.trim(),
+					title: adNode.getElementsByTagName('AdTitle')[0].textContent.trim(),
+					description: adNode.getElementsByTagName('Description')[0].textContent.trim(),
 					impressions: [],
-					clickThrough: adNode.querySelector('ClickThrough').innerText.trim(),
+					clickThrough: adNode.getElementsByTagName('ClickThrough')[0].textContent.trim(),
 					mediaFiles: [],
 					trackingEvents: {},
 					// internal tracking if it's been used
 					shown: false
 				},
-				impressions = adNode.querySelectorAll('Impression'),
-				mediaFiles = adNode.querySelectorAll('MediaFile'),
-				trackFiles = adNode.querySelectorAll('Tracking')
+				impressions = adNode.getElementsByTagName('Impression'),
+				mediaFiles = adNode.getElementsByTagName('MediaFile'),
+				trackFiles = adNode.getElementsByTagName('Tracking')
 			;
 
 			t.vastAdTags.push(adTag);
 
-			for (let j = 0, impressionsTotal = impressions.length; i < impressionsTotal; i++) {
-				adTag.impressions.push(impressions[j].innerText.trim());
+			for (let j = 0, impressionsTotal = impressions.length; j < impressionsTotal; j++) {
+				adTag.impressions.push(impressions[j].textContent.trim());
 			}
 
-			for (let j = 0, tracksTotal = trackFiles.length; i < tracksTotal; i++) {
+			for (let j = 0, tracksTotal = trackFiles.length; j < tracksTotal; j++) {
 				const trackingEvent = trackFiles[j];
-				adTag.trackingEvents[trackingEvent.getAttribute('event')] = trackingEvent.innerText.trim();
+				adTag.trackingEvents[trackingEvent.getAttribute('event')] = trackingEvent.textContent.trim();
 			}
 
-			for (let j = 0, mediaFilesTotal = mediaFiles.length; i < mediaFilesTotal; i++) {
+			for (let j = 0, mediaFilesTotal = mediaFiles.length; j < mediaFilesTotal; j++) {
 				const
 					mediaFile = mediaFiles[j],
-					type = mediaFile.attr('type')
+					type = mediaFile.getAttribute('type')
 				;
 
-				if (t.media.canPlayType(type).toString().replace(/no/, '').replace(/false/, '') !== '') {
+				if (t.media.canPlayType(type) !== '' || t.media.canPlayType(type).match(/(no|false)/) === null) {
 
 					adTag.mediaFiles.push({
 						id: mediaFile.getAttribute('id'),
@@ -224,7 +232,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						bitrate: mediaFile.getAttribute('bitrate'),
 						width: mediaFile.getAttribute('width'),
 						height: mediaFile.getAttribute('height'),
-						url: mediaFile.innerText.trim()
+						url: mediaFile.textContent.trim()
 					});
 				}
 			}
@@ -237,7 +245,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	vastLoaded: function ()  {
+	vastLoaded ()  {
 		const t = this;
 
 		t.vastAdTagIsLoaded = true;
@@ -249,7 +257,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 *
 	 */
-	vastStartPreroll: function ()  {
+	vastStartPreroll ()  {
 		const t = this;
 
 		// if we have a media URL, then send it up to the ads plugin as a preroll

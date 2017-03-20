@@ -44,7 +44,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildspeed: function (player, controls, layers, media)  {
+	buildspeed (player, controls, layers, media)  {
 		const
 			t = this,
 			isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/) !== null
@@ -208,7 +208,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Always has to be prefixed with `clean` and the name that was used in MepDefaults.features list
 	 * @param {MediaElementPlayer} player
 	 */
-	clearspeed: function (player)  {
+	clearspeed (player)  {
 		if (player) {
 			if (player.speedButton) {
 				player.speedButton.parentNode.removeChild(player.speedButton);

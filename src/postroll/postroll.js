@@ -30,7 +30,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildpostroll: function (player, controls, layers)  {
+	buildpostroll (player, controls, layers)  {
 		const
 			t = this,
 			postrollTitle = mejs.Utils.isString(t.options.postrollCloseText) ? t.options.postrollCloseText : mejs.i18n.t('mejs.close'),

@@ -186,6 +186,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		});
 	},
+
 	/**
   * Feature destructor.
   *

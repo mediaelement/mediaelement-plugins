@@ -30,7 +30,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildjumpforward: function (player, controls, layers, media)  {
+	buildjumpforward (player, controls, layers, media)  {
 
 		const
 			t = this,
