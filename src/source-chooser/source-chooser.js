@@ -59,6 +59,13 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.addControlElement(player.sourcechooserButton, 'sourcechooser');
 
+		for (let i = 0, total = sources.length; i < total; i++) {
+			const src = sources[i];
+			if (src.type !== undefined && src.nodeName === 'SOURCE' && typeof media.canPlayType === 'function') {
+				player.addSourceButton(src.src, src.title, src.type, media.src === src.src);
+			}
+		}
+
 		// hover
 		player.sourcechooserButton.addEventListener('mouseover', () => {
 			clearTimeout(hoverTimeout);
@@ -125,10 +132,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				const otherRadios = this.closest(`.${t.options.classPrefix}sourcechooser-selector`).querySelectorAll('input[type=radio]');
 
-				for (let j = 0, radioTotal = otherRadios.length; j < radioTotal; i++) {
-					if (otherRadios[i] !== this) {
-						otherRadios[i].setAttribute('aria-selected', 'false');
-						otherRadios[i].removeAttribute('checked');
+				for (let j = 0, radioTotal = otherRadios.length; j < radioTotal; j++) {
+					if (otherRadios[j] !== this) {
+						otherRadios[j].setAttribute('aria-selected', 'false');
+						otherRadios[j].removeAttribute('checked');
 					}
 				}
 
@@ -163,18 +170,11 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.sourcechooserButton.querySelector('button').addEventListener('click', function() {
 			if (mejs.Utils.hasClass(mejs.Utils.siblings(this, `.${t.options.classPrefix}sourcechooser-selector`), `${t.options.classPrefix}offscreen`)) {
 				player.showSourcechooserSelector();
-				player.sourcechooserButton.querySelectorAll('input[type=radio]:checked').focus();
+				player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
 			} else {
 				player.hideSourcechooserSelector();
 			}
 		});
-
-		for (let i = 0, total = sources.length; i < total; i++) {
-			const src = sources[i];
-			if (src.type !== undefined && src.nodeName === 'SOURCE' && typeof media.canPlayType === 'function') {
-				player.addSourceButton(src.src, src.title, src.type, media.src === src.src);
-			}
-		}
 
 	},
 

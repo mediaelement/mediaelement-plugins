@@ -57,6 +57,13 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.addControlElement(player.sourcechooserButton, 'sourcechooser');
 
+		for (var _i = 0, _total = sources.length; _i < _total; _i++) {
+			var src = sources[_i];
+			if (src.type !== undefined && src.nodeName === 'SOURCE' && typeof media.canPlayType === 'function') {
+				player.addSourceButton(src.src, src.title, src.type, media.src === src.src);
+			}
+		}
+
 		// hover
 		player.sourcechooserButton.addEventListener('mouseover', function () {
 			clearTimeout(hoverTimeout);
@@ -118,7 +125,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		var radios = player.sourcechooserButton.querySelectorAll('input[type=radio]');
 
-		var _loop = function _loop(_i2, _total) {
+		for (var _i2 = 0, _total2 = radios.length; _i2 < _total2; _i2++) {
 			// handle clicks to the source radio buttons
 			radios[_i2].addEventListener('click', function () {
 				// set aria states
@@ -127,10 +134,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				var otherRadios = this.closest("." + t.options.classPrefix + "sourcechooser-selector").querySelectorAll('input[type=radio]');
 
-				for (var j = 0, radioTotal = otherRadios.length; j < radioTotal; _i2++) {
-					if (otherRadios[_i2] !== this) {
-						otherRadios[_i2].setAttribute('aria-selected', 'false');
-						otherRadios[_i2].removeAttribute('checked');
+				for (var j = 0, radioTotal = otherRadios.length; j < radioTotal; j++) {
+					if (otherRadios[j] !== this) {
+						otherRadios[j].setAttribute('aria-selected', 'false');
+						otherRadios[j].removeAttribute('checked');
 					}
 				}
 
@@ -159,29 +166,17 @@ Object.assign(MediaElementPlayer.prototype, {
 					})();
 				}
 			});
-			_i = _i2;
-		};
-
-		for (var _i = 0, _total = radios.length; _i < _total; _i++) {
-			_loop(_i, _total);
 		}
 
 		// Handle click so that screen readers can toggle the menu
 		player.sourcechooserButton.querySelector('button').addEventListener('click', function () {
 			if (mejs.Utils.hasClass(mejs.Utils.siblings(this, "." + t.options.classPrefix + "sourcechooser-selector"), t.options.classPrefix + "offscreen")) {
 				player.showSourcechooserSelector();
-				player.sourcechooserButton.querySelectorAll('input[type=radio]:checked').focus();
+				player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
 			} else {
 				player.hideSourcechooserSelector();
 			}
 		});
-
-		for (var _i3 = 0, _total2 = sources.length; _i3 < _total2; _i3++) {
-			var src = sources[_i3];
-			if (src.type !== undefined && src.nodeName === 'SOURCE' && typeof media.canPlayType === 'function') {
-				player.addSourceButton(src.src, src.title, src.type, media.src === src.src);
-			}
-		}
 	},
 
 	/**
