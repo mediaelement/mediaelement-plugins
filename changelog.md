@@ -1,6 +1,6 @@
 ### Version History
 
-*2.0.0 (2017/03/??)*
+*2.0.0 (2017/03/22)*
 
 * Removed all dependencies to jQuery in code and used `mejs.Utils` to mimic jQuery's most used methods @ron666
 
