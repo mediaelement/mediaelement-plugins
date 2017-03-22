@@ -37,7 +37,7 @@ For example, if you want to install `Speed` plugin do the following:
 <!-- Translation file for plugin (includes ALL languages available on player)-->
 <script src="/path/to/dist/speed/speed-i18n,js"></script>
 <script>
-    $('video').mediaelementplayer({
+    var player = new MediaElementPlayer('playerId', {
     	defaultSpeed: 0.75,
     	// other configuration elements
     });
@@ -117,7 +117,7 @@ Object.assign(MediaElementPlayer.prototype, {
         // This allows us to access options and other useful elements already set.
         // Adding variables to the object is a good idea if you plan to reuse 
         // those variables in further operations.
-        let t = this;
+        const t = this;
         
         // All code required inside here to keep it private;
         // otherwise, you can create more methods or add variables

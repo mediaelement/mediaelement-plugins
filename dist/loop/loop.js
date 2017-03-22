@@ -10,6 +10,12 @@
 
 // Translations (English required)
 
+var _templateObject = _taggedTemplateLiteral(["", "loop-on"], ["", "loop-on"]);
+
+function _taggedTemplateLiteral(strings, raw) {
+	return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
+}
+
 mejs.i18n.en["mejs.loop"] = "Toggle Loop";
 
 // Feature configuration
@@ -33,17 +39,22 @@ Object.assign(MediaElementPlayer.prototype, {
 	buildloop: function buildloop(player, controls) {
 		var t = this,
 		    loopTitle = mejs.Utils.isString(t.options.loopText) ? t.options.loopText : mejs.i18n.t('mejs.loop'),
-		    loop = $("<div class=\"" + t.options.classPrefix + "button " + t.options.classPrefix + "loop-button " + ((player.options.loop ? t.options.classPrefix + "loop-on" : t.options.classPrefix + "loop-off") + "\">") + ("<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + loopTitle + "\" aria-label=\"" + loopTitle + "\" tabindex=\"0\"></button>") + "</div>");
+		    loop = document.createElement('div');
+
+		loop.className = t.options.classPrefix + "button " + t.options.classPrefix + "loop-button " + (player.options.loop ? t.options.classPrefix + "loop-on" : t.options.classPrefix + "loop-off");
+		loop.innerHTML = "<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + loopTitle + "\" aria-label=\"" + loopTitle + "\" tabindex=\"0\"></button>";
 
 		t.addControlElement(loop, 'loop');
 
 		// add a click toggle event
-		loop.click(function () {
+		loop.addEventListener('click', function () {
 			player.options.loop = !player.options.loop;
 			if (player.options.loop) {
-				loop.removeClass(t.options.classPrefix + "loop-off").addClass(t.options.classPrefix + "loop-on");
+				mejs.Utils.removeClass(loop, t.options.classPrefix + "loop-off");
+				mejs.Utils.addClass(loop, t.options.classPrefix + "loop-on");
 			} else {
-				loop.removeClass(t.options.classPrefix + "loop-on").addClass(t.options.classPrefix + "loop-off");
+				mejs.Utils.removeClass(loop(_templateObject, t.options.classPrefix));
+				mejs.Utils.addClass(loop, t.options.classPrefix + "loop-off");
 			}
 		});
 	}

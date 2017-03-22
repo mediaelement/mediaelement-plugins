@@ -10,105 +10,110 @@ mejs.i18n.en["mejs.download-video"] = "Download Video";
  *
  */
 Object.assign(mejs.MepDefaults, {
-		contextMenuItems: [
-			// demo of a fullscreen option
-			{
-				render: function (player)  {
+	isContextMenuEnabled: true,
+	contextMenuTimeout: null,
+	contextMenuItems: [{
+		// demo of a fullscreen option
+			render (player) {
 
-					// check for fullscreen plugin
-					if (player.enterFullScreen === undefined) {
-						return null;
-					}
+				// check for fullscreen plugin
+				if (player.enterFullScreen === undefined) {
+					return null;
+				}
 
-					if (player.isFullScreen) {
-						return mejs.i18n.t('mejs.fullscreen-off');
-					} else {
-						return mejs.i18n.t('mejs.fullscreen-on');
-					}
-				},
-				click: function (player)  {
-					if (player.isFullScreen) {
-						player.exitFullScreen();
-					} else {
-						player.enterFullScreen();
-					}
+				if (player.isFullScreen) {
+					return mejs.i18n.t('mejs.fullscreen-off');
+				} else {
+					return mejs.i18n.t('mejs.fullscreen-on');
 				}
 			},
-			// demo of a mute/unmute button
-			{
-				render: function (player)  {
-					if (player.media.muted) {
-						return mejs.i18n.t('mejs.unmute');
-					} else {
-						return mejs.i18n.t('mejs.mute');
-					}
-				},
-				click: function (player)  {
-					if (player.media.muted) {
-						player.setMuted(false);
-					} else {
-						player.setMuted(true);
-					}
-				}
-			},
-			// separator
-			{
-				isSeparator: true
-			},
-			// demo of simple download video
-			{
-				render: function ()  {
-					return mejs.i18n.t('mejs.download-video');
-				},
-				click: function (player)  {
-					window.location.href = player.media.currentSrc;
+			click (player) {
+				if (player.isFullScreen) {
+					player.exitFullScreen();
+				} else {
+					player.enterFullScreen();
 				}
 			}
-		]
+		},
+		// demo of a mute/unmute button
+		{
+			render (player) {
+				if (player.media.muted) {
+					return mejs.i18n.t('mejs.unmute');
+				} else {
+					return mejs.i18n.t('mejs.mute');
+				}
+			},
+			click (player) {
+				if (player.media.muted) {
+					player.setMuted(false);
+				} else {
+					player.setMuted(true);
+				}
+			}
+		},
+		// separator
+		{
+			isSeparator: true
+		},
+		// demo of simple download video
+		{
+			render () {
+				return mejs.i18n.t('mejs.download-video');
+			},
+			click (player) {
+				window.location.href = player.media.currentSrc;
+			}
+		}]
 	}
 );
 
 
 Object.assign(MediaElementPlayer.prototype, {
-	buildcontextmenu: function (player)  {
+
+	buildcontextmenu (player) {
+
+		if (document.querySelector(`.${player.options.classPrefix}contextmenu`)) {
+			return;
+		}
 
 		// create context menu
-		player.contextMenu = $(`<div class="${t.options.classPrefix}contextmenu"></div>`)
-		.appendTo($('body'))
-		.hide();
+		player.contextMenu = document.createElement('div');
+		player.contextMenu.className = `${player.options.classPrefix}contextmenu`;
+		player.contextMenu.style.display = 'none';
+
+		document.body.appendChild(player.contextMenu);
 
 		// create events for showing context menu
-		player.container.on('contextmenu', (e) => {
+		player.container.addEventListener('contextmenu', (e) => {
 			if (player.isContextMenuEnabled) {
-				e.preventDefault();
 				player.renderContextMenu(e.clientX - 1, e.clientY - 1);
-				return false;
+				e.preventDefault();
+				e.stopPropagation();
 			}
 		});
-		player.container.on('click', () => {
-			player.contextMenu.hide();
+		player.container.addEventListener('click', () => {
+			player.contextMenu.style.display = 'none';
 		});
-		player.contextMenu.on('mouseleave', () => {
+		player.contextMenu.addEventListener('mouseleave', () => {
 			player.startContextMenuTimer();
 
 		});
 	},
 
-	cleancontextmenu: function (player)  {
-		player.contextMenu.remove();
+	cleancontextmenu (player) {
+		player.contextMenu.parentNode.removeChild(player.contextMenu);
 	},
 
-	isContextMenuEnabled: true,
-	enableContextMenu: function ()  {
+	enableContextMenu () {
 		this.isContextMenuEnabled = true;
 	},
-	disableContextMenu: function ()  {
+	disableContextMenu () {
 		this.isContextMenuEnabled = false;
 	},
 
-	contextMenuTimeout: null,
-	startContextMenuTimer: function ()  {
-		let t = this;
+	startContextMenuTimer () {
+		const t = this;
 
 		t.killContextMenuTimer();
 
@@ -117,7 +122,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.killContextMenuTimer();
 		}, 750);
 	},
-	killContextMenuTimer: function ()  {
+	killContextMenuTimer () {
 		let timer = this.contextMenuTimer;
 
 		if (timer !== null && timer !== undefined) {
@@ -126,66 +131,69 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 	},
 
-	hideContextMenu: function ()  {
-		this.contextMenu.hide();
+	hideContextMenu () {
+		this.contextMenu.style.display = 'none';
 	},
 
-	renderContextMenu: function (x, y)  {
+	renderContextMenu (x, y) {
 
 		// alway re-render the items so that things like "turn fullscreen on" and "turn fullscreen off" are always written correctly
-		let t = this,
+		let
+			t = this,
 			html = '',
-			items = t.options.contextMenuItems;
+			items = t.options.contextMenuItems
+			;
 
-		for (let i = 0, il = items.length; i < il; i++) {
+		for (let i = 0, total = items.length; i < total; i++) {
 
-			let item = items[i];
+			const item = items[i];
 
 			if (item.isSeparator) {
 				html += `<div class="${t.options.classPrefix}contextmenu-separator"></div>`;
 			} else {
 
-				let rendered = item.render(t);
+				const rendered = item.render(t);
 
 				// render can return null if the item doesn't need to be used at the moment
 				if (rendered !== null && rendered !== undefined) {
-					html += `<div class="${t.options.classPrefix}contextmenu-item"` +
-							`data-itemindex="${i}" id="element-${(Math.random() * 1000000)}">${rendered}</div>`;
+					html += `<div class="${t.options.classPrefix}contextmenu-item" data-itemindex="${i}" id="element-${(Math.random() * 1000000)}">${rendered}</div>`;
 				}
 			}
 		}
 
 		// position and show the context menu
-		t.contextMenu
-			.empty()
-			.append($(html))
-			.css({top: y, left: x})
-			.show();
+		t.contextMenu.innerHTML = html;
+		t.contextMenu.style.top = y;
+		t.contextMenu.style.left = x;
+		t.contextMenu.style.display = 'block';
 
 		// bind events
-		t.contextMenu.find(`.${t.options.classPrefix}contextmenu-item`).each(function() {
+		const contextItems = t.contextMenu.querySelectorAll(`.${t.options.classPrefix}contextmenu-item`);
+		for (let i = 0, total = contextItems.length; i < total; i++) {
 
 			// which one is this?
-			let $dom = $(this),
-				itemIndex = parseInt($dom.data('itemindex'), 10),
-				item = t.options.contextMenuItems[itemIndex];
+			const
+				menuItem = contextItems[i],
+				itemIndex = parseInt(menuItem.getAttribute('data-itemindex'), 10),
+				item = t.options.contextMenuItems[itemIndex]
+				;
 
 			// bind extra functionality?
 			if (typeof item.show !== 'undefined') {
-				item.show($dom, t);
+				item.show(menuItem, t);
 			}
 
 			// bind click action
-			$dom.click(() => {
+			menuItem.addEventListener('click', () => {
 				// perform click action
 				if (typeof item.click !== 'undefined') {
 					item.click(t);
 				}
 
 				// close
-				t.contextMenu.hide();
+				t.contextMenu.style.display = 'none';
 			});
-		});
+		}
 
 		// stop the controls from hiding
 		setTimeout(() => {

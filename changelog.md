@@ -1,5 +1,9 @@
 ### Version History
 
+*2.0.0 (2017/03/??)*
+
+* Removed all dependencies to jQuery in code and used `mejs.Utils` to mimic jQuery's most used methods @ron666
+
 *1.2.3 (2017/03/01)*
 
 * Improved way to add control elements by using new `addControlElement()` method @ron666

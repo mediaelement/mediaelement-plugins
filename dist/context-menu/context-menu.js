@@ -12,9 +12,10 @@ mejs.i18n.en["mejs.download-video"] = "Download Video";
  *
  */
 Object.assign(mejs.MepDefaults, {
-	contextMenuItems: [
-	// demo of a fullscreen option
-	{
+	isContextMenuEnabled: true,
+	contextMenuTimeout: null,
+	contextMenuItems: [{
+		// demo of a fullscreen option
 		render: function render(player) {
 
 			// check for fullscreen plugin
@@ -71,38 +72,41 @@ Object.assign(mejs.MepDefaults, {
 Object.assign(MediaElementPlayer.prototype, {
 	buildcontextmenu: function buildcontextmenu(player) {
 
+		if (document.querySelector("." + player.options.classPrefix + "contextmenu")) {
+			return;
+		}
+
 		// create context menu
-		player.contextMenu = $("<div class=\"" + t.options.classPrefix + "contextmenu\"></div>").appendTo($('body')).hide();
+		player.contextMenu = document.createElement('div');
+		player.contextMenu.className = player.options.classPrefix + "contextmenu";
+		player.contextMenu.style.display = 'none';
+
+		document.body.appendChild(player.contextMenu);
 
 		// create events for showing context menu
-		player.container.on('contextmenu', function (e) {
+		player.container.addEventListener('contextmenu', function (e) {
 			if (player.isContextMenuEnabled) {
-				e.preventDefault();
 				player.renderContextMenu(e.clientX - 1, e.clientY - 1);
-				return false;
+				e.preventDefault();
+				e.stopPropagation();
 			}
 		});
-		player.container.on('click', function () {
-			player.contextMenu.hide();
+		player.container.addEventListener('click', function () {
+			player.contextMenu.style.display = 'none';
 		});
-		player.contextMenu.on('mouseleave', function () {
+		player.contextMenu.addEventListener('mouseleave', function () {
 			player.startContextMenuTimer();
 		});
 	},
-
 	cleancontextmenu: function cleancontextmenu(player) {
-		player.contextMenu.remove();
+		player.contextMenu.parentNode.removeChild(player.contextMenu);
 	},
-
-	isContextMenuEnabled: true,
 	enableContextMenu: function enableContextMenu() {
 		this.isContextMenuEnabled = true;
 	},
 	disableContextMenu: function disableContextMenu() {
 		this.isContextMenuEnabled = false;
 	},
-
-	contextMenuTimeout: null,
 	startContextMenuTimer: function startContextMenuTimer() {
 		var t = this;
 
@@ -121,11 +125,9 @@ Object.assign(MediaElementPlayer.prototype, {
 			timer = null;
 		}
 	},
-
 	hideContextMenu: function hideContextMenu() {
-		this.contextMenu.hide();
+		this.contextMenu.style.display = 'none';
 	},
-
 	renderContextMenu: function renderContextMenu(x, y) {
 
 		// alway re-render the items so that things like "turn fullscreen on" and "turn fullscreen off" are always written correctly
@@ -133,7 +135,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		    html = '',
 		    items = t.options.contextMenuItems;
 
-		for (var i = 0, il = items.length; i < il; i++) {
+		for (var i = 0, total = items.length; i < total; i++) {
 
 			var item = items[i];
 
@@ -145,38 +147,47 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				// render can return null if the item doesn't need to be used at the moment
 				if (rendered !== null && rendered !== undefined) {
-					html += "<div class=\"" + t.options.classPrefix + "contextmenu-item\"" + ("data-itemindex=\"" + i + "\" id=\"element-" + Math.random() * 1000000 + "\">" + rendered + "</div>");
+					html += "<div class=\"" + t.options.classPrefix + "contextmenu-item\" data-itemindex=\"" + i + "\" id=\"element-" + Math.random() * 1000000 + "\">" + rendered + "</div>";
 				}
 			}
 		}
 
 		// position and show the context menu
-		t.contextMenu.empty().append($(html)).css({ top: y, left: x }).show();
+		t.contextMenu.innerHTML = html;
+		t.contextMenu.style.top = y;
+		t.contextMenu.style.left = x;
+		t.contextMenu.style.display = 'block';
 
 		// bind events
-		t.contextMenu.find("." + t.options.classPrefix + "contextmenu-item").each(function () {
+		var contextItems = t.contextMenu.querySelectorAll("." + t.options.classPrefix + "contextmenu-item");
+
+		var _loop = function _loop(_i, _total) {
 
 			// which one is this?
-			var $dom = $(this),
-			    itemIndex = parseInt($dom.data('itemindex'), 10),
+			var menuItem = contextItems[_i],
+			    itemIndex = parseInt(menuItem.getAttribute('data-itemindex'), 10),
 			    item = t.options.contextMenuItems[itemIndex];
 
 			// bind extra functionality?
 			if (typeof item.show !== 'undefined') {
-				item.show($dom, t);
+				item.show(menuItem, t);
 			}
 
 			// bind click action
-			$dom.click(function () {
+			menuItem.addEventListener('click', function () {
 				// perform click action
 				if (typeof item.click !== 'undefined') {
 					item.click(t);
 				}
 
 				// close
-				t.contextMenu.hide();
+				t.contextMenu.style.display = 'none';
 			});
-		});
+		};
+
+		for (var _i = 0, _total = contextItems.length; _i < _total; _i++) {
+			_loop(_i, _total);
+		}
 
 		// stop the controls from hiding
 		setTimeout(function () {

@@ -30,25 +30,25 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildjumpforward: function (player, controls, layers, media)  {
+	buildjumpforward (player, controls, layers, media)  {
 
 		const
 			t = this,
 			defaultTitle = mejs.i18n.t('mejs.time-jump-forward', t.options.jumpForwardInterval),
 			forwardTitle = mejs.Utils.isString(t.options.jumpForwardText) ? t.options.jumpForwardText.replace('%1', t.options.jumpForwardInterval) : defaultTitle,
-			button = $(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}jump-forward-button">` +
-				`<button type="button" aria-controls="${t.id}" title="${forwardTitle}" ` +
-				`aria-label="${forwardTitle}" tabindex="0">${t.options.jumpForwardInterval}</button>` +
-			`</div>`)
+			button = document.createElement('div')
 		;
+
+		button.className = `${t.options.classPrefix}button ${t.options.classPrefix}jump-forward-button`;
+		button.innerHTML = `<button type="button" aria-controls="${t.id}" title="${forwardTitle}" aria-label="${forwardTitle}" tabindex="0">${t.options.jumpForwardInterval}</button>`;
 
 		t.addControlElement(button, 'jumpforward');
 
 		// add a click toggle event
-		button.click(function() {
+		button.addEventListener('click', function() {
 			if (media.duration) {
 				media.setCurrentTime(Math.min(media.currentTime + t.options.jumpForwardInterval, media.duration));
-				$(this).find('button').blur();
+				this.querySelector('button').blur();
 			}
 		});
 	}
