@@ -1,8 +1,21 @@
 ### Version History
 
-*1.3.0 (2017/??/??)*
+*2.1.0 (2017/??/??)*
 
 * Integrated Chromecast support @ron666
+
+*2.0.0 (2017/03/22)*
+
+* Removed all dependencies to jQuery in code and used `mejs.Utils` to mimic jQuery's most used methods @ron666
+
+*1.2.3 (2017/03/01)*
+
+* Improved way to add control elements by using new `addControlElement()` method @ron666
+
+*1.2.2 (2017/03/01)*
+
+* Added translation files for all the plugins that required it and added documentation @ron666 
+* Added workflow to preserve order of control elements when certain features are reset @ron666
 
 *1.2.1 (2017/02/26)*
 

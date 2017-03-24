@@ -67,7 +67,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildpreview: function (player) {
+	buildpreview (player) {
 		let
 			initFadeIn = false,
 			initFadeOut = false,
@@ -194,25 +194,25 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		// show/hide controls
-		$('body').on('mouseover', function (e) {
+		document.body.addEventListener('mouseover', (e) => {
 
-			if ($(e.target).is(t.container) || $(e.target).closest(t.container).length) {
+			if (e.target === t.container || e.target.closest(`.${t.options.classPrefix}container`)) {
 				mouseOver = true;
-				t.container.find(`.${t.options.classPrefix}overlay-loading`).parent().show();
+				t.container.querySelector(`.${t.options.classPrefix}overlay-loading`).parentNode.style.display = 'block';
 
 				if (t.media.paused) {
-					timeout = setTimeout(function () {
+					timeout = setTimeout(() => {
 						if (mouseOver) {
 							t.media.play();
 						} else {
 							clearTimeout(timeout);
 							timeout = null;
 						}
-						t.container.find(`.${t.options.classPrefix}overlay-loading`).parent().hide();
+						t.container.querySelector(`.${t.options.classPrefix}overlay-loading`).parentNode.style.display = 'none';
 
 					}, t.options.delayPreview);
 				} else {
-					t.container.find(`.${t.options.classPrefix}overlay-loading`).parent().hide();
+					t.container.querySelector(`.${t.options.classPrefix}overlay-loading`).parentNode.style.display = 'none';
 				}
 			} else {
 				mouseOver = false;
@@ -221,13 +221,14 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (!t.media.paused) {
 					t.media.pause();
 				}
-				t.container.find(`.${t.options.classPrefix}overlay-loading`).parent().hide();
+				t.container.querySelector(`.${t.options.classPrefix}overlay-loading`).parentNode.style.display = 'none';
 			}
 
-		}).on('mouseout', function (e) {
-			if (!$(e.target).is(t.container) && !$(e.target).closest(t.container).length) {
+		});
+		document.body.addEventListener('mouseout', (e) => {
+			if (!(e.target === t.container) && !(e.target.closest(`.${t.options.classPrefix}container`))) {
 				mouseOver = false;
-				t.container.find(`.${t.options.classPrefix}overlay-loading`).parent().hide();
+				t.container.querySelector(`.${t.options.classPrefix}overlay-loading`).parentNode.style.display = 'none';
 				if (!t.media.paused) {
 					t.media.pause();
 
@@ -241,9 +242,9 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		});
 
-		$(window).on('scroll', function () {
+		window.addEventListener('scroll', () => {
 			mouseOver = false;
-			t.container.find(`.${t.options.classPrefix}overlay-loading`).parent().hide();
+			t.container.querySelector(`.${t.options.classPrefix}overlay-loading`).parentNode.style.display = 'none';
 			if (!t.media.paused) {
 				t.media.pause();
 			}

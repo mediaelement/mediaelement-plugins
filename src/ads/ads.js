@@ -10,6 +10,10 @@
 // ----
 // 2013/02/23		3.5		split into a generic pre-roll plugin
 
+// Translations (English required)
+mejs.i18n.en["mejs.ad-skip"] = "Skip ad";
+mejs.i18n.en["mejs.ad-skip-info"] = ["Skip in 1 second", "Skip in %1 seconds"];
+
 Object.assign(mejs.MepDefaults, {
 	// URL to a media file
 	adsPrerollMediaUrl: [],
@@ -44,9 +48,9 @@ Object.assign(MediaElementPlayer.prototype, {
 	// true when the user clicks play for the first time, or if autoplay is set
 	adsPlayerHasStarted: false,
 
-	buildads: function (player, controls, layers)  {
+	buildads (player, controls, layers)  {
 
-		let t = this;
+		const t = this;
 
 		if (t.adsLoaded) {
 			return;
@@ -55,30 +59,33 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		// add layer for ad links and skipping
-		player.adsLayer = $(`<div class="${t.options.classPrefix}layer ${t.options.classPrefix}overlay
-				${t.options.classPrefix}ads">
-					<a href="#" target="_blank"></a>
-					<div class="${t.options.classPrefix}ads-skip-block">
-						<span class="${t.options.classPrefix}ads-skip-message"></span>
-						<span class="${t.options.classPrefix}ads-skip-button">${mejs.i18n.t('mejs.ad-skip')}</span>
-					</div>
-				</div>`)
-		.insertBefore(layers.find(`.${t.options.classPrefix}overlay-play`))
-		.hide();
+		player.adsLayer = document.createElement('div');
+		player.adsLayer.className = `${t.options.classPrefix}layer ${t.options.classPrefix}overlay ${t.options.classPrefix}ads`;
+		player.adsLayer.innerHTML = `<a href="#" target="_blank"></a>` +
+			`<div class="${t.options.classPrefix}ads-skip-block">` +
+				`<span class="${t.options.classPrefix}ads-skip-message"></span>` +
+				`<span class="${t.options.classPrefix}ads-skip-button">${mejs.i18n.t('mejs.ad-skip')}</span>` +
+			`</div>`;
+		player.adsLayer.style.display = 'none';
 
-		player.adsLayer.find('a').on('click', $.proxy(t.adsAdClick, t));
+		layers.insertBefore(player.adsLayer, layers.querySelector(`.${t.options.classPrefix}overlay-play`));
 
-		player.adsSkipBlock = player.adsLayer.find(`.${t.options.classPrefix}ads-skip-block`).hide();
-		player.adsSkipMessage = player.adsLayer.find(`.${t.options.classPrefix}ads-skip-message`).hide();
-		player.adsSkipButton = player.adsLayer.find(`.${t.options.classPrefix}ads-skip-button`).on('click', $.proxy(t.adsSkipClick, t));
+		player.adsLayer.querySelector('a').addEventListener('click', t.adsAdClick);
+
+		player.adsSkipBlock = player.adsLayer.querySelector(`.${t.options.classPrefix}ads-skip-block`);
+		player.adsSkipBlock.style.display = 'none';
+		player.adsSkipMessage = player.adsLayer.querySelector(`.${t.options.classPrefix}ads-skip-message`);
+		player.adsSkipMessage.style.display = 'none';
+		player.adsSkipButton = player.adsLayer.querySelector(`.${t.options.classPrefix}ads-skip-button`);
+		player.adsSkipButton.addEventListener('click', t.adsSkipClick);
 
 		// create proxies (only needed for events we want to remove later)
-		t.adsMediaTryingToStartProxy = $.proxy(t.adsMediaTryingToStart, t);
-		t.adsPrerollStartedProxy = $.proxy(t.adsPrerollStarted, t);
-		t.adsPrerollMetaProxy = $.proxy(t.adsPrerollMeta, t);
-		t.adsPrerollUpdateProxy = $.proxy(t.adsPrerollUpdate, t);
-		t.adsPrerollEndedProxy = $.proxy(t.adsPrerollEnded, t);
-
+		t.adsMediaTryingToStartProxy = t.adsMediaTryingToStart.bind(t);
+		t.adsPrerollStartedProxy = t.adsPrerollStarted.bind(t);
+		t.adsPrerollMetaProxy = t.adsPrerollMeta.bind(t);
+		t.adsPrerollUpdateProxy = t.adsPrerollUpdate.bind(t);
+		t.adsPrerollEndedProxy = t.adsPrerollEnded.bind(t);
+		
 		// check for start
 		t.media.addEventListener('play', t.adsMediaTryingToStartProxy);
 		t.media.addEventListener('playing', t.adsMediaTryingToStartProxy);
@@ -90,10 +97,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 	},
 
+	adsMediaTryingToStart ()  {
 
-	adsMediaTryingToStart: function ()  {
-
-		let t = this;
+		const t = this;
 
 		// make sure to pause until the ad data is loaded
 		if (t.adsDataIsLoading && !t.media.paused) {
@@ -103,9 +109,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.adsPlayerHasStarted = true;
 	},
 
-	adsStartPreroll: function ()  {
+	adsStartPreroll ()  {
 
-		let t = this;
+		const t = this;
 
 		t.media.addEventListener('loadedmetadata', t.adsPrerollMetaProxy);
 		t.media.addEventListener('playing', t.adsPrerollStartedProxy);
@@ -129,12 +135,11 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 	},
 
-	adsPrerollMeta: function ()  {
+	adsPrerollMeta ()  {
 
-		let
-			t = this,
-			newDuration = 0
-			;
+		const t = this;
+
+		let newDuration = 0;
 
 		// if duration has been set, show that
 		if (t.options.duration > 0) {
@@ -144,70 +149,72 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		setTimeout(() => {
-			t.controls.find(`.${t.options.classPrefix}duration`).html(
-				mejs.Utils.secondsToTimeCode(newDuration, t.options.alwaysShowHours)
-			);
+			t.controls.querySelector(`.${t.options.classPrefix}duration`).innerHTML =
+				mejs.Utils.secondsToTimeCode(newDuration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
 		}, 250);
 	},
 
-	adsPrerollStarted: function ()  {
-		let t = this;
+	adsPrerollStarted ()  {
+		const t = this;
+
 		t.media.removeEventListener('playing', t.adsPrerollStartedProxy);
 
 		// turn off controls until the preroll is done
 		t.disableControls();
 
 		// enable clicking through
-		t.adsLayer.show();
-		if (t.options.adsPrerollAdUrl[t.options.indexPreroll] !== '') {
-			t.adsLayer.find('a').attr('href', t.options.adsPrerollAdUrl[t.options.indexPreroll]);
-		}
-		else {
-			t.adsLayer.find('a').attr('href', '#');
-			t.adsLayer.find('a').attr('target', '');
+		t.adsLayer.style.display = 'block';
+		if (t.options.adsPrerollAdUrl[t.options.indexPreroll]) {
+			t.adsLayer.querySelector('a').href = t.options.adsPrerollAdUrl[t.options.indexPreroll];
+		} else {
+			t.adsLayer.querySelector('a').href = '#';
+			t.adsLayer.querySelector('a').setAttribute('target', '');
 		}
 
 		// possibly allow the skip button to work
 		if (t.options.adsPrerollAdEnableSkip) {
-			t.adsSkipBlock.show();
+			t.adsSkipBlock.style.display = 'block';
 
 			if (t.options.adsPrerollAdSkipSeconds > 0) {
-
-				t.adsSkipMessage.html(mejs.i18n.t('mejs.ad-skip-info').replace('%1', t.options.adsPrerollAdSkipSeconds.toString())).show();
-				t.adsSkipButton.hide();
+				t.adsSkipMessage.innerHTML = mejs.i18n.t('mejs.ad-skip-info').replace('%1', t.options.adsPrerollAdSkipSeconds.toString());
+				t.adsSkipMessage.style.display = 'block';
+				t.adsSkipButton.style.display = 'none';
 			} else {
-				t.adsSkipMessage.hide();
-				t.adsSkipButton.show();
+				t.adsSkipMessage.style.display = 'none';
+				t.adsSkipButton.style.display = 'block';
 			}
 		} else {
-			t.adsSkipBlock.hide();
+			t.adsSkipBlock.style.display = 'none';
 		}
 
 		// send click events
-		t.container.trigger('mejsprerollstarted');
+		const event = mejs.Utils.createEvent('mejsprerollstarted', t.container);
+		t.container.dispatchEvent(event);
 	},
 
-	adsPrerollUpdate: function ()  {
-		let t = this;
+	adsPrerollUpdate ()  {
+		const t = this;
 
 		if (t.options.adsPrerollAdEnableSkip && t.options.adsPrerollAdSkipSeconds > 0) {
 			// update message
 			if (t.media.currentTime > t.options.adsPrerollAdSkipSeconds) {
-				t.adsSkipButton.show();
-				t.adsSkipMessage.hide();
+				t.adsSkipButton.style.display = 'block';
+				t.adsSkipMessage.style.display = 'none';
 			} else {
-				t.adsSkipMessage.html(mejs.i18n.t('mejs.ad-skip-info').replace('%1', Math.round(t.options.adsPrerollAdSkipSeconds - t.media.currentTime).toString()));
+				t.adsSkipMessage.innerHTML = (mejs.i18n.t('mejs.ad-skip-info').replace('%1', Math.round(t.options.adsPrerollAdSkipSeconds - t.media.currentTime).toString()));
 			}
 
 		}
 
-		t.container.trigger('mejsprerolltimeupdate');
+		const event = mejs.Utils.createEvent('mejsprerolltimeupdate', t.container);
+		t.container.dispatchEvent(event);
 	},
 
-	adsPrerollEnded: function ()  {
-		let t = this;
+	adsPrerollEnded ()  {
+		const t = this;
 
-		t.container.trigger('mejsprerollended');
+		const event = mejs.Utils.createEvent('mejsprerollended', t.container);
+		t.container.dispatchEvent(event);
 
 		t.options.indexPreroll++;
 		if (t.options.indexPreroll < t.options.adsPrerollMediaUrl.length) {
@@ -217,8 +224,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 	},
 
-	adRestoreMainMedia: function ()  {
-		let t = this;
+	adRestoreMainMedia ()  {
+		const t = this;
 
 		t.media.setSrc(t.adsCurrentMediaUrl);
 		setTimeout(() => {
@@ -228,19 +235,18 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.enableControls();
 
-		t.adsLayer.hide();
+		t.adsLayer.style.display = 'none';
 
 		t.media.removeEventListener('ended', t.adsPrerollEndedProxy);
 		t.media.removeEventListener('loadedmetadata', t.adsPrerollMetaProxy);
 		t.media.removeEventListener('timeupdate', t.adsPrerollUpdateProxy);
 
-		t.container.trigger('mejsprerollmainstarted');
-
-
+		const event = mejs.Utils.createEvent('mejsprerollmainstarted', t.container);
+		t.container.dispatchEvent(event);
 	},
 
-	adsAdClick: function ()  {
-		let t = this;
+	adsAdClick ()  {
+		const t = this;
 
 		if (t.media.paused) {
 			t.media.play();
@@ -248,14 +254,18 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.media.pause();
 		}
 
-		t.container.trigger('mejsprerolladsclicked');
+		const event = mejs.Utils.createEvent('mejsprerolladsclicked', t.container);
+		t.container.dispatchEvent(event);
 	},
 
-	adsSkipClick: function ()  {
-		let t = this;
+	adsSkipClick ()  {
+		const t = this;
 
-		t.container.trigger('mejsprerollskipclicked');
-		t.container.trigger('mejsprerollended');
+		let event = mejs.Utils.createEvent('mejsprerollskipclicked', t.container);
+		t.container.dispatchEvent(event);
+
+		event = mejs.Utils.createEvent('mejsprerollended', t.container);
+		t.container.dispatchEvent(event);
 
 		t.options.indexPreroll++;
 		if (t.options.indexPreroll < t.options.adsPrerollMediaUrl.length) {
@@ -266,19 +276,19 @@ Object.assign(MediaElementPlayer.prototype, {
 	},
 
 	// tells calling function if ads have finished running
-	prerollAdsFinished: function ()  {
-		let t = this;
+	prerollAdsFinished ()  {
+		const t = this;
 		return t.options.indexPreroll === t.options.adsPrerollMediaUrl.length;
 	},
 
 	// fires off fake XHR requests
-	adsLoadUrl: function (url)  {
+	adsLoadUrl (url)  {
 		let
 			img = new Image(),
 			rnd = Math.round(Math.random() * 100000)
-			;
+		;
 
-		img.src = url + (url.includes('?') ? '&' : '?') + `random${rnd}=${rnd}`;
+		img.src = `${url}${(url.includes('?') ? '&' : '?')}random${rnd}=${rnd}`;
 		img.loaded = () => {
 			img = null;
 		};

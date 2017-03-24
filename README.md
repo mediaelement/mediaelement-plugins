@@ -18,6 +18,7 @@ This repository contains plugins built for MediaElementJS.
     * [Node.js](#nodejs)
     * [General Conventions](#conventions)
     * [Template to create a Feature](#template)
+    * [Template for Translations](#translations)
     * [A word on `ES6` for Features](#es6)
 * [Available plugins](#plugins)
 
@@ -28,14 +29,16 @@ Download the package from https://github.com/johndyer/mediaelement-plugins, and 
 
 Or you can use a CDN; check http://www.jsdelivr.com/projects/mediaelement-plugins or https://cdnjs.com/libraries/mediaelement-plugins.
 
-
-For example, if you want to install `Markers` plugin do the following:
+For example, if you want to install `Speed` plugin do the following:
 ```html
 <script src="/path/to/mediaelement-and-player.min.js"></script>
-<script src="/path/to/dist/markers/markers.min,js"></script>
+<!-- Include any languages from `build/lang` folder -->
+<script src="/path/to/dist/speed/speed.min,js"></script>
+<!-- Translation file for plugin (includes ALL languages available on player)-->
+<script src="/path/to/dist/speed/speed-i18n,js"></script>
 <script>
-    $('video').mediaelementplayer({
-    	markerColor: '#ff0000',
+    var player = new MediaElementPlayer('playerId', {
+    	defaultSpeed: 0.75,
     	// other configuration elements
     });
 </script>
@@ -44,7 +47,7 @@ For example, if you want to install `Markers` plugin do the following:
 Some of them will contain CSS styles so place them after the main player stylesheet:
 ```html
 <link rel="stylesheet" href="/path/to/mediaelementplayer.min.css">
-<link rel="stylesheet" href="/path/to/dist/postroll/postroll.min.css">
+<link rel="stylesheet" href="/path/to/dist/speed/speed.min.css">
 ```
 
 <a id="guidelines"></a>
@@ -69,7 +72,7 @@ Once installed, at the command prompt, type `npm install`, which will download a
 * Make sure you also write comments about their purpose, and add them into the README file to keep documentation up-to-date.
 * You can also include CSS inside the feature folder, matching the name of the feature JS file and adding CSS styles for "legacy" and BEM naming convention.
 ```css
-.mejs__feature, .mejs-feature {
+.mejs__[feature_name], .mejs-[feature_name] {
     // all your styles
 }
 ```
@@ -77,11 +80,17 @@ Once installed, at the command prompt, type `npm install`, which will download a
 <a id="template"></a>
 ## Template to create a Feature 
 ```javascript
+'use strict';
+
 /**
  * [Name of feature]
  *
  * [Description]
  */
+
+// If plugin needs translations, put here English one in this format:
+// mejs.i18n.en["mejs.id1"] = "String 1";
+// mejs.i18n.en["mejs.id2"] = "String 2";
 
 // Feature configuration
 Object.assign(mejs.MepDefaults, {
@@ -108,7 +117,7 @@ Object.assign(MediaElementPlayer.prototype, {
         // This allows us to access options and other useful elements already set.
         // Adding variables to the object is a good idea if you plan to reuse 
         // those variables in further operations.
-        let t = this;
+        const t = this;
         
         // All code required inside here to keep it private;
         // otherwise, you can create more methods or add variables
@@ -128,6 +137,80 @@ Object.assign(MediaElementPlayer.prototype, {
     // Other optional public methods (all documented according to JSDoc specifications)
 });
 ```
+<a id="translations"></a>
+## Template for Translations
+ 
+If translatable strings are part of the plugin, you will need to create a `[feature_name]-i18n.js` file with this format:
+```javascript
+'use strict';
+
+if (mejs.i18n.ca !== undefined) {
+        mejs.i18n.ca["mejs.id1"] = "";
+}
+if (mejs.i18n.cs !== undefined) {
+        mejs.i18n.cs["mejs.id1"] = "";
+}
+if (mejs.i18n.de !== undefined) {
+        mejs.i18n.de["mejs.id1"] = "";
+}
+if (mejs.i18n.es !== undefined) {
+        mejs.i18n.es["mejs.id1"] = "";
+}
+if (mejs.i18n.fr !== undefined) {
+        mejs.i18n.fr["mejs.id1"] = "";
+}
+if (mejs.i18n.hr !== undefined) {
+        mejs.i18n.hr["mejs.id1"] = "";
+}
+if (mejs.i18n.hu !== undefined) {
+        mejs.i18n.hu["mejs.id1"] = "";
+}
+if (mejs.i18n.it !== undefined) {
+        mejs.i18n.it["mejs.id1"] = "";
+}
+if (mejs.i18n.ja !== undefined) {
+        mejs.i18n.ja["mejs.id1"] = "";
+}
+if (mejs.i18n.ko !== undefined) {
+        mejs.i18n.ko["mejs.id1"] = "";
+}
+if (mejs.i18n.nl !== undefined) {
+        mejs.i18n.nl["mejs.id1"] = "";
+}
+if (mejs.i18n.pl !== undefined) {
+        mejs.i18n.pl["mejs.id1"] = "";
+}
+if (mejs.i18n.pt !== undefined) {
+        mejs.i18n.pt["mejs.id1"] = "";
+}
+if (mejs.i18n['pt-BR'] !== undefined) {
+        mejs.i18n['pt-BR']["mejs.id1"] = "";
+}
+if (mejs.i18n.ro !== undefined) {
+        mejs.i18n.ro["mejs.id1"] = "";
+}
+if (mejs.i18n.ru !== undefined) {
+        mejs.i18n.ru["mejs.id1"] = "";
+}
+if (mejs.i18n.sk !== undefined) {
+        mejs.i18n.sk["mejs.id1"] = "";
+}
+if (mejs.i18n.sv !== undefined) {
+        mejs.i18n.sv["mejs.id1"] = "";
+}
+if (mejs.i18n.uk !== undefined) {
+        mejs.i18n.uk["mejs.id1"] = "";
+}
+if (mejs.i18n.zh !== undefined) {
+        mejs.i18n.zh["mejs.id1"] = "";
+}
+if (mejs.i18n['zh-CN'] !== undefined) {
+        mejs.i18n['zh-CN']["mejs.id1"] = "";
+}
+```
+**NOTE**: The more languages are integrated on `MediaElementPlayer`, the bigger this template will become. So account for more languages.
+
+Also, if you are adding a new language to `MediaElementPlayer`, you will need to add it in all the existing `i18n` files in the same way described in the template above. 
 
 <a id="es6"></a>
 ### A word on `ES6` for Features

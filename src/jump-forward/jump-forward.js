@@ -6,7 +6,8 @@
  * This feature creates a button to forward media a specific number of seconds.
  */
 
-// Jump forward button
+// Translations (English required)
+mejs.i18n.en["mejs.time-jump-forward"] = ["Jump forward 1 second", "Jump forward %1 seconds"];
 
 Object.assign(mejs.MepDefaults, {
 	/**
@@ -29,23 +30,25 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildjumpforward: function (player, controls, layers, media)  {
-		let
+	buildjumpforward (player, controls, layers, media)  {
+
+		const
 			t = this,
 			defaultTitle = mejs.i18n.t('mejs.time-jump-forward', t.options.jumpForwardInterval),
-			forwardTitle = mejs.Utils.isString(t.options.jumpForwardText) ? t.options.jumpForwardText.replace('%1', t.options.jumpForwardInterval) : defaultTitle;
+			forwardTitle = mejs.Utils.isString(t.options.jumpForwardText) ? t.options.jumpForwardText.replace('%1', t.options.jumpForwardInterval) : defaultTitle,
+			button = document.createElement('div')
+		;
 
-		$(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}jump-forward-button">` +
-			`<button type="button" aria-controls="${t.id}" title="${forwardTitle}" ` +
-			`aria-label="${forwardTitle}" tabindex="0">${t.options.jumpForwardInterval}</button>` +
-		`</div>`)
-		// append it to the toolbar
-		.appendTo(controls)
+		button.className = `${t.options.classPrefix}button ${t.options.classPrefix}jump-forward-button`;
+		button.innerHTML = `<button type="button" aria-controls="${t.id}" title="${forwardTitle}" aria-label="${forwardTitle}" tabindex="0">${t.options.jumpForwardInterval}</button>`;
+
+		t.addControlElement(button, 'jumpforward');
+
 		// add a click toggle event
-		.click(function() {
+		button.addEventListener('click', function() {
 			if (media.duration) {
 				media.setCurrentTime(Math.min(media.currentTime + t.options.jumpForwardInterval, media.duration));
-				$(this).find('button').blur();
+				this.querySelector('button').blur();
 			}
 		});
 	}

@@ -8,8 +8,11 @@
  * it to the initial position.
  */
 
-// Feature configuration
+// Translations (English required)
 
+mejs.i18n.en["mejs.stop"] = "Stop";
+
+// Feature configuration
 Object.assign(mejs.MepDefaults, {
 	/**
   * @type {?String}
@@ -30,20 +33,26 @@ Object.assign(MediaElementPlayer.prototype, {
   */
 	buildstop: function buildstop(player, controls, layers, media) {
 		var t = this,
-		    stopTitle = mejs.Utils.isString(t.options.stopText) ? t.options.stopText : mejs.i18n.t('mejs.stop');
+		    stopTitle = mejs.Utils.isString(t.options.stopText) ? t.options.stopText : mejs.i18n.t('mejs.stop'),
+		    button = document.createElement('div');
 
-		$('<div class="' + t.options.classPrefix + 'button ' + t.options.classPrefix + 'stop-button ' + t.options.classPrefix + 'stop">' + ('<button type="button" aria-controls="' + t.id + '" title="' + stopTitle + '" aria-label="' + stopTitle + '" tabindex="0"></button>') + '</div>').appendTo(controls).click(function () {
+		button.className = t.options.classPrefix + "button " + t.options.classPrefix + "stop-button " + t.options.classPrefix + "stop";
+		button.innerHTML = "<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + stopTitle + "\" aria-label=\"" + stopTitle + "\" tabindex=\"0\"></button>";
+
+		t.addControlElement(button, 'stop');
+
+		button.addEventListener('click', function () {
 			if (!media.paused) {
 				media.pause();
 			}
 			if (media.currentTime > 0) {
 				media.setCurrentTime(0);
 				media.pause();
-				controls.find('.' + t.options.classPrefix + 'time-current').width('0px');
-				controls.find('.' + t.options.classPrefix + 'time-handle').css('left', '0px');
-				controls.find('.' + t.options.classPrefix + 'time-float-current').html(mejs.Utils.secondsToTimeCode(0, player.options.alwaysShowHours));
-				controls.find('.' + t.options.classPrefix + 'currenttime').html(mejs.Utils.secondsToTimeCode(0, player.options.alwaysShowHours));
-				layers.find('.' + t.options.classPrefix + 'poster').show();
+				controls.querySelector("." + t.options.classPrefix + "time-current").style.width = '0px';
+				controls.querySelector("." + t.options.classPrefix + "time-handle").style.left = '0px';
+				controls.querySelector("." + t.options.classPrefix + "time-float-current").innerHTML = mejs.Utils.secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond);
+				controls.querySelector("." + t.options.classPrefix + "currenttime").innerHTML = mejs.Utils.secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond);
+				layers.querySelector("." + t.options.classPrefix + "poster").style.display = 'block';
 			}
 		});
 	}
