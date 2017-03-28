@@ -70,14 +70,14 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		layers.insertBefore(player.adsLayer, layers.querySelector(`.${t.options.classPrefix}overlay-play`));
 
-		player.adsLayer.querySelector('a').addEventListener('click', t.adsAdClick);
+		player.adsLayer.querySelector('a').addEventListener('click', t.adsAdClick.bind(t));
 
 		player.adsSkipBlock = player.adsLayer.querySelector(`.${t.options.classPrefix}ads-skip-block`);
 		player.adsSkipBlock.style.display = 'none';
 		player.adsSkipMessage = player.adsLayer.querySelector(`.${t.options.classPrefix}ads-skip-message`);
 		player.adsSkipMessage.style.display = 'none';
 		player.adsSkipButton = player.adsLayer.querySelector(`.${t.options.classPrefix}ads-skip-button`);
-		player.adsSkipButton.addEventListener('click', t.adsSkipClick);
+		player.adsSkipButton.addEventListener('click', t.adsSkipClick.bind(t));
 
 		// create proxies (only needed for events we want to remove later)
 		t.adsMediaTryingToStartProxy = t.adsMediaTryingToStart.bind(t);

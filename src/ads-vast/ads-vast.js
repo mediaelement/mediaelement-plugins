@@ -3,9 +3,7 @@
 /**
  * VAST Ads Plugin
  *
- * Sponsored by Minoto Video
  */
-
 
 // Feature configuration
 Object.assign(mejs.MepDefaults, {
@@ -13,7 +11,13 @@ Object.assign(mejs.MepDefaults, {
 	 * URL to vast data (http://minotovideo.com/sites/minotovideo.com/files/upload/eday_vast_tag.xml)
 	 * @type {String}
 	 */
-	vastAdTagUrl: ''
+	vastAdTagUrl: '',
+
+	/**
+	 * Whether Ads is VAST or VPAID
+	 * @type {String}
+	 */
+	vastAdsType: 'vast'
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -140,14 +144,17 @@ Object.assign(MediaElementPlayer.prototype, {
 		const t = this;
 
 		mejs.Utils.ajax(t.options.vastAdTagUrl, 'xml', (data)  => {
+			if (t.options.vastAdsType === 'vpaid') {
+				t.vpaidParseVpaidData(data);
+			} else {
 				t.vastParseVastData(data);
-			}, (err)  => {
-				console.error('vast3:direct:error', err);
-
-				// fallback to Yahoo proxy
-				t.loadAdTagInfoProxy();
 			}
-		);
+		}, (err)  => {
+			console.error('vast3:direct:error', err);
+
+			// fallback to Yahoo proxy
+			t.loadAdTagInfoProxy();
+		});
 	},
 
 	/**
@@ -162,16 +169,21 @@ Object.assign(MediaElementPlayer.prototype, {
 		;
 
 		mejs.Utils.ajax(yahooUrl, 'xml', (data) => {
+			if (t.options.vastAdsType === 'vpaid') {
+				t.vpaidParseVpaidData(data);
+			} else {
 				t.vastParseVastData(data);
-			}, (err)  => {
-				console.error('vast:proxy:yahoo:error', err);
 			}
-		);
+		}, (err)  => {
+			console.error('vast:proxy:yahoo:error', err);
+		});
 	},
 
 	/**
+	 * Parse a VAST XML source and build adTags entities.
 	 *
-	 * @param {jQuery} data
+	 * This is compliant with VPAID 3.0
+	 * @param {String} data
 	 */
 	vastParseVastData (data)  {
 
@@ -237,6 +249,73 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 			}
 		}
+
+		// DONE
+		t.vastLoaded();
+	},
+
+	/**
+	 * Parse a VPAID XML source and build adTags entities.
+	 *
+	 * This is compliant with VPAID 2.0
+	 * @param {String} data
+	 */
+	vpaidParseVpaidData (data) {
+
+		const
+			t = this,
+			parser = new DOMParser(),
+			xmlDoc = parser.parseFromString(data, 'text/xml'),
+			ads = xmlDoc.getElementsByTagName('AdParameters')
+		;
+
+		// clear out data
+		t.vpaidAdTags = [];
+		t.options.indexPreroll = 0;
+
+		if (!ads) {
+			throw new TypeError('No AdParamters detected');
+		}
+
+		const
+			adData = JSON.parse(ads[0].textContent.trim()),
+			duration = xmlDoc.getElementsByTagName('Duration'),
+			adTag = {
+				id: adData.ad_id.trim(),
+				title: adData.title.trim(),
+				clickThrough: adData.page_url,
+				impressions: [],
+				mediaFiles: [],
+				trackingEvents: {},
+				// internal tracking if it's been used
+				shown: false
+			}
+		;
+
+		for (const property in adData.media.video) {
+			if (adData.media.video.hasOwnProperty(property)) {
+				const
+					mediaFile = adData.media.video[property],
+					type = mediaFile.mime_type.trim()
+				;
+
+				if (t.media.canPlayType(type) !== '' || t.media.canPlayType(type).match(/(no|false)/) === null) {
+
+					adTag.mediaFiles.push({
+						id: mediaFile.media_id,
+						format: mediaFile.format,
+						type: type,
+						transcoding: mediaFile.transcoding,
+						width: mediaFile.width,
+						height: mediaFile.height,
+						duration: duration,
+						url: mediaFile.media_url
+					});
+				}
+			}
+		}
+
+		t.vastAdTags.push(adTag);
 
 		// DONE
 		t.vastLoaded();
