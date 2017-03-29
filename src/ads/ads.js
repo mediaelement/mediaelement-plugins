@@ -207,6 +207,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		const event = mejs.Utils.createEvent('mejsprerolltimeupdate', t.container);
+		event.detail.duration = t.media.duration;
+		event.detail.currentTime = t.media.currentTime;
 		t.container.dispatchEvent(event);
 	},
 

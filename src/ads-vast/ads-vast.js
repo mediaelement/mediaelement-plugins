@@ -70,6 +70,11 @@ Object.assign(MediaElementPlayer.prototype, {
 	vastSetupEvents ()  {
 		const t = this;
 
+		let
+			firstQuartExecuted = false,
+			secondQuartExecuted = false,
+			thirdQuartExecuted = false
+		;
 
 		// START: preroll
 		t.container.addEventListener('mejsprerollstarted', () => {
@@ -81,6 +86,10 @@ Object.assign(MediaElementPlayer.prototype, {
 				// always fire this event
 				if (adTag.trackingEvents.start) {
 					t.adsLoadUrl(adTag.trackingEvents.start);
+				}
+
+				if (adTag.trackingEvents.initialization) {
+					t.adsLoadUrl(adTag.trackingEvents.initialization);
 				}
 
 				// only do impressions once
@@ -95,6 +104,33 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 
 		});
+
+		// UPDATE: preroll
+		t.container.addEventListener('mejsprerolltimeupdate', function (e) {
+			const
+				duration = e.detail.duration,
+				current = e.detail.currentTime,
+				percentage = Math.min(1, Math.max(0, current/duration)) * 100,
+				adTag = t.vastAdTags[t.options.indexPreroll],
+				isFirsQuart = percentage >= 25 && percentage < 50,
+				isMidPoint = percentage >= 50 && percentage < 75,
+				isThirdQuart = percentage >= 75 && percentage < 100
+			;
+
+			// Check which track is going to be fired
+			if (adTag.trackingEvents.firstQuartile && !firstQuartExecuted && isFirsQuart) {
+				t.adsLoadUrl(adTag.trackingEvents.firstQuartile);
+				firstQuartExecuted = true;
+			} else if (adTag.trackingEvents.midpoint && !secondQuartExecuted && isMidPoint) {
+				t.adsLoadUrl(adTag.trackingEvents.midpoint);
+				secondQuartExecuted = true;
+			} else if (adTag.trackingEvents.thirdQuartile && !thirdQuartExecuted && isThirdQuart) {
+				t.adsLoadUrl(adTag.trackingEvents.thirdQuartile);
+				thirdQuartExecuted = true;
+			}
+
+		});
+
 
 		// END: preroll
 		t.container.addEventListener('mejsprerollended', () => {
