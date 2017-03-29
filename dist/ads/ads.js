@@ -146,6 +146,10 @@ Object.assign(MediaElementPlayer.prototype, {
 		setTimeout(function () {
 			t.controls.querySelector("." + t.options.classPrefix + "duration").innerHTML = mejs.Utils.secondsToTimeCode(newDuration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
 		}, 250);
+
+		// send initialization events
+		var event = mejs.Utils.createEvent('mejsprerollinitialized', t.container);
+		t.container.dispatchEvent(event);
 	},
 	adsPrerollStarted: function adsPrerollStarted() {
 		var t = this;
@@ -198,6 +202,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		var event = mejs.Utils.createEvent('mejsprerolltimeupdate', t.container);
+		event.detail.duration = t.media.duration;
+		event.detail.currentTime = t.media.currentTime;
 		t.container.dispatchEvent(event);
 	},
 	adsPrerollEnded: function adsPrerollEnded() {

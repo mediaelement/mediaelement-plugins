@@ -69,11 +69,26 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.vastSetupEvents();
 	},
 	vastSetupEvents: function vastSetupEvents() {
+
 		var t = this;
 
 		var firstQuartExecuted = false,
 		    secondQuartExecuted = false,
 		    thirdQuartExecuted = false;
+
+		// LOAD: preroll
+		t.container.addEventListener('mejsprerollinitialized', function () {
+			if (t.vastAdTags.length > 0) {
+
+				var adTag = t.vastAdTags[0];
+
+				if (adTag.trackingEvents.initialization) {
+					for (var i = 0, total = adTag.trackingEvents.initialization.length; i < total; i++) {
+						t.adsLoadUrl(adTag.trackingEvents.initialization[i]);
+					}
+				}
+			}
+		});
 
 		// START: preroll
 		t.container.addEventListener('mejsprerollstarted', function () {
@@ -84,18 +99,15 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				// always fire this event
 				if (adTag.trackingEvents.start) {
-					t.adsLoadUrl(adTag.trackingEvents.start);
-				}
-
-				if (adTag.trackingEvents.initialization) {
-					t.adsLoadUrl(adTag.trackingEvents.initialization);
+					for (var i = 0, total = adTag.trackingEvents.start.length; i < total; i++) {
+						t.adsLoadUrl(adTag.trackingEvents.start[i]);
+					}
 				}
 
 				// only do impressions once
 				if (!adTag.shown && adTag.impressions.length > 0) {
-
-					for (var i = 0, total = adTag.impressions.length; i < total; i++) {
-						t.adsLoadUrl(adTag.impressions[i]);
+					for (var _i = 0, _total = adTag.impressions.length; _i < _total; _i++) {
+						t.adsLoadUrl(adTag.impressions[_i]);
 					}
 				}
 
@@ -105,32 +117,45 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// UPDATE: preroll
 		t.container.addEventListener('mejsprerolltimeupdate', function (e) {
-			var duration = e.detail.duration,
-			    current = e.detail.currentTime,
-			    percentage = Math.min(1, Math.max(0, current / duration)) * 100,
-			    adTag = t.vastAdTags[t.options.indexPreroll],
-			    isFirsQuart = percentage >= 25 && percentage < 50,
-			    isMidPoint = percentage >= 50 && percentage < 75,
-			    isThirdQuart = percentage >= 75 && percentage < 100;
 
-			// Check which track is going to be fired
-			if (adTag.trackingEvents.firstQuartile && !firstQuartExecuted && isFirsQuart) {
-				t.adsLoadUrl(adTag.trackingEvents.firstQuartile);
-				firstQuartExecuted = true;
-			} else if (adTag.trackingEvents.midpoint && !secondQuartExecuted && isMidPoint) {
-				t.adsLoadUrl(adTag.trackingEvents.midpoint);
-				secondQuartExecuted = true;
-			} else if (adTag.trackingEvents.thirdQuartile && !thirdQuartExecuted && isThirdQuart) {
-				t.adsLoadUrl(adTag.trackingEvents.thirdQuartile);
-				thirdQuartExecuted = true;
+			if (t.vastAdTags.length > 0 && t.options.indexPreroll < t.vastAdTags.length) {
+				var duration = e.detail.duration,
+				    current = e.detail.currentTime,
+				    percentage = Math.min(1, Math.max(0, current / duration)) * 100,
+				    adTag = t.vastAdTags[t.options.indexPreroll],
+				    isFirsQuart = percentage >= 25 && percentage < 50,
+				    isMidPoint = percentage >= 50 && percentage < 75,
+				    isThirdQuart = percentage >= 75 && percentage < 100;
+
+				// Check which track is going to be fired
+				if (adTag.trackingEvents.firstQuartile && !firstQuartExecuted && isFirsQuart) {
+					for (var i = 0, total = adTag.trackingEvents.firstQuartile.length; i < total; i++) {
+						t.adsLoadUrl(adTag.trackingEvents.firstQuartile[i]);
+					}
+					firstQuartExecuted = true;
+				} else if (adTag.trackingEvents.midpoint && !secondQuartExecuted && isMidPoint) {
+					for (var _i2 = 0, _total2 = adTag.trackingEvents.midpoint.length; _i2 < _total2; _i2++) {
+						t.adsLoadUrl(adTag.trackingEvents.midpoint[_i2]);
+					}
+					secondQuartExecuted = true;
+				} else if (adTag.trackingEvents.thirdQuartile && !thirdQuartExecuted && isThirdQuart) {
+					for (var _i3 = 0, _total3 = adTag.trackingEvents.thirdQuartile.length; _i3 < _total3; _i3++) {
+						t.adsLoadUrl(adTag.trackingEvents.thirdQuartile[_i3]);
+					}
+					thirdQuartExecuted = true;
+				}
 			}
 		});
 
 		// END: preroll
 		t.container.addEventListener('mejsprerollended', function () {
 
-			if (t.vastAdTags.length > 0 && t.options.indexPreroll < t.vastAdTags.length && t.vastAdTags[t.options.indexPreroll].trackingEvents.complete) {
-				t.adsLoadUrl(t.vastAdTags[t.options.indexPreroll].trackingEvents.complete);
+			var adTag = t.vastAdTags[t.options.indexPreroll];
+
+			if (t.vastAdTags.length > 0 && t.options.indexPreroll < t.vastAdTags.length && adTag.trackingEvents.complete) {
+				for (var i = 0, total = adTag.trackingEvents.complete.length; i < total; i++) {
+					t.adsLoadUrl(adTag.trackingEvents.complete[i]);
+				}
 			}
 		});
 	},
@@ -243,8 +268,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 
 			for (var _j = 0, tracksTotal = trackFiles.length; _j < tracksTotal; _j++) {
-				var trackingEvent = trackFiles[_j];
-				adTag.trackingEvents[trackingEvent.getAttribute('event')] = trackingEvent.textContent.trim();
+				var trackingEvent = trackFiles[_j],
+				    event = trackingEvent.getAttribute('event');
+
+				if (adTag.trackingEvents[event] === undefined) {
+					adTag.trackingEvents[event] = [];
+				}
+				adTag.trackingEvents[event].push(trackingEvent.textContent.trim());
 			}
 
 			for (var _j2 = 0, mediaFilesTotal = mediaFiles.length; _j2 < mediaFilesTotal; _j2++) {
@@ -299,13 +329,19 @@ Object.assign(MediaElementPlayer.prototype, {
 		};
 
 		if (typeof adData.media.tracking.beacon !== 'undefined') {
+
+			var trackingPoints = ['initialization', 'start', 'firstQuartile', 'midpoint', 'thirdQuartile', 'complete'];
+
 			for (var i = 0, total = adData.media.tracking.beacon.length; i < total; i++) {
 				var trackingEvent = adData.media.tracking.beacon[i];
 
-				if (trackingEvent.type === 'impression' || trackingEvent.mime_type !== undefined && trackingEvent.mime_type === 'image/*' || trackingEvent.proxy_whitelist === false) {
+				if (trackingPoints.includes(trackingEvent.type)) {
+					if (adTag.trackingEvents[trackingEvent.type] === undefined) {
+						adTag.trackingEvents[trackingEvent.type] = [];
+					}
+					adTag.trackingEvents[trackingEvent.type].push(trackingEvent.beacon_url.trim());
+				} else if (trackingEvent.type === 'impression') {
 					adTag.impressions.push(trackingEvent.beacon_url.trim());
-				} else if (trackingEvent.proxy_whitelist === true) {
-					adTag.trackingEvents[trackingEvent.type] = trackingEvent.beacon_url.trim();
 				}
 			}
 		}

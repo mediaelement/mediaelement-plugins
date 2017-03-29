@@ -152,6 +152,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.controls.querySelector(`.${t.options.classPrefix}duration`).innerHTML =
 				mejs.Utils.secondsToTimeCode(newDuration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
 		}, 250);
+
+		// send initialization events
+		const event = mejs.Utils.createEvent('mejsprerollinitialized', t.container);
+		t.container.dispatchEvent(event);
 	},
 
 	adsPrerollStarted ()  {
