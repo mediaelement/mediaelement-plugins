@@ -1,5 +1,11 @@
 ### Version History
 
+*2.0.1 (2017/??/??)*
+
+* Added missing `bind()` calls on `Ads` plugin @ron666
+* Fixed issue with `VAST` plugin due to updates on AJAX method @ron666
+* Integrated VPAID 2.0 with `VAST` plugin @ron666  
+
 *2.0.0 (2017/03/22)*
 
 * Removed all dependencies to jQuery in code and used `mejs.Utils` to mimic jQuery's most used methods @ron666

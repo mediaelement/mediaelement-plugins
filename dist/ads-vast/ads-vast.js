@@ -181,15 +181,12 @@ Object.assign(MediaElementPlayer.prototype, {
   */
 	vastParseVastData: function vastParseVastData(data) {
 
-		var t = this;
+		var t = this,
+		    ads = data.getElementsByTagName('Ad');
 
 		// clear out data
 		t.vastAdTags = [];
 		t.options.indexPreroll = 0;
-
-		var parser = new DOMParser(),
-		    xmlDoc = parser.parseFromString(data, 'text/xml'),
-		    ads = xmlDoc.getElementsByTagName('Ad');
 
 		for (var i = 0, total = ads.length; i < total; i++) {
 			var adNode = ads[i],
@@ -251,20 +248,14 @@ Object.assign(MediaElementPlayer.prototype, {
 	vpaidParseVpaidData: function vpaidParseVpaidData(data) {
 
 		var t = this,
-		    parser = new DOMParser(),
-		    xmlDoc = parser.parseFromString(data, 'text/xml'),
-		    ads = xmlDoc.getElementsByTagName('AdParameters');
+		    ads = data.getElementsByTagName('AdParameters');
 
 		// clear out data
 		t.vpaidAdTags = [];
 		t.options.indexPreroll = 0;
 
-		if (!ads) {
-			throw new TypeError('No AdParamters detected');
-		}
-
 		var adData = JSON.parse(ads[0].textContent.trim()),
-		    duration = xmlDoc.getElementsByTagName('Duration'),
+		    duration = data.getElementsByTagName('Duration'),
 		    adTag = {
 			id: adData.ad_id.trim(),
 			title: adData.title.trim(),
@@ -275,6 +266,18 @@ Object.assign(MediaElementPlayer.prototype, {
 			// internal tracking if it's been used
 			shown: false
 		};
+
+		if (typeof adData.media.tracking.beacon !== 'undefined') {
+			for (var i = 0, total = adData.media.tracking.beacon.length; i < total; i++) {
+				var trackingEvent = adData.media.tracking.beacon[i];
+
+				if (trackingEvent.type === 'impression' || trackingEvent.mime_type !== undefined && trackingEvent.mime_type === 'image/*' || trackingEvent.proxy_whitelist === false) {
+					adTag.impressions.push(trackingEvent.beacon_url.trim());
+				} else if (trackingEvent.proxy_whitelist === true) {
+					adTag.trackingEvents[trackingEvent.type] = trackingEvent.beacon_url.trim();
+				}
+			}
+		}
 
 		for (var property in adData.media.video) {
 			if (adData.media.video.hasOwnProperty(property)) {

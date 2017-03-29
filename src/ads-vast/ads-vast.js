@@ -187,17 +187,14 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	vastParseVastData (data)  {
 
-		const t = this;
+		const
+			t = this,
+			ads = data.getElementsByTagName('Ad')
+		;
 
 		// clear out data
 		t.vastAdTags = [];
 		t.options.indexPreroll = 0;
-
-		const
-			parser = new DOMParser(),
-			xmlDoc = parser.parseFromString(data, 'text/xml'),
-			ads = xmlDoc.getElementsByTagName('Ad')
-		;
 
 		for (let i = 0, total = ads.length; i < total; i++) {
 			const
@@ -264,22 +261,16 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		const
 			t = this,
-			parser = new DOMParser(),
-			xmlDoc = parser.parseFromString(data, 'text/xml'),
-			ads = xmlDoc.getElementsByTagName('AdParameters')
+			ads = data.getElementsByTagName('AdParameters')
 		;
 
 		// clear out data
 		t.vpaidAdTags = [];
 		t.options.indexPreroll = 0;
 
-		if (!ads) {
-			throw new TypeError('No AdParamters detected');
-		}
-
 		const
 			adData = JSON.parse(ads[0].textContent.trim()),
-			duration = xmlDoc.getElementsByTagName('Duration'),
+			duration = data.getElementsByTagName('Duration'),
 			adTag = {
 				id: adData.ad_id.trim(),
 				title: adData.title.trim(),
@@ -291,6 +282,19 @@ Object.assign(MediaElementPlayer.prototype, {
 				shown: false
 			}
 		;
+
+		if (typeof adData.media.tracking.beacon !== 'undefined') {
+			for (let i = 0, total =  adData.media.tracking.beacon.length; i < total; i++) {
+				const trackingEvent = adData.media.tracking.beacon[i];
+
+				if (trackingEvent.type === 'impression' || (trackingEvent.mime_type !== undefined &&
+					trackingEvent.mime_type === 'image/*') || trackingEvent.proxy_whitelist === false) {
+					adTag.impressions.push(trackingEvent.beacon_url.trim());
+				} else if (trackingEvent.proxy_whitelist === true) {
+					adTag.trackingEvents[trackingEvent.type] = trackingEvent.beacon_url.trim();
+				}
+			}
+		}
 
 		for (const property in adData.media.video) {
 			if (adData.media.video.hasOwnProperty(property)) {
