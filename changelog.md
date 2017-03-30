@@ -1,11 +1,12 @@
 ### Version History
 
-*2.0.1 (2017/??/??)*
+*2.1.0 (2017/03/30)*
 
 * Added missing `bind()` calls on `Ads` plugin @ron666
 * Fixed issue with `VAST` plugin due to updates on AJAX method @ron666
-* Integrated VPAID 2.0 with `VAST` plugin @ron666  
+* Integrated VPAID 2.0 with `VAST` plugin and renamed package @ron666  
 * Integrated events to load tracking URLs in `VAST` plugin @ron666
+* Added link in documentation for `MediaElement` utilities  @ron666
 
 *2.0.0 (2017/03/22)*
 

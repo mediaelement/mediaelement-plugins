@@ -70,6 +70,7 @@ Once installed, at the command prompt, type `npm install`, which will download a
 * The file for the feature must be placed inside a folder matching its name (i.e, `loop/loop.js`).
 * Update `package.json` with a command under the `script` configuration to make sure it will be bundled and compiled properly. For more reference, [review the file](package.json).
 * Make sure you also write comments about their purpose, and add them into the README file to keep documentation up-to-date.
+* **DO NOT REINVENT THE WHEEL**: Use the utilities that `MediaElement` provides for DOM manipulation/AJAX/etc. Check [this link](https://github.com/mediaelement/mediaelement/blob/master/docs/utils.md) for more details.  
 * You can also include CSS inside the feature folder, matching the name of the feature JS file and adding CSS styles for "legacy" and BEM naming convention.
 ```css
 .mejs__[feature_name], .mejs-[feature_name] {
