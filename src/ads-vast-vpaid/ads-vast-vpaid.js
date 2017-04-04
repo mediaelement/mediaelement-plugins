@@ -302,13 +302,11 @@ Object.assign(MediaElementPlayer.prototype, {
 			const
 				adNode = ads[i],
 				title = adNode.getElementsByTagName('AdTitle').length ?
-					adNode.getElementsByTagName('AdTitle')[0].textContent.trim() :
-					adNode.getElementsByTagName('AdSystem')[0].textContent.trim(),
+					adNode.getElementsByTagName('AdTitle')[0].textContent.trim() : '',
 				description = adNode.getElementsByTagName('Description').length ?
 					adNode.getElementsByTagName('Description')[0].textContent.trim() : '',
 				clickLink = adNode.getElementsByTagName('ClickThrough').length ?
-					adNode.getElementsByTagName('ClickThrough')[0].textContent.trim() :
-					'',
+					adNode.getElementsByTagName('ClickThrough')[0].textContent.trim() : '',
 				clickTrack = adNode.getElementsByTagName('ClickTracking').length ?
 					adNode.getElementsByTagName('ClickTracking')[0].textContent.trim() : '',
 				adTag = {
