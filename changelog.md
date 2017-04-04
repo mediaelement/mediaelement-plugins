@@ -3,6 +3,8 @@
 *2.1.1 (2017/??/??)*
 
 * Added demo file to show how to setup and configure plugins @ron666
+* Expanded `VAST` plugin to support VAST3.0 and added more events for preroll @ron666
+* Fixed typos in code in `Preview` and `Speed` plugins @ron666
 
 *2.1.0 (2017/03/30)*
 

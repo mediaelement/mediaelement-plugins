@@ -115,6 +115,26 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		});
 
+		// VOLUMECHANGE: preroll
+		t.container.addEventListener('mejsprerollvolumechanged', function () {
+
+			if (t.vastAdTags.length > 0 && t.options.indexPreroll < t.vastAdTags.length) {
+				var adTag = t.vastAdTags[t.options.indexPreroll];
+
+				if (adTag.trackingEvents.mute && !t.media.volume) {
+					for (var i = 0, total = adTag.trackingEvents.mute.length; i < total; i++) {
+						t.adsLoadUrl(adTag.trackingEvents.mute[i]);
+					}
+				}
+
+				if (adTag.trackingEvents.unmute && t.media.volume) {
+					for (var _i2 = 0, _total2 = adTag.trackingEvents.unmute.length; _i2 < _total2; _i2++) {
+						t.adsLoadUrl(adTag.trackingEvents.unmute[_i2]);
+					}
+				}
+			}
+		});
+
 		// UPDATE: preroll
 		t.container.addEventListener('mejsprerolltimeupdate', function (e) {
 
@@ -134,13 +154,13 @@ Object.assign(MediaElementPlayer.prototype, {
 					}
 					firstQuartExecuted = true;
 				} else if (adTag.trackingEvents.midpoint && !secondQuartExecuted && isMidPoint) {
-					for (var _i2 = 0, _total2 = adTag.trackingEvents.midpoint.length; _i2 < _total2; _i2++) {
-						t.adsLoadUrl(adTag.trackingEvents.midpoint[_i2]);
+					for (var _i3 = 0, _total3 = adTag.trackingEvents.midpoint.length; _i3 < _total3; _i3++) {
+						t.adsLoadUrl(adTag.trackingEvents.midpoint[_i3]);
 					}
 					secondQuartExecuted = true;
 				} else if (adTag.trackingEvents.thirdQuartile && !thirdQuartExecuted && isThirdQuart) {
-					for (var _i3 = 0, _total3 = adTag.trackingEvents.thirdQuartile.length; _i3 < _total3; _i3++) {
-						t.adsLoadUrl(adTag.trackingEvents.thirdQuartile[_i3]);
+					for (var _i4 = 0, _total4 = adTag.trackingEvents.thirdQuartile.length; _i4 < _total4; _i4++) {
+						t.adsLoadUrl(adTag.trackingEvents.thirdQuartile[_i4]);
 					}
 					thirdQuartExecuted = true;
 				}
@@ -155,6 +175,31 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (t.vastAdTags.length > 0 && t.options.indexPreroll < t.vastAdTags.length && adTag.trackingEvents.complete) {
 				for (var i = 0, total = adTag.trackingEvents.complete.length; i < total; i++) {
 					t.adsLoadUrl(adTag.trackingEvents.complete[i]);
+				}
+			}
+
+			firstQuartExecuted = false;
+			secondQuartExecuted = false;
+			thirdQuartExecuted = false;
+		});
+
+		// ADCLICKED: preroll
+		t.container.addEventListener('mejsprerolladsclicked', function () {
+			var adTag = t.vastAdTags[t.options.indexPreroll];
+
+			if (t.vastAdTags.length > 0 && t.options.indexPreroll < t.vastAdTags.length && adTag.clickThrough && adTag.clickTracking) {
+				t.adsLoadUrl(adTag.clickTracking);
+			}
+		});
+
+		// ADSKIPPED: preroll
+		t.container.addEventListener('mejsprerollskipclicked', function () {
+
+			var adTag = t.vastAdTags[t.options.indexPreroll];
+
+			if (t.vastAdTags.length > 0 && t.options.indexPreroll < t.vastAdTags.length && adTag.trackingEvents.skip) {
+				for (var i = 0, total = adTag.trackingEvents.skip.length; i < total; i++) {
+					t.adsLoadUrl(adTag.trackingEvents.skip[i]);
 				}
 			}
 		});
@@ -246,12 +291,17 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		for (var i = 0, total = ads.length; i < total; i++) {
 			var adNode = ads[i],
+			    title = adNode.getElementsByTagName('AdTitle').length ? adNode.getElementsByTagName('AdTitle')[0].textContent.trim() : adNode.getElementsByTagName('AdSystem')[0].textContent.trim(),
+			    description = adNode.getElementsByTagName('Description').length ? adNode.getElementsByTagName('Description')[0].textContent.trim() : '',
+			    clickLink = adNode.getElementsByTagName('ClickThrough').length ? adNode.getElementsByTagName('ClickThrough')[0].textContent.trim() : '',
+			    clickTrack = adNode.getElementsByTagName('ClickTracking').length ? adNode.getElementsByTagName('ClickTracking')[0].textContent.trim() : '',
 			    adTag = {
 				id: adNode.getAttribute('id'),
-				title: adNode.getElementsByTagName('AdTitle')[0].textContent.trim(),
-				description: adNode.getElementsByTagName('Description')[0].textContent.trim(),
+				title: title,
+				description: description,
 				impressions: [],
-				clickThrough: adNode.getElementsByTagName('ClickThrough')[0].textContent.trim(),
+				clickThrough: clickLink,
+				clickTracking: clickTrack,
 				mediaFiles: [],
 				trackingEvents: {},
 				// internal tracking if it's been used
