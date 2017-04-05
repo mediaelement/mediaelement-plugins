@@ -2,4 +2,4 @@
 
 Parameter | Type | Default | Description
 ------ | --------- | ------- | --------
-sourcechooserText | string | _(empty)_ | Title for Source Chooser button for WARIA purposes
+sourcechooserText | string | `null` | Title for Source Chooser button for WARIA purposes

@@ -67,10 +67,12 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildpreview: function (player) {
+	buildpreview (player) {
 		let
 			initFadeIn = false,
-			initFadeOut = false
+			initFadeOut = false,
+			timeout,
+			mouseOver = false
 		;
 
 		const
@@ -107,7 +109,7 @@ Object.assign(MediaElementPlayer.prototype, {
 									clearInterval(interval);
 									interval = null;
 									t.media.setMuted(false);
-									setTimeout(function () {
+									setTimeout(() => {
 										initFadeIn = false;
 									}, 300);
 								}
@@ -150,7 +152,7 @@ Object.assign(MediaElementPlayer.prototype, {
 									clearInterval(interval);
 									interval = null;
 									t.media.setMuted(false);
-									setTimeout(function () {
+									setTimeout(() => {
 										initFadeOut = false;
 									}, 300);
 								}
@@ -170,7 +172,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		// fade-in/out should be available for both video/audio
-		t.media.addEventListener('timeupdate', function () {
+		t.media.addEventListener('timeupdate', () => {
 
 			if (initFadeIn) {
 				t.media.removeEventListener('timeupdate', fadeInCallback);
@@ -192,22 +194,41 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		// show/hide controls
-		$('body').on('mouseover', function (e) {
+		document.body.addEventListener('mouseover', (e) => {
 
-			if ($(e.target).is(t.container) || $(e.target).closest(t.container).length) {
+			if (e.target === t.container || e.target.closest(`.${t.options.classPrefix}container`)) {
+				mouseOver = true;
+				t.container.querySelector(`.${t.options.classPrefix}overlay-loading`).parentNode.style.display = 'block';
+
 				if (t.media.paused) {
-					setTimeout(function () {
-						t.media.play();
-					}, t.options.delayPreview);
+					timeout = setTimeout(() => {
+						if (mouseOver) {
+							t.media.play();
+						} else {
+							clearTimeout(timeout);
+							timeout = null;
+						}
+						t.container.querySelector(`.${t.options.classPrefix}overlay-loading`).parentNode.style.display = 'none';
 
+					}, t.options.delayPreview);
+				} else {
+					t.container.querySelector(`.${t.options.classPrefix}overlay-loading`).parentNode.style.display = 'none';
 				}
-			} else if (!t.media.paused) {
-				t.media.pause();
+			} else {
+				mouseOver = false;
+				clearTimeout(timeout);
+				timeout = null;
+				if (!t.media.paused) {
+					t.media.pause();
+				}
+				t.container.querySelector(`.${t.options.classPrefix}overlay-loading`).parentNode.style.display = 'none';
 			}
 
-		}).on('mouseout', function (e) {
-
-			if (!$(e.target).is(t.container) && !$(e.target).closest(t.container).length) {
+		});
+		document.body.addEventListener('mouseout', (e) => {
+			if (!(e.target === t.container) && !(e.target.closest(`.${t.options.classPrefix}container`))) {
+				mouseOver = false;
+				t.container.querySelector(`.${t.options.classPrefix}overlay-loading`).parentNode.style.display = 'none';
 				if (!t.media.paused) {
 					t.media.pause();
 
@@ -215,10 +236,15 @@ Object.assign(MediaElementPlayer.prototype, {
 						t.media.setCurrentTime(0);
 					}
 				}
+
+				clearTimeout(timeout);
+				timeout = null;
 			}
 		});
 
-		$(window).on('scroll', function () {
+		window.addEventListener('scroll', () => {
+			mouseOver = false;
+			t.container.querySelector(`.${t.options.classPrefix}overlay-loading`).parentNode.style.display = 'none';
 			if (!t.media.paused) {
 				t.media.pause();
 			}

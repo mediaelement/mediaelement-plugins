@@ -49,7 +49,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildgoogleanalytics: function (player, controls, layers, media)  {
+	buildgoogleanalytics (player, controls, layers, media)  {
 
 		media.addEventListener('play', () => {
 			if (typeof ga !== 'undefined') {

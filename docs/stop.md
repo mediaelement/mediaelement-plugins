@@ -2,4 +2,4 @@
 
 Parameter | Type | Default | Description
 ------ | --------- | ------- | --------
-stopText | string | _(empty)_ | Title for Stop button for WARIA purposes
+stopText | string | `null` | Title for Stop button for WARIA purposes

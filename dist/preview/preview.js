@@ -70,7 +70,9 @@ Object.assign(MediaElementPlayer.prototype, {
   */
 	buildpreview: function buildpreview(player) {
 		var initFadeIn = false,
-		    initFadeOut = false;
+		    initFadeOut = false,
+		    timeout = void 0,
+		    mouseOver = false;
 
 		var t = this,
 		    fadeInCallback = function fadeInCallback() {
@@ -186,20 +188,39 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		// show/hide controls
-		$('body').on('mouseover', function (e) {
+		document.body.addEventListener('mouseover', function (e) {
 
-			if ($(e.target).is(t.container) || $(e.target).closest(t.container).length) {
+			if (e.target === t.container || e.target.closest('.' + t.options.classPrefix + 'container')) {
+				mouseOver = true;
+				t.container.querySelector('.' + t.options.classPrefix + 'overlay-loading').parentNode.style.display = 'block';
+
 				if (t.media.paused) {
-					setTimeout(function () {
-						t.media.play();
+					timeout = setTimeout(function () {
+						if (mouseOver) {
+							t.media.play();
+						} else {
+							clearTimeout(timeout);
+							timeout = null;
+						}
+						t.container.querySelector('.' + t.options.classPrefix + 'overlay-loading').parentNode.style.display = 'none';
 					}, t.options.delayPreview);
+				} else {
+					t.container.querySelector('.' + t.options.classPrefix + 'overlay-loading').parentNode.style.display = 'none';
 				}
-			} else if (!t.media.paused) {
-				t.media.pause();
+			} else {
+				mouseOver = false;
+				clearTimeout(timeout);
+				timeout = null;
+				if (!t.media.paused) {
+					t.media.pause();
+				}
+				t.container.querySelector('.' + t.options.classPrefix + 'overlay-loading').parentNode.style.display = 'none';
 			}
-		}).on('mouseout', function (e) {
-
-			if (!$(e.target).is(t.container) && !$(e.target).closest(t.container).length) {
+		});
+		document.body.addEventListener('mouseout', function (e) {
+			if (!(e.target === t.container) && !e.target.closest('.' + t.options.classPrefix + 'container')) {
+				mouseOver = false;
+				t.container.querySelector('.' + t.options.classPrefix + 'overlay-loading').parentNode.style.display = 'none';
 				if (!t.media.paused) {
 					t.media.pause();
 
@@ -207,10 +228,15 @@ Object.assign(MediaElementPlayer.prototype, {
 						t.media.setCurrentTime(0);
 					}
 				}
+
+				clearTimeout(timeout);
+				timeout = null;
 			}
 		});
 
-		$(window).on('scroll', function () {
+		window.addEventListener('scroll', function () {
+			mouseOver = false;
+			t.container.querySelector('.' + t.options.classPrefix + 'overlay-loading').parentNode.style.display = 'none';
 			if (!t.media.paused) {
 				t.media.pause();
 			}
