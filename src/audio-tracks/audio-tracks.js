@@ -33,7 +33,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildaudiotracks: function (player, controls)  {
+	buildaudiotracks (player)  {
 
 		const
 			t = this,
@@ -65,7 +65,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 	},
 
-	displayAudioCaptions: function() {
+	displayAudioCaptions () {
 	
 	}
 

@@ -35,7 +35,7 @@ Object.assign(MediaElementPlayer.prototype, {
   * @param {$} layers
   * @param {HTMLElement} media
   */
-	buildaudiotracks: function buildaudiotracks(player, controls) {
+	buildaudiotracks: function buildaudiotracks(player) {
 
 		var t = this,
 		    children = t.domNode.childNodes,
@@ -62,9 +62,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.addControlElement(player.audioTrackButton, 'audiotracks');
 	},
-
 	displayAudioCaptions: function displayAudioCaptions() {}
-
 });
 
 },{}]},{},[1]);
