@@ -44,7 +44,8 @@
     "preview": "browserify -t browserify-versionify -t [babelify] -p browserify-derequire -p bundle-collapser/plugin src/preview/preview.js > dist/preview/preview.js && uglifyjs dist/preview/preview.js -c sequences=true,dead_code=true,conditionals=true,booleans=true,unused=true,if_return=true,join_vars=true,drop_console=true -m --screw-ie8  > dist/preview/preview.min.js"
   },
   "dependencies": {
-    "global": "^4.3.1"
+    "global": "^4.3.1",
+    "mediaelement": "~4.0.3"
   },
   "browserify": {
     "extensions": [
