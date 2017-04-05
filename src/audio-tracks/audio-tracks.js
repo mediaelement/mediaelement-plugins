@@ -7,13 +7,15 @@
  * @see https://github.com/jrglasgow/mediaelement_audio_description
  */
 
+// Translations (English required)
+mejs.i18n.en['mejs.audio-track'] = 'Audio Tracks';
 
 // Feature configuration
 Object.assign(mejs.MepDefaults, {
 	/**
-	 * @type {String}
+	 * @type {?String}
 	 */
-	audioTrackText: '',
+	audioTrackText: null,
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -35,20 +37,31 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		const
 			t = this,
-			audioTracks = t.$media.children('audiotrack'),
-			total = audioTracks.length
+			children = t.domNode.childNodes,
+			audioTrackNodes = []
 		;
 
-		if (!total) {
+		let audioTracks = 0;
+
+		for (let i = 0, total = children.lenght; i < total; i++) {
+			if (children[i].tagName.toLowerCase() === 'audiotrack') {
+				audioTracks++;
+				audioTrackNodes.push(children[i]);
+			}
+		}
+
+
+		if (!audioTracks) {
 			return;
 		}
 
-		const audioTracksTitle = t.options.audioTrackText ? t.options.audioTrackText : mejs.i18n.t('mejs.audio-track');
+		const audioTracksTitle = mejs.Utils.isString(t.options.audioTrackText) ? t.options.audioTrackText : mejs.i18n.t('mejs.audio-track');
 
-		player.audioTrackButton = $(`<div class="${t.options.classPrefix}button ${t.options.classPrefix}audiotrack-button">` +
-			`<button type="button" aria-controls="${t.id}" title="${audioTracksTitle}" aria-label="${audioTracksTitle}" tabindex="0"></button>` +
-		`</div>`)
-		.appendTo(controls);
+		player.audioTrackButton = document.createElement('div');
+		player.audioTrackButton.className = `${t.options.classPrefix}button ${t.options.classPrefix}audiotrack-button`;
+		player.audioTrackButton.innerHTML = `<button type="button" aria-controls="${t.id}" title="${audioTracksTitle}" aria-label="${audioTracksTitle}" tabindex="0"></button>`;
+
+		t.addControlElement(player.audioTrackButton, 'audiotracks');
 
 	},
 
