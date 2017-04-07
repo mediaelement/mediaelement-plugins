@@ -59,6 +59,7 @@
 <script src="../dist/speed/speed.min.js"></script>
 <script>
 	new MediaElementPlayer('player1', {
+		autoRewind: false,
 		features: ['playpause', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'markers'],
 	    markers: [5, 10, 25, 40],
 	    markerCallback: function (media, currentTime) {
