@@ -47,8 +47,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// add a click toggle event
 		button.addEventListener('click', function() {
-			if (media.duration) {
-				media.setCurrentTime(Math.max(media.currentTime - t.options.skipBackInterval, 0));
+			const duration = !isNaN(media.duration) ? media.duration : t.options.skipBackInterval;
+			if (duration) {
+				const current = media.currentTime === Infinity ? 0 : media.currentTime;
+				media.setCurrentTime(Math.max(current - t.options.jumpForwardInterval, 0));
 				this.querySelector('button').blur();
 			}
 		});

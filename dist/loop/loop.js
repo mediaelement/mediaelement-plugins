@@ -10,12 +10,6 @@
 
 // Translations (English required)
 
-var _templateObject = _taggedTemplateLiteral(["", "loop-on"], ["", "loop-on"]);
-
-function _taggedTemplateLiteral(strings, raw) {
-	return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
-}
-
 mejs.i18n.en["mejs.loop"] = "Toggle Loop";
 
 // Feature configuration
@@ -53,7 +47,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				mejs.Utils.removeClass(loop, t.options.classPrefix + "loop-off");
 				mejs.Utils.addClass(loop, t.options.classPrefix + "loop-on");
 			} else {
-				mejs.Utils.removeClass(loop(_templateObject, t.options.classPrefix));
+				mejs.Utils.removeClass(loop, t.options.classPrefix + "loop-on");
 				mejs.Utils.addClass(loop, t.options.classPrefix + "loop-off");
 			}
 		});

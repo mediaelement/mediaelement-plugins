@@ -47,7 +47,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				mejs.Utils.removeClass(loop, `${t.options.classPrefix}loop-off`);
 				mejs.Utils.addClass(loop, `${t.options.classPrefix}loop-on`);
 			} else {
-				mejs.Utils.removeClass(loop`${t.options.classPrefix}loop-on`);
+				mejs.Utils.removeClass(loop, `${t.options.classPrefix}loop-on`);
 				mejs.Utils.addClass(loop, `${t.options.classPrefix}loop-off`);
 			}
 		});
