@@ -2,6 +2,6 @@
     font-size: 8px;
     line-height: normal;
     color: #ffffff;
-    background-position: -180px 0;
+    background: url("jumpforward.svg") no-repeat 0 1px;
     position: relative;
 }
