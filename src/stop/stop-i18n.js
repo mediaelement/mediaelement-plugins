@@ -13,7 +13,7 @@ if (mejs.i18n.es !== undefined) {
 	mejs.i18n.es["mejs.stop"] = "Parar";
 }
 if (mejs.i18n.fr !== undefined) {
-	// mejs.i18n.fr["mejs.stop"] = "Stop";
+	mejs.i18n.fr["mejs.stop"] = "Stop";
 }
 if (mejs.i18n.hr !== undefined) {
 	mejs.i18n.hr["mejs.stop"] = "Zaustavi";
