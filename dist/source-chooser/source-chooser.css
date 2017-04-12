@@ -4,7 +4,7 @@
 
 .mejs__sourcechooser-button > button, .mejs-sourcechooser-button > button {
     background: url("settings.svg") transparent no-repeat;
-    background-position: 0;
+    background-position: 0 1px;
 }
 
 .mejs__sourcechooser-button .mejs__sourcechooser-selector, .mejs-sourcechooser-button .mejs-sourcechooser-selector {
