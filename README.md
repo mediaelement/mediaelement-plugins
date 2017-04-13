@@ -67,10 +67,12 @@ Once installed, at the command prompt, type `npm install`, which will download a
 * **ALWAYS** make changes to the files in the `/src/` directory, and **NEVER** in `/build/` directory. This is with the sole purpose of facilitating the merging (and further, the compiling) operation, and help people to see changes more easily.
 * Use [JSDoc](http://usejsdoc.org/) conventions to document code. This facilitates the contributions of other developers and ensures more quality in the product.
 * **BEFORE PUSHING** any changes, run `npm run jshint` to ensure code quality.
-* The file for the feature must be placed inside a folder matching its name (i.e, `loop/loop.js`).
+* The file for the feature must be placed inside a folder matching its name, as well as any SVG/CSS elements needed (i.e, `loop/loop.js`).
 * Update `package.json` with a command under the `script` configuration to make sure it will be bundled and compiled properly. For more reference, [review the file](package.json).
 * Make sure you also write comments about their purpose, and add them into the README file to keep documentation up-to-date.
+* **DO NOT REINVENT THE WHEEL**: Use the utilities that `MediaElement` provides for DOM manipulation/AJAX/etc. Check [this link](https://github.com/mediaelement/mediaelement/blob/master/docs/utils.md) for more details.  
 * You can also include CSS inside the feature folder, matching the name of the feature JS file and adding CSS styles for "legacy" and BEM naming convention.
+* If using an icon, its size **MUST** be **20x20px**, so it matches all the rest of the icons' dimensions. 
 ```css
 .mejs__[feature_name], .mejs-[feature_name] {
     // all your styles
@@ -109,11 +111,11 @@ Object.assign(MediaElementPlayer.prototype, {
      *
      * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
      * @param {MediaElementPlayer} player
-     * @param {$} controls
-     * @param {$} layers
+     * @param {HTMLElement} controls
+     * @param {HTMLElement} layers
      * @param {HTMLElement} media
      */
-    build[feature_name]: function(player, controls, layers, media) {
+    build[feature_name] (player, controls, layers, media) {
         // This allows us to access options and other useful elements already set.
         // Adding variables to the object is a good idea if you plan to reuse 
         // those variables in further operations.
@@ -122,7 +124,7 @@ Object.assign(MediaElementPlayer.prototype, {
         // All code required inside here to keep it private;
         // otherwise, you can create more methods or add variables
         // outside of this scope
-    }
+    },
     
     // Optionally, each feature can be destroyed setting a `clean` method
     
@@ -131,8 +133,11 @@ Object.assign(MediaElementPlayer.prototype, {
      *
      * Always has to be prefixed with `clean` and the name that was used in MepDefaults.features list
      * @param {MediaElementPlayer} player
+     * @param {HTMLElement} controls
+     * @param {HTMLElement} layers
+     * @param {HTMLElement} media
      */
-    clean[feature_name]: function(player, controls, layers, media) {}
+    clean[feature_name] (player, controls, layers, media) {}
             
     // Other optional public methods (all documented according to JSDoc specifications)
 });
@@ -225,7 +230,7 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 ## Available plugins
 
 * [Ads](docs/ads.md)
-* [VAST](docs/ads-vast.md)
+* [VAST/VPAID](docs/ads-vast.md)
 * [Context Menu](docs/context-menu.md)
 * [Google Analytics](docs/google-analytics.md)
 * [Jump Forward](docs/jump-forward.md)

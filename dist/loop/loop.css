@@ -1,7 +1,10 @@
+.mejs__loop-button>button, .mejs-loop-button>button {
+    background: url("loop.svg") no-repeat transparent;
+}
 .mejs__loop-off > button, .mejs-loop-off > button {
-    background-position: -260px 0;
+    background-position: -20px 1px;
 }
 
 .mejs__loop-on > button, .mejs-loop-on > button {
-    background-position: -240px 0;
+    background-position: 0 1px;
 }

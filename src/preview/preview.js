@@ -109,7 +109,7 @@ Object.assign(MediaElementPlayer.prototype, {
 									clearInterval(interval);
 									interval = null;
 									t.media.setMuted(false);
-									setTimeout(function () {
+									setTimeout(() => {
 										initFadeIn = false;
 									}, 300);
 								}
@@ -152,7 +152,7 @@ Object.assign(MediaElementPlayer.prototype, {
 									clearInterval(interval);
 									interval = null;
 									t.media.setMuted(false);
-									setTimeout(function () {
+									setTimeout(() => {
 										initFadeOut = false;
 									}, 300);
 								}
@@ -172,7 +172,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		// fade-in/out should be available for both video/audio
-		t.media.addEventListener('timeupdate', function () {
+		t.media.addEventListener('timeupdate', () => {
 
 			if (initFadeIn) {
 				t.media.removeEventListener('timeupdate', fadeInCallback);
