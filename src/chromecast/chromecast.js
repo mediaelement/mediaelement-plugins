@@ -94,13 +94,10 @@ Object.assign(MediaElementPlayer.prototype, {
 					t.initializeCastApi();
 				}
 			};
-
-			const script = document.createElement('script');
-
-			script.src = 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1';
-
-			document.head.appendChild(script);
 			
+			const script = document.createElement('script');
+			script.src = '//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1';
+			document.head.appendChild(script);
 			initiatedCastFramework = true;
 		}
 	},
