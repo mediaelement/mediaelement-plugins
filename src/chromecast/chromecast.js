@@ -65,7 +65,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		let loaded = false;
+		let initiatedCastFramework = false;
 
 		button.className = `${t.options.classPrefix}button ${t.options.classPrefix}chromecast-button`;
 		button.innerHTML = `<button type="button" is="google-cast-button" aria-controls="${t.id}" title="${castTitle}" aria-label="${castTitle}" tabindex="0"></button>`;
@@ -86,7 +86,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.castButton = button;
 
 		// Load Cast sender library
-		if (!loaded) {
+		if (!initiatedCastFramework) {
 
 			// Start SDK
 			window.__onGCastApiAvailable = (isAvailable) => {
@@ -95,26 +95,13 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 			};
 
-			const
-				script = document.createElement('script'),
-				firstScriptTag = document.getElementsByTagName('script')[0]
-			;
+			const script = document.createElement('script');
 
-			let done = false;
+			script.src = 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1';
 
-			script.src = '//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1';
-
-			// Attach handlers for all browsers
-			script.onload = script.onreadystatechange = function () {
-				if (!done && (!this.readyState || this.readyState === undefined ||
-					this.readyState === 'loaded' || this.readyState === 'complete')) {
-					done = true;
-					script.onload = script.onreadystatechange = null;
-				}
-			};
-
-			firstScriptTag.parentNode.appendChild(script);
-			loaded = true;
+			document.head.appendChild(script);
+			
+			initiatedCastFramework = true;
 		}
 	},
 
