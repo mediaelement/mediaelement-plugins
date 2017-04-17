@@ -149,7 +149,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		;
 
 		// Add event listeners for player changes which may occur outside sender app
-		t.castPlayerController.addEventListener(cast.framework.castPlayerEventType.IS_PAUSED_CHANGED, () => {
+		t.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_PAUSED_CHANGED, () => {
 			if (t.castPlayer.isPaused) {
 				t.media.pause();
 			} else {
@@ -157,11 +157,11 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		});
 
-		t.castPlayerController.addEventListener(cast.framework.castPlayerEventType.IS_MUTED_CHANGED, () => {
+		t.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_MUTED_CHANGED, () => {
 			t.media.setMute(t.castPlayer.isMuted);
 		});
 
-		t.castPlayerController.addEventListener(cast.framework.castPlayerEventType.VOLUME_LEVEL_CHANGED, () => {
+		t.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED, () => {
 		});
 
 		mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();

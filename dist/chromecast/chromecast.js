@@ -141,7 +141,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		    request = new chrome.cast.media.LoadRequest(mediaInfo);
 
 		// Add event listeners for player changes which may occur outside sender app
-		t.castPlayerController.addEventListener(cast.framework.castPlayerEventType.IS_PAUSED_CHANGED, function () {
+		t.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_PAUSED_CHANGED, function () {
 			if (t.castPlayer.isPaused) {
 				t.media.pause();
 			} else {
@@ -149,11 +149,11 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		});
 
-		t.castPlayerController.addEventListener(cast.framework.castPlayerEventType.IS_MUTED_CHANGED, function () {
+		t.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_MUTED_CHANGED, function () {
 			t.media.setMute(t.castPlayer.isMuted);
 		});
 
-		t.castPlayerController.addEventListener(cast.framework.castPlayerEventType.VOLUME_LEVEL_CHANGED, function () {});
+		t.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED, function () {});
 
 		mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
 		mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
