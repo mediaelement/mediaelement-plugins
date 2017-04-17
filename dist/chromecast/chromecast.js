@@ -115,7 +115,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.castPlayer = new cast.framework.RemotePlayer();
 		t.castPlayerController = new cast.framework.RemotePlayerController(t.castPlayer);
-		t.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, t.loadPlayer);
+		t.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, t.loadPlayer.bind(t));
 	},
 	loadPlayer: function loadPlayer() {
 		var t = this;
@@ -155,8 +155,8 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.castPlayerController.addEventListener(cast.framework.castPlayerEventType.VOLUME_LEVEL_CHANGED, function () {});
 
-		// mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
-		// mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
+		mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
+		mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
 
 		t.media.addEventListener('loadeddata', function () {
 
