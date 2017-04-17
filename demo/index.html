@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="../dist/jump-forward/jump-forward.min.css">
     <link rel="stylesheet" href="../dist/skip-back/skip-back.min.css">
     <link rel="stylesheet" href="../dist/speed/speed.min.css">
+    <link rel="stylesheet" href="../dist/chromecast/chromecast.min.css">
 
     <style>
         #container {
@@ -57,10 +58,11 @@
 <script src="../dist/skip-back/skip-back.min.js"></script>
 <script src="../dist/markers/markers.min.js"></script>
 <script src="../dist/speed/speed.min.js"></script>
+<script src="../dist/chromecast/chromecast.min.js"></script>
 <script>
 	new MediaElementPlayer('player1', {
 		autoRewind: false,
-		features: ['playpause', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'markers'],
+		features: ['playpause', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'markers', 'chromecast'],
 	    markers: [5, 10, 25, 40],
 	    markerCallback: function (media, currentTime) {
 			console.log('Reached ' + currentTime + ' secs');
