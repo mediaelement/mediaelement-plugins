@@ -2,6 +2,7 @@
 
 /**
  * Chrome Cast Plugin
+ * It uses the Cast Framework v3.0 to connect to Chromecast devices
  * @see https://developers.google.com/cast/docs/developers
  */
 
@@ -69,18 +70,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		button.className = `${t.options.classPrefix}button ${t.options.classPrefix}chromecast-button`;
 		button.innerHTML = `<button type="button" is="google-cast-button" aria-controls="${t.id}" title="${castTitle}" aria-label="${castTitle}" tabindex="0"></button>`;
-		button.addEventListener('click', function () {
-			if (mejs.Utils.hasClass(button, t.options.classPrefix + "chromecast-connected")) {
-				mejs.Utils.removeClass(button, t.options.classPrefix + "chromecast-connected");
-			} else {
-				mejs.Utils.addClass(button, t.options.classPrefix + "chromecast-connecting");
-
-				setTimeout(function () {
-					mejs.Utils.removeClass(button, t.options.classPrefix + "chromecast-connecting");
-					mejs.Utils.addClass(button, t.options.classPrefix + "chromecast-connected");
-				}, 2000);
-			}
-		});
 
 		t.addControlElement(button, 'chromecast');
 		t.castButton = button;
@@ -175,8 +164,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.castPlayerController.addEventListener(cast.framework.castPlayerEventType.VOLUME_LEVEL_CHANGED, () => {
 		});
 
-		mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
-		mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
+		// mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
+		// mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
 
 		t.media.addEventListener('loadeddata', () => {
 
@@ -236,7 +225,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.castPlayer.volumeLevel = t.media.getVolume();
 			t.castPlayerController.setVolumeLevel();
 
-			if ((t.media.getVolume && t.media.muted) || !t.media.getVolume()) {
+			if ((t.media.getVolume() && t.media.muted) || !t.media.getVolume()) {
 				t.castPlayerController.muteOrUnmute();
 			}
 		});
