@@ -18,7 +18,7 @@ Object.assign(mejs.MepDefaults, {
   * Chromecast App ID
   * @type {String}
   */
-	castAppID: '4F8B3483',
+	castAppID: null,
 
 	/**
   * Chromecast type of policy
@@ -103,7 +103,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		cast.framework.CastContext.getInstance().setOptions({
-			receiverApplicationId: t.options.castAppID,
+			receiverApplicationId: t.options.castAppID || chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
 			autoJoinPolicy: chrome.cast.AutoJoinPolicy[origin]
 		});
 
@@ -147,7 +147,9 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.media.setMute(t.castPlayer.isMuted);
 		});
 
-		t.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED, function () {});
+		t.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED, function (e) {
+			t.media.setVolume(e.value);
+		});
 
 		mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
 		mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
@@ -196,15 +198,17 @@ Object.assign(MediaElementPlayer.prototype, {
 			});
 		});
 
-		var events = ['play', 'pause'];
+		t.media.addEventListener('play', function () {
+			if (t.castPlayer.isPaused) {
+				t.castPlayerController.playOrPause();
+			}
+		});
 
-		for (var i = 0, total = events.lenght; i < total; i++) {
-			t.media.addEventListener(events[i], function () {
-				if (t.castPlayer.isPaused) {
-					t.castPlayerController.playOrPause();
-				}
-			});
-		}
+		t.media.addEventListener('pause', function () {
+			if (!t.castPlayer.isPaused) {
+				t.castPlayerController.playOrPause();
+			}
+		});
 
 		t.media.addEventListener('volumechange', function () {
 			t.castPlayer.volumeLevel = t.media.getVolume();
