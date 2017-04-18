@@ -34,13 +34,7 @@ Object.assign(mejs.MepDefaults, {
   * Title display
   * @type {String}
   */
-	castTitle: null,
-
-	/**
-  * Synopsis display
-  * @type {String}
-  */
-	castSubtitle: null
+	castTitle: null
 
 });
 
