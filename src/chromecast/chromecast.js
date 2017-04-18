@@ -155,8 +155,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.media.setMute(t.castPlayer.isMuted);
 		});
 
-		t.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED, (evt) => {
-			t.media.setVolume(evt.value)
+		t.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED, (e) => {
+			t.media.setVolume(e.value);
 		});
 
 		mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
