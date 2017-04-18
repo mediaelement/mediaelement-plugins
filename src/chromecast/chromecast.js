@@ -206,15 +206,17 @@ Object.assign(MediaElementPlayer.prototype, {
 			});
 		});
 
-		const events = ['play', 'pause'];
+		t.media.addEventListener('play', () => {
+			if (t.castPlayer.isPaused) {
+				t.castPlayerController.playOrPause();
+			}
+		});
 
-		for (let i = 0, total = events.lenght; i < total; i++) {
-			t.media.addEventListener(events[i], () => {
-				if (t.castPlayer.isPaused) {
-					t.castPlayerController.playOrPause();
-				}
-			});
-		}
+		t.media.addEventListener('pause', () => {
+			if (!t.castPlayer.isPaused) {
+				t.castPlayerController.playOrPause();
+			}
+		});
 
 		t.media.addEventListener('volumechange', () => {
 			t.castPlayer.volumeLevel = t.media.getVolume();
