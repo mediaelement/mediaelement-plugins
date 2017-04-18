@@ -16,7 +16,7 @@ Object.assign(mejs.MepDefaults, {
 	 * Chromecast App ID
 	 * @type {String}
 	 */
-	castAppID: '4F8B3483',
+	castAppID: null,
 
 	/**
 	 * Chromecast type of policy
@@ -104,7 +104,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 
 		cast.framework.CastContext.getInstance().setOptions({
-			receiverApplicationId: t.options.castAppID,
+			receiverApplicationId: t.options.castAppID || chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
 			autoJoinPolicy: chrome.cast.AutoJoinPolicy[origin]
 		});
 
