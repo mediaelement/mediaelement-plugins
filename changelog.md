@@ -1,6 +1,6 @@
 ### Version History
 
-*2.1.1 (2017/??/??)*
+*2.1.1 (2017/04/19)*
 
 * Added demo file to show how to setup and configure plugins @rafa8626
 * Expanded `VAST` plugin to support VAST3.0 and added more events for preroll @rafa8626
