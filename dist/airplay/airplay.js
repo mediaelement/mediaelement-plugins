@@ -23,18 +23,22 @@ Object.assign(MediaElementPlayer.prototype, {
   * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
   */
 	buildairplay: function buildairplay() {
+		// bail early if not available
+		if (!window.WebKitPlaybackTargetAvailabilityEvent) {
+			return;
+		}
+
 		var t = this,
 		    airPlayTitle = mejs.Utils.isString(t.options.airPlayText) ? t.options.airPlayText : 'AirPlay',
 		    button = document.createElement('div');
+
+		t.addControlElement(button, 'airplay');
 
 		button.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'airplay-button';
 		button.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + airPlayTitle + '" aria-label="' + airPlayTitle + '" tabindex="0"></button>';
 
 		button.addEventListener('click', function () {
-			t.media.originaNode.webkitShowPlaybackTargetPicker();
-
-			var event = mejs.Utils.createEvent('airplayStart', t.media);
-			t.media.dispatchEvent(event);
+			t.media.originalNode.webkitShowPlaybackTargetPicker();
 		});
 
 		var acceptAirPlay = t.media.originalNode.getAttribute('x-webkit-airplay');
@@ -42,23 +46,17 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.media.originalNode.setAttribute('x-webkit-airplay', 'allow');
 		}
 
-		// Detect if AirPlay is available
-		// Mac OS Safari 9+ only
-		if (window.WebKitPlaybackTargetAvailabilityEvent) {
+		t.media.originalNode.addEventListener('webkitcurrentplaybacktargetiswirelesschanged', function () {
+			var name = t.media.originalNode.webkitCurrentPlaybackTargetIsWireless ? 'Started' : 'Stopped',
+			    event = mejs.Utils.createEvent('airplay' + name, t.media);
+			t.media.dispatchEvent(event);
+		});
 
-			t.media.originalNode.addEventListener('webkitplaybacktargetavailabilitychanged', function (e) {
-				switch (e.availability) {
-					case 'available':
-						player.on('loadeddata', function () {
-							t.addControlElement(button, 'airplay');
-						});
-						break;
-
-					case 'not-available':
-						break;
-				}
-			});
-		};
+		t.media.originalNode.addEventListener('webkitplaybacktargetavailabilitychanged', function (e) {
+			if (e.availability === 'available') {
+				t.addControlElement(button, 'airplay');
+			}
+		});
 	}
 });
 

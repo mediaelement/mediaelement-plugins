@@ -1,4 +1,3 @@
 .mejs__airplay-button>button, .mejs-airplay-button>button {
-    background: url('airplay.svg') no-repeat 0 0;
+    background: url('airplay.svg') no-repeat 0 4px;
 }
-/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImFpcnBsYXkuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0lBQ0ksNkNBQTZDO0NBQ2hEIiwiZmlsZSI6ImFpcnBsYXkuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLm1lanNfX2FpcnBsYXktYnV0dG9uPmJ1dHRvbiwgLm1lanMtYWlycGxheS1idXR0b24+YnV0dG9uIHtcbiAgICBiYWNrZ3JvdW5kOiB1cmwoJ2FpcnBsYXkuc3ZnJykgbm8tcmVwZWF0IDAgMDtcbn0iXX0= */
