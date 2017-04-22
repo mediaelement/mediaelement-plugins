@@ -21,6 +21,10 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
 	 */
 	buildairplay ()  {
+		// bail early if not avalible
+		if (!window.WebKitPlaybackTargetAvailabilityEvent)
+			return
+			
 		const
 			t = this,
 			airPlayTitle = mejs.Utils.isString(t.options.airPlayText) ? t.options.airPlayText : 'AirPlay',
@@ -31,10 +35,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		button.innerHTML = `<button type="button" aria-controls="${t.id}" title="${airPlayTitle}" aria-label="${airPlayTitle}" tabindex="0"></button>`;
 
 		button.addEventListener('click', () => {
-			t.media.originaNode.webkitShowPlaybackTargetPicker();
-
-			const event = mejs.Utils.createEvent('airplayStart', t.media);
-			t.media.dispatchEvent(event);
+			t.media.originalNode.webkitShowPlaybackTargetPicker();
 		});
 
 		const acceptAirPlay = t.media.originalNode.getAttribute('x-webkit-airplay');
@@ -42,24 +43,18 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.media.originalNode.setAttribute('x-webkit-airplay', 'allow');
 		}
 
-		// Detect if AirPlay is available
-		// Mac OS Safari 9+ only
-		if (window.WebKitPlaybackTargetAvailabilityEvent) {
+		t.media.originalNode.addEventListener('webkitcurrentplaybacktargetiswirelesschanged', () => {
+			const name = t.media.originalNode.webkitCurrentPlaybackTargetIsWireless ? 'Started' : 'Stopped';
+			const event = mejs.Utils.createEvent('airplay' + name, t.media);
+			t.media.dispatchEvent(event);
+		})
 
-			t.media.originalNode.addEventListener('webkitplaybacktargetavailabilitychanged', function(e) {
-				switch (e.availability) {
-					case 'available':
-						player.on('loadeddata', () => {
-							t.addControlElement(button, 'airplay');
-						});
-						break;
+		t.media.originalNode.addEventListener('webkitplaybacktargetavailabilitychanged', function(e) {
+			if (e.availability == 'available') {
+				t.addControlElement(button, 'airplay');
+			}
+		});
 
-					case 'not-available':
-						break;
-				}
-			});
-
-		};
 	}
 });
 
