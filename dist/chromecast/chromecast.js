@@ -516,7 +516,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		// Activate poster layer
 		player.chromecastLayer.innerHTML = '<div class="' + t.options.classPrefix + 'chromecast-container">' + ('<span class="' + t.options.classPrefix + 'chromecast-icon"></span>') + ('<span class="' + t.options.classPrefix + 'chromecast-info">' + mejs.i18n.t('mejs.chromecast-legend') + ' <span class="device"></span></span>') + '</div>';
 
-		var poster = layers.querySelector('.' + t.options.classPrefix + 'poster');
 		if (media.originalNode.getAttribute('poster')) {
 			player.chromecastLayer.innerHTML += '<img src="' + media.originalNode.getAttribute('poster') + '" width="100%" height="100%">';
 		}
@@ -551,7 +550,7 @@ Object.assign(MediaElementPlayer.prototype, {
 							    deviceInfo = layers.querySelector('.' + t.options.classPrefix + 'chromecast-info').querySelector('.device');
 
 							deviceInfo.innerText = castSession.getCastDevice().friendlyName;
-							poster.style.display = '';
+							player.chromecastLayer.style.display = 'block';
 
 							media.addEventListener('play', function () {
 								poster.style.display = '';
