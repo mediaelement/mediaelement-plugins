@@ -504,7 +504,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.chromecastLayer.innerHTML = '<div class="' + t.options.classPrefix + 'chromecast-info"></div>';
 		player.chromecastLayer.style.display = 'none';
 
-		layers.insertBefore(player.captions, layers.firstChild);
+		layers.insertBefore(player.chromecastLayer, layers.firstChild);
 
 		button.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'chromecast-button';
 		button.innerHTML = '<button type="button" is="google-cast-button" aria-controls="' + t.id + '" title="' + castTitle + '" aria-label="' + castTitle + '" tabindex="0"></button>';
