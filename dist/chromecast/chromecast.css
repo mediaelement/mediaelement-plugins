@@ -1,3 +1,6 @@
+.mejs__chromecast-button {
+    width: auto;
+}
 .mejs__chromecast-button > button, .mejs-chromecast-button > button {
     background: none;
 }

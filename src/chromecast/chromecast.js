@@ -3,150 +3,22 @@
 /**
  * Chromecast renderer/plugin
  *
+ * 1) Add JS framwework
+ * 2) Display button when available
+ * 3) Load the new renderer when connect status changes
+ * 4) Change renderers when connection status change
+ *
  * Uses version 3.0 to take advantage of Google Cast Framework, and creates a button to turn on/off Chromecast streaming
  * @see https://developers.google.com/cast/docs/developers
  */
-const castApi = {
-	/**
-	 * @type {Boolean}
-	 */
-	isCastStarted: false,
-	/**
-	 * @type {Boolean}
-	 */
-	isCastLoaded: false,
-	/**
-	 * @type {Array}
-	 */
-	mediaQueue: [],
-
-	/**
-	 * Create a queue to prepare the creation of Cast
-	 *
-	 * @param {Object} settings - an object with settings needed to create Cast
-	 */
-	enqueueCast: (settings) => {
-
-		castApi.isLoaded = typeof cast !== 'undefined';
-
-		if (castApi.isLoaded) {
-			castApi.initializeCast(settings);
-		} else {
-			castApi.loadApi();
-			castApi.mediaQueue.push(settings);
-		}
-	},
-
-	/**
-	 * Load Cast API script on the body of the document
-	 *
-	 */
-	loadApi: () => {
-
-		if (!castApi.isCastStarted) {
-
-			// Start SDK
-			window.__onGCastApiAvailable = (isAvailable) => {
-				if (isAvailable) {
-					castApi.castReady();
-				}
-			};
-
-			const script = document.createElement('script');
-			script.src = '//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1';
-			document.body.appendChild(script);
-			castApi.isCastStarted = true;
-		}
-	},
-
-	/**
-	 * Process queue of Cast element creation
-	 *
-	 */
-	castReady: () => {
-
-		castApi.isLoaded = true;
-		castApi.isCastLoaded = true;
-
-		while (castApi.mediaQueue.length > 0) {
-			const settings = castApi.mediaQueue.pop();
-			castApi.initializeCast(settings);
-		}
-	},
-
-	/**
-	 * Create a new instance of Cast API player and trigger a custom event to initialize it
-	 *
-	 * @param {Object} settings - an object with settings needed to create Cast
-	 */
-	initializeCast: (settings) => {
-		window[`__ready__${settings.id}`](settings.options);
-	},
-
-	getErrorMessage: (error) => {
-
-		const description = error.description ? ` : ${error.description}` : '.';
-
-		let message;
-
-		switch (errorCode.code) {
-			case chrome.cast.ErrorCode.API_NOT_INITIALIZED:
-				message = `The API is not initialized${description}`;
-				break;
-			case chrome.cast.ErrorCode.CANCEL:
-				message = `The operation was canceled by the user${description}`;
-				break;
-			case chrome.cast.ErrorCode.CHANNEL_ERROR:
-				message = `A channel to the receiver is not available${description}`;
-				break;
-			case chrome.cast.ErrorCode.EXTENSION_MISSING:
-				message = `The Cast extension is not available${description}`;
-				break;
-			case chrome.cast.ErrorCode.INVALID_PARAMETER:
-				message = `The parameters to the operation were not valid${description}`;
-				break;
-			case chrome.cast.ErrorCode.RECEIVER_UNAVAILABLE:
-				message = `No receiver was compatible with the session request${description}`;
-				break;
-			case chrome.cast.ErrorCode.SESSION_ERROR:
-				message = `A session could not be created, or a session was invalid${description}`;
-				break;
-			case chrome.cast.ErrorCode.TIMEOUT:
-				message = `The operation timed out${description}`;
-				break;
-			default:
-				message = `Unknown error: ${errorCode.code}`;
-				break;
-		}
-
-		console.error(message);
-	}
-};
-
-export const CastRenderer = {
+const CastRenderer = {
 
 	name: 'chromecast',
 
 	options: {
 		prefix: 'chromecast',
 
-		cast: {
-			/**
-			 * Chromecast App ID
-			 * @type {String}
-			 */
-			appID: null,
-
-			/**
-			 * Chromecast type of policy
-			 * `origin`: Auto connect from same appId and page origin (default)
-			 * `tab`: Auto connect from same appId, page origin, and tab
-			 * `page`: No auto connect
-			 *
-			 * @type {String}
-			 */
-			policy: 'origin'
-		}
+		cast: {}
 	},
 
 	/**
@@ -168,12 +40,50 @@ export const CastRenderer = {
 		// API objects
 		const
 			c = {},
-			readyState = 4
+			readyState = 4,
+			getErrorMessage = (error) => {
+
+				const description = error.description ? ` : ${error.description}` : '.';
+
+				let message;
+
+				switch (errorCode.code) {
+					case chrome.cast.ErrorCode.API_NOT_INITIALIZED:
+						message = `The API is not initialized${description}`;
+						break;
+					case chrome.cast.ErrorCode.CANCEL:
+						message = `The operation was canceled by the user${description}`;
+						break;
+					case chrome.cast.ErrorCode.CHANNEL_ERROR:
+						message = `A channel to the receiver is not available${description}`;
+						break;
+					case chrome.cast.ErrorCode.EXTENSION_MISSING:
+						message = `The Cast extension is not available${description}`;
+						break;
+					case chrome.cast.ErrorCode.INVALID_PARAMETER:
+						message = `The parameters to the operation were not valid${description}`;
+						break;
+					case chrome.cast.ErrorCode.RECEIVER_UNAVAILABLE:
+						message = `No receiver was compatible with the session request${description}`;
+						break;
+					case chrome.cast.ErrorCode.SESSION_ERROR:
+						message = `A session could not be created, or a session was invalid${description}`;
+						break;
+					case chrome.cast.ErrorCode.TIMEOUT:
+						message = `The operation timed out${description}`;
+						break;
+					default:
+						message = `Unknown error: ${errorCode.code}`;
+						break;
+				}
+
+				console.error(message);
+			}
 		;
 
 		let
-			castPlayer = null,
-			castPlayerController = null,
+			castPlayer = mediaElement.castPlayer,
+			castPlayerController = mediaElement.castPlayerController,
 			volume = 1
 		;
 
@@ -341,7 +251,7 @@ export const CastRenderer = {
 
 								if (mediaElement.originalNode.getAttribute('poster')) {
 									mediaInfo.metadata.images = [
-										{ 'url': mejs.Utils.absolutizeUrl(mediaElement.originalNode.getAttribute('poster')) }
+										{'url': mejs.Utils.absolutizeUrl(mediaElement.originalNode.getAttribute('poster'))}
 									];
 								}
 
@@ -358,7 +268,7 @@ export const CastRenderer = {
 
 									},
 									(error) => {
-										castApi.getErrorMessage(error);
+										getErrorMessage(error);
 									}
 								);
 								break;
@@ -373,119 +283,84 @@ export const CastRenderer = {
 			assignMethods(methods[i]);
 		}
 
-		window[`__ready__${c.id}`] = (options) => {
+		window[`__ready__${c.id}`] = () => {
 
-			let origin;
-
-			switch (options.policy) {
-				case 'tab':
-					origin = 'TAB_AND_ORIGIN_SCOPED';
-					break;
-				case 'page':
-					origin = 'PAGE_SCOPED';
-					break;
-				default:
-					origin = 'ORIGIN_SCOPED';
-					break;
-			}
-
-
-			cast.framework.CastContext.getInstance().setOptions({
-				receiverApplicationId: options.appID || chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
-				autoJoinPolicy: chrome.cast.AutoJoinPolicy[origin]
-			});
-
-			mediaElement.castPlayer = castPlayer = new cast.framework.RemotePlayer();
-			mediaElement.castPlayerController = castPlayerController = new cast.framework.RemotePlayerController(castPlayer);
-
+			// Add event listeners for player changes which may occur outside sender app
 			castPlayerController.addEventListener(
-				cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, () => {
-					if (cast && cast.framework) {
-						if (castPlayer.isConnected) {
-							// Add event listeners for player changes which may occur outside sender app
-							castPlayerController.addEventListener(
-								cast.framework.RemotePlayerEventType.IS_PAUSED_CHANGED,
-								() => {
-									if (castPlayer.isPaused) {
-										c.pause();
-									} else {
-										c.play();
-									}
-								}
-							);
-
-							castPlayerController.addEventListener(
-								cast.framework.RemotePlayerEventType.IS_MUTED_CHANGED,
-								() => c.setMuted(castPlayer.isMuted)
-							);
-
-							castPlayerController.addEventListener(
-								cast.framework.RemotePlayerEventType.IS_MEDIA_LOADED_CHANGED,
-								() => {
-									setTimeout(() => {
-										const event = mejs.Utils.createEvent('loadedmetadata', c);
-										mediaElement.dispatchEvent(event);
-									}, 50);
-								}
-							);
-
-							castPlayerController.addEventListener(
-								cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED,
-								() => {
-									const event = mejs.Utils.createEvent('volumechange', c);
-									mediaElement.dispatchEvent(event);
-								}
-							);
-
-							castPlayerController.addEventListener(
-								cast.framework.RemotePlayerEventType.DURATION_CHANGED,
-								() => {
-									setTimeout(() => {
-										const event = mejs.Utils.createEvent('timeupdate', c);
-										mediaElement.dispatchEvent(event);
-									}, 50);
-								}
-							);
-
-							castPlayerController.addEventListener(
-								cast.framework.RemotePlayerEventType.CURRENT_TIME_CHANGED,
-								() => {
-									setTimeout(() => {
-										const event = mejs.Utils.createEvent('timeupdate', c);
-										mediaElement.dispatchEvent(event);
-									}, 50);
-
-									if (mediaElement.castPlayer.currentTime >= mediaElement.castPlayer.duration) {
-										setTimeout(() => {
-											const event = mejs.Utils.createEvent('ended', c);
-											mediaElement.dispatchEvent(event);
-										}, 50);
-									}
-								}
-							);
-
-							castPlayerController.addEventListener(
-								cast.framework.RemotePlayerEventType.IS_MUTED_CHANGED,
-								() => c.setMuted(castPlayer.isMuted)
-							);
-
-							c.load();
-
-							return;
-						}
+				cast.framework.RemotePlayerEventType.IS_PAUSED_CHANGED,
+				() => {
+					if (castPlayer.isPaused) {
+						c.pause();
+					} else {
+						c.play();
 					}
-
-					mediaElement.style.display = '';
-					const renderInfo = mejs.Renderers.select(mediaFiles, mediaElement.renderers);
-					mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
 				}
 			);
+
+			castPlayerController.addEventListener(
+				cast.framework.RemotePlayerEventType.IS_MUTED_CHANGED,
+				() => c.setMuted(castPlayer.isMuted)
+			);
+
+			castPlayerController.addEventListener(
+				cast.framework.RemotePlayerEventType.IS_MEDIA_LOADED_CHANGED,
+				() => {
+					setTimeout(() => {
+						const event = mejs.Utils.createEvent('loadedmetadata', c);
+						mediaElement.dispatchEvent(event);
+					}, 50);
+				}
+			);
+
+			castPlayerController.addEventListener(
+				cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED,
+				() => {
+					const event = mejs.Utils.createEvent('volumechange', c);
+					mediaElement.dispatchEvent(event);
+				}
+			);
+
+			castPlayerController.addEventListener(
+				cast.framework.RemotePlayerEventType.DURATION_CHANGED,
+				() => {
+					setTimeout(() => {
+						const event = mejs.Utils.createEvent('timeupdate', c);
+						mediaElement.dispatchEvent(event);
+					}, 50);
+				}
+			);
+
+			castPlayerController.addEventListener(
+				cast.framework.RemotePlayerEventType.CURRENT_TIME_CHANGED,
+				() => {
+					setTimeout(() => {
+						const event = mejs.Utils.createEvent('timeupdate', c);
+						mediaElement.dispatchEvent(event);
+					}, 50);
+
+					if (mediaElement.castPlayer.currentTime >= mediaElement.castPlayer.duration) {
+						setTimeout(() => {
+							const event = mejs.Utils.createEvent('ended', c);
+							mediaElement.dispatchEvent(event);
+						}, 50);
+					}
+				}
+			);
+
+			castPlayerController.addEventListener(
+				cast.framework.RemotePlayerEventType.IS_MUTED_CHANGED,
+				() => c.setMuted(castPlayer.isMuted)
+			);
+
+			c.load();
+
+			return;
 		};
 
 		mediaElement.autoplay = false;
 
 		// send it off for async loading and creation
-		castApi.enqueueCast({id: c.id, options: options.cast});
+		window[`__ready__${c.id}`]();
 
 		c.setSize = () => {};
 		c.hide = () => {};
@@ -503,8 +378,6 @@ export const CastRenderer = {
 	}
 };
 
-mejs.Renderers.add(CastRenderer);
-
 // Translations (English required)
 mejs.i18n.en['mejs.chromecast-legend'] = 'Casting to:';
 
@@ -514,7 +387,23 @@ Object.assign(mejs.MepDefaults, {
 	 * Title display
 	 * @type {String}
 	 */
-	castTitle: null
+	castTitle: null,
+
+	/**
+	 * Chromecast App ID
+	 * @type {String}
+	 */
+	castAppID: null,
+
+	/**
+	 * Chromecast type of policy
+	 * `origin`: Auto connect from same appId and page origin (default)
+	 * `tab`: Auto connect from same appId, page origin, and tab
+	 * `page`: No auto connect
+	 *
+	 * @type {String}
+	 */
+	castPolicy: 'origin'
 
 });
 
@@ -550,7 +439,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		button.className = `${t.options.classPrefix}button ${t.options.classPrefix}chromecast-button`;
 		button.innerHTML = `<button type="button" is="google-cast-button" aria-controls="${t.id}" title="${castTitle}" aria-label="${castTitle}" tabindex="0"></button>`;
-		button.style.display = 'none';
 
 		t.addControlElement(button, 'chromecast');
 		t.castButton = button;
@@ -559,7 +447,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.chromecastLayer.innerHTML = `<div class="${t.options.classPrefix}chromecast-container">` +
 			`<span class="${t.options.classPrefix}chromecast-icon"></span>` +
 			`<span class="${t.options.classPrefix}chromecast-info">${mejs.i18n.t('mejs.chromecast-legend')} <span class="device"></span></span>` +
-		`</div>`;
+			`</div>`;
 
 		if (media.originalNode.getAttribute('poster')) {
 			player.chromecastLayer.innerHTML += `<img src="${media.originalNode.getAttribute('poster')}" width="100%" height="100%">`;
@@ -571,41 +459,83 @@ Object.assign(MediaElementPlayer.prototype, {
 			mediaFiles = [{src: url, type: mejs.Utils.getTypeFromFile(url)}]
 		;
 
-		let renderInfo = mejs.Renderers.select(mediaFiles, ['chromecast']);
-		media.changeRenderer(renderInfo.rendererName, mediaFiles);
+		let loadedCastAPI = false;
 
-		let interval = setInterval(function () {
+		if (!loadedCastAPI) {
 
-			if (media.castPlayer !== undefined) {
+			// Start SDK
+			window.__onGCastApiAvailable = (isAvailable) => {
 
-				button.style.display = '';
+				if (isAvailable) {
 
-				setTimeout(() => {
-					t.setPlayerSize(t.width, t.height);
-					t.setControlsSize();
-				}, 0);
+					// Add renderer to the list
+					mejs.Renderers.add(CastRenderer);
 
-				clearInterval(interval);
+					button.style.width = '20px';
 
-				media.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, () => {
-					if (cast && cast.framework) {
-						if (media.castPlayer.isConnected) {
+					setTimeout(() => {
+						t.setPlayerSize(t.width, t.height);
+						t.setControlsSize();
+					}, 0);
 
-							const
-								castSession = cast.framework.CastContext.getInstance().getCurrentSession(),
-								deviceInfo = layers.querySelector(`.${t.options.classPrefix}chromecast-info`).querySelector('.device')
-							;
 
-							deviceInfo.innerText = castSession.getCastDevice().friendlyName;
-							player.chromecastLayer.style.display = 'block';
-							return;
-						}
+					let origin;
 
-						player.chromecastLayer.style.display = 'none';
+					switch (t.options.castPolicy) {
+						case 'tab':
+							origin = 'TAB_AND_ORIGIN_SCOPED';
+							break;
+						case 'page':
+							origin = 'PAGE_SCOPED';
+							break;
+						default:
+							origin = 'ORIGIN_SCOPED';
+							break;
 					}
-				});
-			}
-		}, 500);
+
+
+					cast.framework.CastContext.getInstance().setOptions({
+						receiverApplicationId: t.options.castAppID || chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+						autoJoinPolicy: chrome.cast.AutoJoinPolicy[origin]
+					});
+
+					media.castPlayer = new cast.framework.RemotePlayer();
+					media.castPlayerController = new cast.framework.RemotePlayerController(media.castPlayer);
+
+					// Set up renderer and device data
+					media.castPlayerController.addEventListener(
+						cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, () => {
+
+							if (cast && cast.framework) {
+								if (media.castPlayer.isConnected) {
+
+									const renderInfo = mejs.Renderers.select(mediaFiles, ['chromecast']);
+									media.changeRenderer(renderInfo.rendererName, mediaFiles);
+
+									const
+										castSession = cast.framework.CastContext.getInstance().getCurrentSession(),
+										deviceInfo = layers.querySelector(`.${t.options.classPrefix}chromecast-info`).querySelector('.device')
+									;
+
+									deviceInfo.innerText = castSession.getCastDevice().friendlyName;
+									player.chromecastLayer.style.display = 'block';
+									return;
+								}
+
+								player.chromecastLayer.style.display = 'none';
+								media.style.display = '';
+								const renderInfo = mejs.Renderers.select(mediaFiles, media.renderers);
+								media.changeRenderer(renderInfo.rendererName, mediaFiles);
+							}
+						});
+				}
+			};
+
+			const script = document.createElement('script');
+			script.src = '//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1';
+			document.body.appendChild(script);
+			loadedCastAPI = true;
+		}
 	},
 
 	clearchromecast (player) {
