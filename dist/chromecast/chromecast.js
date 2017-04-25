@@ -426,7 +426,7 @@ var CastRenderer = exports.CastRenderer = {
 								mediaElement.dispatchEvent(event);
 							}, 50);
 
-							if (media.castPlayer.currentTime >= media.castPlayer.duration) {
+							if (mediaElement.castPlayer.currentTime >= mediaElement.castPlayer.duration) {
 								setTimeout(function () {
 									var event = mejs.Utils.createEvent('ended', c);
 									mediaElement.dispatchEvent(event);
@@ -445,7 +445,7 @@ var CastRenderer = exports.CastRenderer = {
 				}
 
 				mediaElement.style.display = '';
-				var renderInfo = renderer.select(mediaFiles, mediaElement.renderers);
+				var renderInfo = mejs.Renderers.select(mediaFiles, mediaElement.renderers);
 				mediaElement.changeRenderer(renderInfo.rendererName, mediaFiles);
 			});
 		};
@@ -538,6 +538,13 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			if (media.castPlayer !== undefined) {
 
+				button.style.display = '';
+
+				setTimeout(function () {
+					t.setPlayerSize(t.width, t.height);
+					t.setControlsSize();
+				}, 0);
+
 				clearInterval(interval);
 
 				media.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, function () {
@@ -549,13 +556,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 							deviceInfo.innerText = castSession.getCastDevice().friendlyName;
 							player.chromecastLayer.style.display = 'block';
-							button.style.display = '';
-
-							setTimeout(function () {
-								t.setPlayerSize(t.width, t.height);
-								t.setControlsSize();
-							}, 0);
-
 							return;
 						}
 
