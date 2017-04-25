@@ -499,6 +499,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
+		player.chromecastLayer = document.createElement('div');
 		player.chromecastLayer.className = t.options.classPrefix + 'chromecast-layer ' + t.options.classPrefix + 'layer';
 		player.chromecastLayer.innerHTML = '<div class="' + t.options.classPrefix + 'chromecast-info"></div>';
 		player.chromecastLayer.style.display = 'none';
