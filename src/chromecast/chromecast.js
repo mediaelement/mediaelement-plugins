@@ -454,6 +454,13 @@ export const CastRenderer = {
 										const event = mejs.Utils.createEvent('timeupdate', c);
 										mediaElement.dispatchEvent(event);
 									}, 50);
+
+									if (media.castPlayer.currentTime >= media.castPlayer.duration) {
+										setTimeout(() => {
+											const event = mejs.Utils.createEvent('ended', c);
+											mediaElement.dispatchEvent(event);
+										}, 50);
+									}
 								}
 							);
 

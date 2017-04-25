@@ -425,6 +425,13 @@ var CastRenderer = exports.CastRenderer = {
 								var event = mejs.Utils.createEvent('timeupdate', c);
 								mediaElement.dispatchEvent(event);
 							}, 50);
+
+							if (media.castPlayer.currentTime >= media.castPlayer.duration) {
+								setTimeout(function () {
+									var event = mejs.Utils.createEvent('ended', c);
+									mediaElement.dispatchEvent(event);
+								}, 50);
+							}
 						});
 
 						castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_MUTED_CHANGED, function () {
