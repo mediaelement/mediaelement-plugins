@@ -521,24 +521,15 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		// Search for Chromecast
-		var url = media.getSrc(),
-		    mediaFiles = [{ src: url, type: getTypeFromFile(url) }];
+		var url = media.originalNode.getAttribute('src'),
+		    mediaFiles = [{ src: url, type: mejs.Utils.getTypeFromFile(url) }];
 
-		var renderInfo = renderer.select(mediaFiles, ['chromecast']);
+		var renderInfo = mejs.Renderers.select(mediaFiles, ['chromecast']);
 		media.changeRenderer(renderInfo.rendererName, mediaFiles);
 
 		var interval = setInterval(function () {
 
 			if (media.castPlayer !== undefined) {
-
-				button.style.display = '';
-				poster.style.display = '';
-				player.chromecastLayer.style.display = 'block';
-
-				setTimeout(function () {
-					t.setPlayerSize(t.width, t.height);
-					t.setControlsSize();
-				}, 0);
 
 				clearInterval(interval);
 
@@ -551,14 +542,12 @@ Object.assign(MediaElementPlayer.prototype, {
 
 							deviceInfo.innerText = castSession.getCastDevice().friendlyName;
 							player.chromecastLayer.style.display = 'block';
+							button.style.display = '';
 
-							media.addEventListener('play', function () {
-								poster.style.display = '';
-							});
-
-							media.addEventListener('playing', function () {
-								poster.style.display = '';
-							});
+							setTimeout(function () {
+								t.setPlayerSize(t.width, t.height);
+								t.setControlsSize();
+							}, 0);
 
 							return;
 						}
@@ -570,6 +559,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		}, 500);
 	},
 	clearchromecast: function clearchromecast(player) {
+
+		player.castPlayerController.stop();
+
 		if (player.castButton) {
 			player.castButton.remove();
 		}

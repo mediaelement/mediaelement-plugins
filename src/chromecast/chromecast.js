@@ -560,25 +560,16 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// Search for Chromecast
 		const
-			url = media.getSrc(),
-			mediaFiles = [{src: url, type: getTypeFromFile(url)}]
+			url = media.originalNode.getAttribute('src'),
+			mediaFiles = [{src: url, type: mejs.Utils.getTypeFromFile(url)}]
 		;
 
-		let renderInfo = renderer.select(mediaFiles, ['chromecast']);
+		let renderInfo = mejs.Renderers.select(mediaFiles, ['chromecast']);
 		media.changeRenderer(renderInfo.rendererName, mediaFiles);
 
 		let interval = setInterval(function () {
 
 			if (media.castPlayer !== undefined) {
-
-				button.style.display = '';
-				poster.style.display = '';
-				player.chromecastLayer.style.display = 'block';
-
-				setTimeout(() => {
-					t.setPlayerSize(t.width, t.height);
-					t.setControlsSize();
-				}, 0);
 
 				clearInterval(interval);
 
@@ -593,14 +584,12 @@ Object.assign(MediaElementPlayer.prototype, {
 
 							deviceInfo.innerText = castSession.getCastDevice().friendlyName;
 							player.chromecastLayer.style.display = 'block';
+							button.style.display = '';
 
-							media.addEventListener('play', () => {
-								poster.style.display = '';
-							});
-
-							media.addEventListener('playing', () => {
-								poster.style.display = '';
-							});
+							setTimeout(() => {
+								t.setPlayerSize(t.width, t.height);
+								t.setControlsSize();
+							}, 0);
 
 							return;
 						}
@@ -613,6 +602,9 @@ Object.assign(MediaElementPlayer.prototype, {
 	},
 
 	clearchromecast (player) {
+
+		player.castPlayerController.stop();
+
 		if (player.castButton) {
 			player.castButton.remove();
 		}
