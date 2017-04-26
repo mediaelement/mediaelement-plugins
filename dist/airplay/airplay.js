@@ -23,6 +23,7 @@ Object.assign(MediaElementPlayer.prototype, {
   * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
   */
 	buildairplay: function buildairplay() {
+
 		// bail early if not available
 		if (!window.WebKitPlaybackTargetAvailabilityEvent) {
 			return;
@@ -31,8 +32,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		var t = this,
 		    airPlayTitle = mejs.Utils.isString(t.options.airPlayText) ? t.options.airPlayText : 'AirPlay',
 		    button = document.createElement('div');
-
-		t.addControlElement(button, 'airplay');
 
 		button.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'airplay-button';
 		button.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + airPlayTitle + '" aria-label="' + airPlayTitle + '" tabindex="0"></button>';
@@ -48,8 +47,16 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.media.originalNode.addEventListener('webkitcurrentplaybacktargetiswirelesschanged', function () {
 			var name = t.media.originalNode.webkitCurrentPlaybackTargetIsWireless ? 'Started' : 'Stopped',
+			    status = t.media.originalNode.webkitCurrentPlaybackTargetIsWireless ? 'active' : '',
+			    icon = button.querySelector('button'),
 			    event = mejs.Utils.createEvent('airplay' + name, t.media);
 			t.media.dispatchEvent(event);
+
+			if (status === 'ative') {
+				mejs.Utils.addClass(icon, 'active');
+			} else {
+				mejs.Utils.removeClass(icon, 'active');
+			}
 		});
 
 		t.media.originalNode.addEventListener('webkitplaybacktargetavailabilitychanged', function (e) {
