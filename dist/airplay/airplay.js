@@ -52,7 +52,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			    event = mejs.Utils.createEvent('airplay' + name, t.media);
 			t.media.dispatchEvent(event);
 
-			if (status === 'ative') {
+			if (status === 'active') {
 				mejs.Utils.addClass(icon, 'active');
 			} else {
 				mejs.Utils.removeClass(icon, 'active');
