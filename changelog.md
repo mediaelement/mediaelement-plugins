@@ -1,5 +1,10 @@
 ### Version History
 
+*2.2.0 (2017/04/??)*
+
+* Modified commands on `package.json` to avoid creating source map on stylesheets @rafa8626
+* Integrated `AirPlay` plugin @rafa8626
+
 *2.1.1 (2017/04/19)*
 
 * Added demo file to show how to setup and configure plugins @rafa8626
