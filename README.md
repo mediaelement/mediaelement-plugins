@@ -230,6 +230,7 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 ## Available plugins
 
 * [Ads](docs/ads.md)
+* [AirPlay](docs/airplay.md)
 * [VAST/VPAID](docs/ads-vast.md)
 * [Chromecast](docs/chromecast.md)
 * [Context Menu](docs/context-menu.md)
