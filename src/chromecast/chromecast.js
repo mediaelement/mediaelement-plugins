@@ -183,6 +183,10 @@ const CastRenderer = {
 								mediaElement.dispatchEvent(event);
 								break;
 
+							case 'playbackRate':
+								mediaElement.originalNode.playbackRate = value;
+								break;
+
 							default:
 								console.log('Chromecast ' + c.id, propName, 'UNSUPPORTED property');
 								break;
