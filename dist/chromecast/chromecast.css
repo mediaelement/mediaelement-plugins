@@ -1,4 +1,4 @@
-.mejs__chromecast-button {
+.mejs__chromecast-button, .mejs-chromecast-button {
     width: auto;
 }
 .mejs__chromecast-button > button, .mejs-chromecast-button > button {
@@ -11,6 +11,15 @@
     color: #fff;
     padding: 5px;
     font-size: 10px;
+    z-index: 1;
+    position: absolute;
+}
+
+.mejs__chromecast-layer > img, .mejs-chromecast-layer > img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
 }
 
 .mejs__chromecast-icon, .mejs-chromecast-icon {

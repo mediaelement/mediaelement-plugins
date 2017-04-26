@@ -4,11 +4,6 @@
 /**
  * Chromecast renderer/plugin
  *
- * 1) Add JS framwework
- * 2) Display button when available
- * 3) Load the new renderer when connect status changes
- * 4) Change renderers when connection status change
- *
  * Uses version 3.0 to take advantage of Google Cast Framework, and creates a button to turn on/off Chromecast streaming
  * @see https://developers.google.com/cast/docs/developers
  */
@@ -146,7 +141,7 @@ var CastRenderer = {
 
 						case 'src':
 							var url = typeof value === 'string' ? value : value[0].src;
-							mediaElement.setSrc(url);
+							mediaElement.originalNode.setAttribute('src', url);
 							break;
 
 						case 'currentTime':
@@ -238,12 +233,16 @@ var CastRenderer = {
 							mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
 							mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
 
-							if (mediaElement.originalNode.getAttribute('title')) {
-								mediaInfo.metadata.title = mediaElement.originalNode.getAttribute('title');
+							if (mediaElement.originalNode.getAttribute('data-title')) {
+								mediaInfo.metadata.title = mediaElement.originalNode.getAttribute('data-title');
 							}
 
-							if (mediaElement.originalNode.getAttribute('poster')) {
-								mediaInfo.metadata.images = [{ 'url': mejs.Utils.absolutizeUrl(mediaElement.originalNode.getAttribute('poster')) }];
+							if (mediaElement.originalNode.getAttribute('data-description')) {
+								mediaInfo.metadata.subtitle = mediaElement.originalNode.getAttribute('data-description');
+							}
+
+							if (mediaElement.originalNode.getAttribute('data-thumb')) {
+								mediaInfo.metadata.images = [{ 'url': mejs.Utils.absolutizeUrl(mediaElement.originalNode.getAttribute('data-thumb')) }];
 							}
 
 							var request = new chrome.cast.media.LoadRequest(mediaInfo);
@@ -321,8 +320,6 @@ var CastRenderer = {
 			});
 
 			c.load();
-
-			return;
 		};
 
 		mediaElement.autoplay = false;
@@ -483,6 +480,8 @@ Object.assign(MediaElementPlayer.prototype, {
 							media.changeRenderer(renderInfo.rendererName, mediaFiles);
 						}
 					});
+
+					return;
 				}
 			};
 
