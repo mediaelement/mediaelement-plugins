@@ -1,13 +1,16 @@
 ### Version History
 
-*2.2.0 (2017/??/??)*
+*2.2.0 (2017/04/??)*
+
+* Added `Chromecast` plugin @rafa8626
+
+*2.1.1 (2017/04/19)*
 
 * Added demo file to show how to setup and configure plugins @rafa8626
 * Expanded `VAST` plugin to support VAST3.0 and added more events for preroll @rafa8626
 * Fixed typos in code in `Preview` and `Speed` plugins @rafa8626
 * Added new icons and modified CSS for them; fixed minor issues with `Skip Back` and `Jump Forward` plugins @rafa8626
 * Added missing French translations (https://github.com/mediaelement/mediaelement-plugins/pull/26) @kloh-fr
-* Added `Chromecast` plugin @rafa8626
 
 *2.1.0 (2017/03/30)*
 
