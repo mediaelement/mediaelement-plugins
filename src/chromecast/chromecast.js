@@ -286,6 +286,10 @@ const CastRenderer = {
 									mediaInfo.metadata.images = [
 										{'url': mejs.Utils.absolutizeUrl(mediaElement.originalNode.getAttribute('data-cast-thumb'))}
 									];
+								} else if (mediaElement.originalNode.getAttribute('poster')) {
+									mediaInfo.metadata.images = [
+										{'url': mejs.Utils.absolutizeUrl(mediaElement.originalNode.getAttribute('poster'))}
+									];
 								}
 
 								if (tracks.length) {
@@ -550,7 +554,7 @@ Object.assign(MediaElementPlayer.prototype, {
 								media.changeRenderer(renderInfo.rendererName, mediaFiles);
 
 								const
-									// captions = player.captionsButton.querySelectorAll('input[type=radio]'),
+									captions = player.captionsButton.querySelectorAll('input[type=radio]'),
 									castSession = cast.framework.CastContext.getInstance().getCurrentSession(),
 									deviceInfo = layers.querySelector(`.${t.options.classPrefix}chromecast-info`).querySelector('.device')
 								;
@@ -558,14 +562,17 @@ Object.assign(MediaElementPlayer.prototype, {
 								deviceInfo.innerText = castSession.getCastDevice().friendlyName;
 								player.chromecastLayer.style.display = 'block';
 
-								// for (let i = 0, total = captions.length; i < total; i++) {
-								// 	captions[i].addEventListener('click', function () {
-								// 		const tracksInfo = new chrome.cast.media.EditTracksInfoRequest([captions[i].id]);
-								// 		castSession.getMediaSession().editTracksInfo(tracksInfo, () => {}, (e) => {
-								// 			console.error(e);
-								// 		});
-								// 	});
-								// }
+								for (let i = 0, total = captions.length; i < total; i++) {
+									captions[i].addEventListener('click', function () {
+										const
+											setTracks = captions[i].value === 'none' ? [] : [captions[i].id],
+											tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks)
+										;
+										castSession.getMediaSession().editTracksInfo(tracksInfo, () => {}, (e) => {
+											console.error(e);
+										});
+									});
+								}
 
 								return;
 							}

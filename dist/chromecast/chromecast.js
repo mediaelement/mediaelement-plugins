@@ -275,6 +275,8 @@ var CastRenderer = {
 
 							if (mediaElement.originalNode.getAttribute('data-cast-thumb')) {
 								mediaInfo.metadata.images = [{ 'url': mejs.Utils.absolutizeUrl(mediaElement.originalNode.getAttribute('data-cast-thumb')) }];
+							} else if (mediaElement.originalNode.getAttribute('poster')) {
+								mediaInfo.metadata.images = [{ 'url': mejs.Utils.absolutizeUrl(mediaElement.originalNode.getAttribute('poster')) }];
 							}
 
 							if (tracks.length) {
