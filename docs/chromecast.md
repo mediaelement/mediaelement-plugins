@@ -33,4 +33,5 @@ so **it is recommended its use**.
 Parameter | Type | Default | Description
 ------ | --------- | ------- | --------
 castTitle | string | `null` | Chromecast button title for ARIA purposes 
-cast | Object |  | Renderer configuration. The `cast` object contains the elements `appID` (Chromecast Application ID) and `policy`, which can be `origin` (by default, auto connect from same appId and page origin), `tab` (auto connect from same appId, page origin, and tab) and `page` (no auto connect)
+castPolicy | string | `origin` | Chromecast default policy: `origin` (by default, auto connect from same appId and page origin), `tab` (auto connect from same appId, page origin, and tab) and `page` (no auto connect)
+castAppId | string | `null` |  Chromecast Application ID; if `null` is provided, it will default to `chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID`
