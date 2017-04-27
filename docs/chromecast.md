@@ -23,8 +23,7 @@ Although the `track` element is indicated in the code above, **it is not require
 
 This plugin also processes `audioTrack` tags.
 
-**IMPORTANT NOTE:** To make captions work, you must develop a Custom Receiver. 
-For more information on how to develop it, please read [Chromecast's Custom Receiver Application](https://developers.google.com/cast/docs/custom_receiver).
+**IMPORTANT NOTE:** To make tracks work properly, you **must** develop a Custom Receiver. For more information, please read [Chromecast's Custom Receiver Application](https://developers.google.com/cast/docs/custom_receiver).
 
 The `poster` attribute is not required as well, but most of the media players use a static image when media is being broadcast in Chromecast, 
 so **it is recommended its use**.
