@@ -12,18 +12,10 @@ The following snippet shows the `data-cast-*` attributes needed to achieve Chrom
 <video id="player1" width="640" height="360" preload="none"
        data-cast-title="[Your title]"
        data-cast-description="[Your optional description]"
-       data-cast-thumb="[Your thumbnail URL]"
        poster="//example.com/poster.jpg">
     <source src="//example.com/media.mp4" type="video/mp4">
-    <track srclang="en" kind="subtitles" src="/path/to/tracks.vtt" label="English">
 </video>
 ```
-
-Although the `track` element is indicated in the code above, **it is not required**.
-
-This plugin also processes `audioTrack` tags.
-
-**IMPORTANT NOTE:** To make tracks work properly, you **must** develop a Custom Receiver. For more information, please read [Chromecast's Custom Receiver Application](https://developers.google.com/cast/docs/custom_receiver).
 
 The `poster` attribute is not required as well, but most of the media players use a static image when media is being broadcast in Chromecast, 
 so **it is recommended its use**.

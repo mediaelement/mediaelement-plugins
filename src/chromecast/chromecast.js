@@ -42,7 +42,7 @@ const CastRenderer = {
 
 				let message;
 
-				switch (errorCode.code) {
+				switch (error.code) {
 					case chrome.cast.ErrorCode.API_NOT_INITIALIZED:
 						message = `The API is not initialized${description}`;
 						break;
@@ -68,7 +68,7 @@ const CastRenderer = {
 						message = `The operation timed out${description}`;
 						break;
 					default:
-						message = `Unknown error: ${errorCode.code}`;
+						message = `Unknown error: ${error.code}`;
 						break;
 				}
 
@@ -238,41 +238,41 @@ const CastRenderer = {
 									url = mediaElement.originalNode.getAttribute('src'),
 									type = mejs.Utils.getTypeFromFile(url),
 									mediaInfo = new chrome.cast.media.MediaInfo(url, type),
-									children = mediaElement.originalNode.childNodes,
+									// children = mediaElement.originalNode.childNodes,
 									castSession = cast.framework.CastContext.getInstance().getCurrentSession()
 								;
 
-								mediaInfo.tracks = null;
-
 								// Find captions/audioTracks
-								const tracks = [];
-								for (let i = 0, total = children.length; i < total; i++) {
-									const child = children[i];
-
-									if (child.nodeType !== Node.TEXT_NODE) {
-										const tag = child.tagName.toLowerCase();
-
-										if ((tag === 'track' && (tag === 'audiotrack' ||
-											child.getAttribute('kind') === 'subititles' || child.getAttribute('kind') === 'captions'))) {
-
-											const el = new chrome.cast.media.Track(child.id || (i + 1),
-												(tag === 'track' ? chrome.cast.media.TrackType.TEXT : chrome.cast.media.TrackType.AUDIO));
-											el.trackContentId = child.getAttribute('src');
-											el.trackContentType = tag === 'track' ? 'text/vtt' : 'audio/mp3';
-											el.subtype = (tag === 'track') ? chrome.cast.media.TextTrackType.SUBTITLES : null;
-											el.name = child.getAttribute('label');
-											el.language = child.getAttribute('srclang');
-											el.customData = null;
-											tracks.push(el);
-										}
-									}
-								}
+								// const tracks = [];
+								//
+								// let counter = 1;
+								//
+								// for (let i = 0, total = children.length; i < total; i++) {
+								// 	const child = children[i];
+								//
+								// 	if (child.nodeType !== Node.TEXT_NODE) {
+								// 		const tag = child.tagName.toLowerCase();
+								//
+								// 		if (tag === 'track' && (child.getAttribute('kind') === 'subtitles' || child.getAttribute('kind') === 'captions')) {
+								// 			const el = new chrome.cast.media.Track(counter, chrome.cast.media.TrackType.TEXT);
+								// 			el.trackContentId = mejs.Utils.absolutizeUrl(child.getAttribute('src'));
+								// 			el.trackContentType = 'text/vtt';
+								// 			el.subtype = chrome.cast.media.TextTrackType.SUBTITLES;
+								// 			el.name = child.getAttribute('label');
+								// 			el.language = child.getAttribute('srclang');
+								// 			el.customData = null;
+								// 			tracks.push(el);
+								// 			counter++;
+								// 		}
+								// 	}
+								// }
 
 								mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
-								mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
-								mediaInfo.streamType = chrome.cast.media.StreamType.BUFFERED;
 								mediaInfo.customData = null;
+								mediaInfo.streamType = chrome.cast.media.StreamType.BUFFERED;
+								// mediaInfo.textTrackStyle = new chrome.cast.media.TextTrackStyle();
 								mediaInfo.duration = null;
+								// mediaInfo.tracks = tracks;
 
 								if (mediaElement.originalNode.getAttribute('data-cast-title')) {
 									mediaInfo.metadata.title = mediaElement.originalNode.getAttribute('data-cast-title');
@@ -282,19 +282,10 @@ const CastRenderer = {
 									mediaInfo.metadata.subtitle = mediaElement.originalNode.getAttribute('data-cast-description');
 								}
 
-								if (mediaElement.originalNode.getAttribute('data-cast-thumb')) {
-									mediaInfo.metadata.images = [
-										{'url': mejs.Utils.absolutizeUrl(mediaElement.originalNode.getAttribute('data-cast-thumb'))}
-									];
-								} else if (mediaElement.originalNode.getAttribute('poster')) {
+								if (mediaElement.originalNode.getAttribute('poster')) {
 									mediaInfo.metadata.images = [
 										{'url': mejs.Utils.absolutizeUrl(mediaElement.originalNode.getAttribute('poster'))}
 									];
-								}
-
-								if (tracks.length) {
-									mediaInfo.textTrackStyle = new chrome.cast.media.TextTrackStyle();
-									mediaInfo.tracks = tracks;
 								}
 
 								const request = new chrome.cast.media.LoadRequest(mediaInfo);
@@ -554,7 +545,7 @@ Object.assign(MediaElementPlayer.prototype, {
 								media.changeRenderer(renderInfo.rendererName, mediaFiles);
 
 								const
-									captions = player.captionsButton.querySelectorAll('input[type=radio]'),
+									// captions = player.captionsButton.querySelectorAll('input[type=radio]'),
 									castSession = cast.framework.CastContext.getInstance().getCurrentSession(),
 									deviceInfo = layers.querySelector(`.${t.options.classPrefix}chromecast-info`).querySelector('.device')
 								;
@@ -562,17 +553,19 @@ Object.assign(MediaElementPlayer.prototype, {
 								deviceInfo.innerText = castSession.getCastDevice().friendlyName;
 								player.chromecastLayer.style.display = 'block';
 
-								for (let i = 0, total = captions.length; i < total; i++) {
-									captions[i].addEventListener('click', function () {
-										const
-											setTracks = captions[i].value === 'none' ? [] : [captions[i].id],
-											tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks)
-										;
-										castSession.getMediaSession().editTracksInfo(tracksInfo, () => {}, (e) => {
-											console.error(e);
-										});
-									});
-								}
+								// for (let i = 0, total = captions.length; i < total; i++) {
+								// 	captions[i].addEventListener('click', function () {
+								// 		const
+								// 			trackId = parseInt(captions[i].id.replace(/^.*?track_(\d+)_.*$/, "$1")),
+								// 			setTracks = captions[i].value === 'none' ? [] : [trackId],
+								// 			tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks)
+								// 		;
+								//
+								// 		castSession.getMediaSession().editTracksInfo(tracksInfo, () => {}, (e) => {
+								// 			console.error(e);
+								// 		});
+								// 	});
+								// }
 
 								return;
 							}
