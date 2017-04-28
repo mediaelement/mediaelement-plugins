@@ -1,5 +1,9 @@
 ### Version History
 
+*2.2.1 (2017/??/??)*
+
+* Fixed issues in Safari related to `Source Chooser` plugin @rafa8626
+
 *2.2.0 (2017/04/28)*
 
 * Modified commands on `package.json` to avoid creating source map on stylesheets @rafa8626
