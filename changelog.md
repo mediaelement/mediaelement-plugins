@@ -4,6 +4,7 @@
 
 * Modified commands on `package.json` to avoid creating source map on stylesheets @rafa8626
 * Integrated `AirPlay` plugin @rafa8626
+* Integrated `Chromecast` plugin @rafa8626
 
 *2.1.1 (2017/04/19)*
 
