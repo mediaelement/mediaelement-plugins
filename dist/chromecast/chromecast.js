@@ -232,42 +232,40 @@ var CastRenderer = {
 							var url = mediaElement.originalNode.getAttribute('src'),
 							    type = mejs.Utils.getTypeFromFile(url),
 							    mediaInfo = new chrome.cast.media.MediaInfo(url, type),
-
-
-							// children = mediaElement.originalNode.childNodes,
-							castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+							    children = mediaElement.originalNode.childNodes,
+							    castSession = cast.framework.CastContext.getInstance().getCurrentSession();
 
 							// Find captions/audioTracks
-							// const tracks = [];
-							//
-							// let counter = 1;
-							//
-							// for (let i = 0, total = children.length; i < total; i++) {
-							// 	const child = children[i];
-							//
-							// 	if (child.nodeType !== Node.TEXT_NODE) {
-							// 		const tag = child.tagName.toLowerCase();
-							//
-							// 		if (tag === 'track' && (child.getAttribute('kind') === 'subtitles' || child.getAttribute('kind') === 'captions')) {
-							// 			const el = new chrome.cast.media.Track(counter, chrome.cast.media.TrackType.TEXT);
-							// 			el.trackContentId = mejs.Utils.absolutizeUrl(child.getAttribute('src'));
-							// 			el.trackContentType = 'text/vtt';
-							// 			el.subtype = chrome.cast.media.TextTrackType.SUBTITLES;
-							// 			el.name = child.getAttribute('label');
-							// 			el.language = child.getAttribute('srclang');
-							// 			el.customData = null;
-							// 			tracks.push(el);
-							// 			counter++;
-							// 		}
-							// 	}
-							// }
+							var tracks = [];
+
+							var counter = 1;
+
+							for (var _i = 0, _total = children.length; _i < _total; _i++) {
+								var child = children[_i];
+
+								if (child.nodeType !== Node.TEXT_NODE) {
+									var tag = child.tagName.toLowerCase();
+
+									if (tag === 'track' && (child.getAttribute('kind') === 'subtitles' || child.getAttribute('kind') === 'captions')) {
+										var el = new chrome.cast.media.Track(counter, chrome.cast.media.TrackType.TEXT);
+										el.trackContentId = mejs.Utils.absolutizeUrl(child.getAttribute('src'));
+										el.trackContentType = 'text/vtt';
+										el.subtype = chrome.cast.media.TextTrackType.SUBTITLES;
+										el.name = child.getAttribute('label');
+										el.language = child.getAttribute('srclang');
+										el.customData = null;
+										tracks.push(el);
+										counter++;
+									}
+								}
+							}
 
 							mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
 							mediaInfo.customData = null;
 							mediaInfo.streamType = chrome.cast.media.StreamType.BUFFERED;
-							// mediaInfo.textTrackStyle = new chrome.cast.media.TextTrackStyle();
+							mediaInfo.textTrackStyle = new chrome.cast.media.TextTrackStyle();
 							mediaInfo.duration = null;
-							// mediaInfo.tracks = tracks;
+							mediaInfo.tracks = tracks;
 
 							if (mediaElement.originalNode.getAttribute('data-cast-title')) {
 								mediaInfo.metadata.title = mediaElement.originalNode.getAttribute('data-cast-title');
@@ -299,8 +297,8 @@ var CastRenderer = {
 			};
 		};
 
-		for (var _i = 0, _total = methods.length; _i < _total; _i++) {
-			assignMethods(methods[_i]);
+		for (var _i2 = 0, _total2 = methods.length; _i2 < _total2; _i2++) {
+			assignMethods(methods[_i2]);
 		}
 
 		window['__ready__' + c.id] = function () {
