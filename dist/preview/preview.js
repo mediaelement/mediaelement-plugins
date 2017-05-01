@@ -84,34 +84,32 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 
 				if (Math.floor(t.media.currentTime) === t.options.fadeInAudioStart) {
-					(function () {
 
-						initFadeIn = true;
+					initFadeIn = true;
 
-						var volume = 0,
-						    audioInterval = t.options.fadeInAudioInterval,
-						    interval = setInterval(function () {
+					var volume = 0,
+					    audioInterval = t.options.fadeInAudioInterval,
+					    interval = setInterval(function () {
 
-							// Increase volume by step as long as it is below 1
-							if (volume < 1) {
-								volume += t.options.fadePercent;
-								if (volume > 1) {
-									volume = 1;
-								}
-
-								// limit to 2 decimal places
-								t.media.setVolume(volume.toFixed(2));
-							} else {
-								// Stop firing interval when 1 is reached
-								clearInterval(interval);
-								interval = null;
-								t.media.setMuted(false);
-								setTimeout(function () {
-									initFadeIn = false;
-								}, 300);
+						// Increase volume by step as long as it is below 1
+						if (volume < 1) {
+							volume += t.options.fadePercent;
+							if (volume > 1) {
+								volume = 1;
 							}
-						}, audioInterval);
-					})();
+
+							// limit to 2 decimal places
+							t.media.setVolume(volume.toFixed(2));
+						} else {
+							// Stop firing interval when 1 is reached
+							clearInterval(interval);
+							interval = null;
+							t.media.setMuted(false);
+							setTimeout(function () {
+								initFadeIn = false;
+							}, 300);
+						}
+					}, audioInterval);
 				}
 			}
 		},
@@ -124,35 +122,33 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 
 				if (Math.floor(t.media.currentTime) === t.options.fadeOutAudioStart) {
-					(function () {
 
-						initFadeOut = true;
+					initFadeOut = true;
 
-						var volume = 1,
-						    audioInterval = t.options.fadeOutAudioInterval,
-						    interval = setInterval(function () {
+					var volume = 1,
+					    audioInterval = t.options.fadeOutAudioInterval,
+					    interval = setInterval(function () {
 
-							// Increase volume by step as long as it is above 0
+						// Increase volume by step as long as it is above 0
 
-							if (volume > 0) {
-								volume -= t.options.fadePercent;
-								if (volume < 0) {
-									volume = 0;
-								}
-
-								// limit to 2 decimal places
-								t.media.setVolume(volume.toFixed(2));
-							} else {
-								// Stop firing interval when 0 is reached
-								clearInterval(interval);
-								interval = null;
-								t.media.setMuted(false);
-								setTimeout(function () {
-									initFadeOut = false;
-								}, 300);
+						if (volume > 0) {
+							volume -= t.options.fadePercent;
+							if (volume < 0) {
+								volume = 0;
 							}
-						}, audioInterval);
-					})();
+
+							// limit to 2 decimal places
+							t.media.setVolume(volume.toFixed(2));
+						} else {
+							// Stop firing interval when 0 is reached
+							clearInterval(interval);
+							interval = null;
+							t.media.setMuted(false);
+							setTimeout(function () {
+								initFadeOut = false;
+							}, 300);
+						}
+					}, audioInterval);
 				}
 			}
 		};
