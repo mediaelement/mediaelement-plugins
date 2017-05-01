@@ -388,6 +388,12 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
+		var button = document.createElement('div');
+
+		button.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'vrview-button';
+		button.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="VR" aria-label="VR" tabindex="0"></button>';
+		t.addControlElement(button, 'vrview');
+
 		var url = media.getSrc(),
 		    mediaFiles = [{ src: url, type: mejs.Utils.getTypeFromFile(url) }],
 		    renderInfo = mejs.Renderers.select(mediaFiles, ['vr']);
