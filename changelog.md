@@ -3,6 +3,7 @@
 *2.2.1 (2017/??/??)*
 
 * Fixed issues in Safari related to `Source Chooser` plugin @rafa8626
+* Added `babel-preset-env` to optimize bundles based on supported browsers @rafa8626
 
 *2.2.0 (2017/04/28)*
 
