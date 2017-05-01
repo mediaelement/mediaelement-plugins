@@ -244,6 +244,7 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 * [Source Chooser](docs/source-chooser.md)
 * [Speed](docs/speed.md)
 * [Stop](docs/stop.md)
+* [VRView](docs/vrview.md)
 
 # Changelog
 

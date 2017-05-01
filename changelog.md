@@ -3,6 +3,7 @@
 *2.2.1 (2017/??/??)*
 
 * Fixed issues in Safari related to `Source Chooser` plugin @rafa8626
+* Integrated `VRView` plugin @rafa8626
 
 *2.2.0 (2017/04/28)*
 

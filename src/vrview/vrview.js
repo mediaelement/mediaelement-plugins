@@ -138,7 +138,8 @@ const VrRenderer = {
 		// exposed object
 		const
 			stack = [],
-			vr = {}
+			vr = {},
+			readyState = 4
 		;
 
 		let
@@ -195,6 +196,8 @@ const VrRenderer = {
 									},
 									length: 1
 								};
+							case 'readyState':
+								return readyState;
 						}
 
 						return value;

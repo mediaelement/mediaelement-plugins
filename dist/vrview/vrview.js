@@ -137,7 +137,8 @@ var VrRenderer = {
 
 		// exposed object
 		var stack = [],
-		    vr = {};
+		    vr = {},
+		    readyState = 4;
 
 		var vrPlayer = null,
 		    paused = true,
@@ -189,6 +190,8 @@ var VrRenderer = {
 								},
 								length: 1
 							};
+						case 'readyState':
+							return readyState;
 					}
 
 					return value;
