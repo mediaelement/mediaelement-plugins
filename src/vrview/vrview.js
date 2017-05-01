@@ -1,0 +1,394 @@
+'use strict';
+
+/**
+ * VR renderer
+ *
+ * It uses Google's VR View and creates an <iframe> that allows the user to see 360 videos
+ * @see https://developers.google.com/vr/concepts/vrview-web
+ */
+const VrAPI = {
+	/**
+	 * @type {Boolean}
+	 */
+	isMediaStarted: false,
+	/**
+	 * @type {Boolean}
+	 */
+	isMediaLoaded: false,
+	/**
+	 * @type {Array}
+	 */
+	creationQueue: [],
+
+	/**
+	 * Create a queue to prepare the loading of the VR View Player
+	 * @param {Object} settings - an object with settings needed to load an VR View Player instance
+	 */
+	prepareSettings: (settings) => {
+		if (VrAPI.isLoaded) {
+			VrAPI.createInstance(settings);
+		} else {
+			VrAPI.loadScript(settings);
+			VrAPI.creationQueue.push(settings);
+		}
+	},
+
+	/**
+	 * Load vrview.min.js script on the header of the document
+	 *
+	 * @param {Object} settings - an object with settings needed to load an HLS player instance
+	 */
+	loadScript: (settings) => {
+		if (!VrAPI.isMediaStarted) {
+
+			if (typeof VRView !== 'undefined') {
+				VrAPI.createInstance(settings);
+			} else {
+				const
+					script = document.createElement('script'),
+					firstScriptTag = document.getElementsByTagName('script')[0]
+				;
+
+				let done = false;
+
+				settings.options.path = typeof settings.options.path === 'string' ?
+					settings.options.path : '//storage.googleapis.com/vrview/2.0/build/vrview.min.js';
+
+				script.src = settings.options.path;
+
+				// Attach handlers for all browsers
+				script.onload = script.onreadystatechange = function() {
+					if (!done && (!this.readyState || this.readyState === undefined ||
+						this.readyState === 'loaded' || this.readyState === 'complete')) {
+						done = true;
+						VrAPI.mediaReady();
+						script.onload = script.onreadystatechange = null;
+					}
+				};
+
+				firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+			}
+			VrAPI.isMediaStarted = true;
+		}
+	},
+
+	/**
+	 * Process queue of VR View Player creation
+	 *
+	 */
+	mediaReady: () => {
+		VrAPI.isLoaded = true;
+		VrAPI.isMediaLoaded = true;
+
+		while (VrAPI.creationQueue.length > 0) {
+			const settings = VrAPI.creationQueue.pop();
+			VrAPI.createInstance(settings);
+		}
+	},
+
+	/**
+	 * Create a new instance of VrView player and trigger a custom event to initialize it
+	 *
+	 * @param {Object} settings - an object with settings needed to instantiate VR View Player object
+	 */
+	createInstance: (settings) => {
+		const player = new VRView.Player(`#${settings.id}`, settings.options);
+		window[`__ready__${settings.id}`](player);
+	}
+};
+
+const VrRenderer = {
+	name: 'vr',
+
+	options: {
+		prefix: 'vr',
+		/**
+		 * https://developers.google.com/vr/concepts/vrview-web#vr_view
+		 */
+		vr: {
+			path: '//storage.googleapis.com/vrview/2.0/build/vrview.min.js',
+			image: '',
+			is_stereo: true,
+			is_autopan_off: true,
+			is_debug: false,
+			is_vr_off: false,
+			default_yaw: 0,
+			is_yaw_only: false
+		}
+	},
+
+	/**
+	 * Determine if a specific element type can be played with this render
+	 *
+	 * @param {String} type
+	 * @return {Boolean}
+	 */
+	canPlayType: (type) => ['video/mp4', 'application/x-mpegurl', 'vnd.apple.mpegurl', 'application/dash+xml'].includes(type.toLowerCase()),
+
+	/**
+	 * Create the player instance and add all native events/methods/properties as possible
+	 *
+	 * @param {MediaElement} mediaElement Instance of mejs.MediaElement already created
+	 * @param {Object} options All the player configuration options passed through constructor
+	 * @param {Object[]} mediaFiles List of sources with format: {src: url, type: x/y-z}
+	 * @return {Object}
+	 */
+	create: (mediaElement, options, mediaFiles) => {
+
+		// exposed object
+		const
+			stack = [],
+			vr = {}
+		;
+
+		let
+			vrPlayer = null,
+			paused = true,
+			volume = 1,
+			oldVolume = volume,
+			bufferedTime = 0,
+			ended = false,
+			duration = 0,
+			url = ''
+		;
+
+
+		vr.options = options;
+		vr.id = mediaElement.id + '_' + options.prefix;
+		vr.mediaElement = mediaElement;
+
+		// wrappers for get/set
+		const
+			props = mejs.html5media.properties,
+			assignGettersSetters = (propName) => {
+
+				const capName = propName.substring(0, 1).toUpperCase() + propName.substring(1);
+
+				vr['get' + capName] = () => {
+					if (vrPlayer !== null) {
+						const value = null;
+
+						switch (propName) {
+							case 'currentTime':
+								return vrPlayer.getCurrentTime();
+							case 'duration':
+								return vrPlayer.getDuration();
+							case 'volume':
+								volume = vrPlayer.getVolume();
+								return volume;
+							case 'muted':
+								return volume === 0;
+							case 'paused':
+								paused = vrPlayer.isPaused;
+								return paused;
+							case 'ended':
+								return ended;
+							case 'src':
+								return url;
+							case 'buffered':
+								return {
+									start: () => {
+										return 0;
+									},
+									end: () => {
+										return bufferedTime * duration;
+									},
+									length: 1
+								};
+						}
+
+						return value;
+					} else {
+						return null;
+					}
+				};
+
+				vr['set' + capName] = (value) => {
+
+					if (vrPlayer !== null) {
+
+						// do something
+						switch (propName) {
+
+							case 'src':
+								const url = typeof value === 'string' ? value : value[0].src;
+								vrPlayer.setContentInfo({video: url});
+								break;
+
+							case 'currentTime':
+								vrPlayer.setCurrentTime(value);
+								break;
+
+							case 'volume':
+								vrPlayer.setVolume(value);
+								break;
+							case 'muted':
+								volume = value ? 0 : oldVolume;
+								vrPlayer.setVolume(volume);
+								break;
+							case 'readyState':
+								const event = mejs.Utils.createEvent('canplay', vr);
+								mediaElement.dispatchEvent(event);
+								break;
+							default:
+								console.log(`VRView ${vr.id}`, propName, 'UNSUPPORTED property');
+								break;
+						}
+
+					} else {
+						// store for after "READY" event fires
+						stack.push({type: 'set', propName: propName, value: value});
+					}
+				};
+
+			}
+		;
+		for (let i = 0, il = props.length; i < il; i++) {
+			assignGettersSetters(props[i]);
+		}
+
+		// add wrappers for native methods
+		const
+			methods = mejs.html5media.methods,
+			assignMethods = (methodName) => {
+				vr[methodName] = () => {
+
+					if (vrPlayer !== null) {
+
+						// DO method
+						switch (methodName) {
+							case 'play':
+								return vrPlayer.play();
+							case 'pause':
+								return vrPlayer.pause();
+							case 'load':
+								return null;
+
+						}
+
+					} else {
+						stack.push({type: 'call', methodName: methodName});
+					}
+				};
+
+			}
+		;
+		for (let i = 0, il = methods.length; i < il; i++) {
+			assignMethods(methods[i]);
+		}
+
+		// Initial method to register all VRView events when initializing <iframe>
+		window['__ready__' + vr.id] = (_vrPlayer) => {
+
+			mediaElement.vrPlayer = vrPlayer = _vrPlayer;
+
+			// do call stack
+			if (stack.length) {
+				for (let i = 0, il = stack.length; i < il; i++) {
+
+					const stackItem = stack[i];
+
+					if (stackItem.type === 'set') {
+						const
+							propName = stackItem.propName,
+							capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`
+						;
+
+						vr[`set${capName}`](stackItem.value);
+					} else if (stackItem.type === 'call') {
+						vr[stackItem.methodName]();
+					}
+				}
+			}
+
+			vrPlayer.on('ready', () => {
+
+				const events = mejs.html5media.events.concat(['mouseover', 'mouseout']);
+
+				for (let i = 0, il = events.length; i < il; i++) {
+					vrPlayer.addEventListener(events[i], (e) => {
+						const event = createEvent(e.type, vr);
+						mediaElement.dispatchEvent(event);
+					});
+				}
+			});
+		};
+
+		const vrContainer = document.createElement('div');
+
+		// Create <iframe> markup
+		vrContainer.setAttribute('id', vr.id);
+		vrContainer.style.width = '100%';
+		vrContainer.style.height = '100%';
+
+		mediaElement.originalNode.parentNode.insertBefore(vrContainer, mediaElement.originalNode);
+		mediaElement.originalNode.style.display = 'none';
+
+		if (mediaFiles && mediaFiles.length > 0) {
+			for (let i = 0, il = mediaFiles.length; i < il; i++) {
+				if (renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
+					options.vr.video = mediaFiles[i].src;
+					options.vr.width = '100%';
+					options.vr.height = '100%';
+					break;
+				}
+			}
+		}
+
+		VrAPI.prepareSettings({
+			options: options.vr,
+			id: vr.id
+		});
+
+		vr.hide = () => {
+			vr.pause();
+			if (vrPlayer) {
+				vrContainer.style.display = 'none';
+			}
+		};
+
+		vr.setSize = () => {};
+
+		vr.show = () => {
+			if (vrPlayer) {
+				vrContainer.style.display = '';
+			}
+		};
+
+		return vr;
+	}
+};
+
+mejs.Renderers.add(VrRenderer);
+
+
+Object.assign(MediaElementPlayer.prototype, {
+
+	/**
+	 * Feature constructor.
+	 *
+	 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
+	 * @param {MediaElementPlayer} player
+	 * @param {$} controls
+	 * @param {$} layers
+	 * @param {HTMLElement} media
+	 */
+	buildvr: function (player, controls, layers, media) {
+
+		const t = this;
+
+		// Currently it only accepts MP4, DASH and HLS
+		if (!t.isVideo || (t.isVideo && t.media.rendererName !== null &&
+			!t.media.rendererName.match(/(native\_(dash|hls)|html5)/))) {
+			return;
+		}
+
+		const
+			url = media.getSrc(),
+			mediaFiles = [{src: url, type: getTypeFromFile(url)}],
+			renderInfo = mejs.Renderers.select(mediaFiles, ['vr'])
+		;
+
+		media.changeRenderer(renderInfo.rendererName, mediaFiles);
+	}
+});
