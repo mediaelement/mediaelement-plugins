@@ -220,14 +220,26 @@ const VrRenderer = {
 
 							case 'currentTime':
 								vrPlayer.setCurrentTime(value);
+								setTimeout(() => {
+									const event = mejs.Utils.createEvent('timeupdate', vr);
+									mediaElement.dispatchEvent(event);
+								}, 50);
 								break;
 
 							case 'volume':
 								vrPlayer.setVolume(value);
+								setTimeout(() => {
+									const event = mejs.Utils.createEvent('volumechange', vr);
+									mediaElement.dispatchEvent(event);
+								}, 50);
 								break;
 							case 'muted':
 								volume = value ? 0 : oldVolume;
 								vrPlayer.setVolume(volume);
+								setTimeout(() => {
+									const event = mejs.Utils.createEvent('volumechange', vr);
+									mediaElement.dispatchEvent(event);
+								}, 50);
 								break;
 							case 'readyState':
 								const event = mejs.Utils.createEvent('canplay', vr);
@@ -280,10 +292,20 @@ const VrRenderer = {
 			assignMethods(methods[i]);
 		}
 
+		// Create <iframe> markup
+		const vrContainer = document.createElement('div');
+		vrContainer.setAttribute('id', vr.id);
+		vrContainer.style.width = '100%';
+		vrContainer.style.height = '100%';
+
 		// Initial method to register all VRView events when initializing <iframe>
 		window['__ready__' + vr.id] = (_vrPlayer) => {
 
 			mediaElement.vrPlayer = vrPlayer = _vrPlayer;
+
+			const iframe = vrContainer.querySelector('iframe');
+			iframe.style.width = '100%';
+			iframe.style.height = '100%';
 
 			// do call stack
 			if (stack.length) {
@@ -309,27 +331,20 @@ const VrRenderer = {
 				const events = mejs.html5media.events.concat(['mouseover', 'mouseout']);
 
 				for (let i = 0, il = events.length; i < il; i++) {
-					vrPlayer.addEventListener(events[i], (e) => {
-						const event = createEvent(e.type, vr);
+					vrPlayer.on(events[i], () => {
+						const event = mejs.Utils.createEvent(events[i], vr);
 						mediaElement.dispatchEvent(event);
 					});
 				}
 			});
 		};
 
-		const vrContainer = document.createElement('div');
-
-		// Create <iframe> markup
-		vrContainer.setAttribute('id', vr.id);
-		vrContainer.style.width = '100%';
-		vrContainer.style.height = '100%';
-
 		mediaElement.originalNode.parentNode.insertBefore(vrContainer, mediaElement.originalNode);
 		mediaElement.originalNode.style.display = 'none';
 
 		if (mediaFiles && mediaFiles.length > 0) {
 			for (let i = 0, il = mediaFiles.length; i < il; i++) {
-				if (renderer.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
+				if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
 					options.vr.video = mediaFiles[i].src;
 					options.vr.width = '100%';
 					options.vr.height = '100%';
@@ -376,7 +391,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {$} layers
 	 * @param {HTMLElement} media
 	 */
-	buildvr: function (player, controls, layers, media) {
+	buildvrview (player, controls, layers, media) {
 
 		const t = this;
 
@@ -388,7 +403,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		const
 			url = media.getSrc(),
-			mediaFiles = [{src: url, type: getTypeFromFile(url)}],
+			mediaFiles = [{ src: url, type: mejs.Utils.getTypeFromFile(url) }],
 			renderInfo = mejs.Renderers.select(mediaFiles, ['vr'])
 		;
 

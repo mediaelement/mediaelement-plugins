@@ -214,14 +214,26 @@ var VrRenderer = {
 
 						case 'currentTime':
 							vrPlayer.setCurrentTime(value);
+							setTimeout(function () {
+								var event = mejs.Utils.createEvent('timeupdate', vr);
+								mediaElement.dispatchEvent(event);
+							}, 50);
 							break;
 
 						case 'volume':
 							vrPlayer.setVolume(value);
+							setTimeout(function () {
+								var event = mejs.Utils.createEvent('volumechange', vr);
+								mediaElement.dispatchEvent(event);
+							}, 50);
 							break;
 						case 'muted':
 							volume = value ? 0 : oldVolume;
 							vrPlayer.setVolume(volume);
+							setTimeout(function () {
+								var event = mejs.Utils.createEvent('volumechange', vr);
+								mediaElement.dispatchEvent(event);
+							}, 50);
 							break;
 						case 'readyState':
 							var event = mejs.Utils.createEvent('canplay', vr);
@@ -267,10 +279,20 @@ var VrRenderer = {
 			assignMethods(methods[_i]);
 		}
 
+		// Create <iframe> markup
+		var vrContainer = document.createElement('div');
+		vrContainer.setAttribute('id', vr.id);
+		vrContainer.style.width = '100%';
+		vrContainer.style.height = '100%';
+
 		// Initial method to register all VRView events when initializing <iframe>
 		window['__ready__' + vr.id] = function (_vrPlayer) {
 
 			mediaElement.vrPlayer = vrPlayer = _vrPlayer;
+
+			var iframe = vrContainer.querySelector('iframe');
+			iframe.style.width = '100%';
+			iframe.style.height = '100%';
 
 			// do call stack
 			if (stack.length) {
@@ -293,28 +315,25 @@ var VrRenderer = {
 
 				var events = mejs.html5media.events.concat(['mouseover', 'mouseout']);
 
-				for (var _i3 = 0, _il3 = events.length; _i3 < _il3; _i3++) {
-					vrPlayer.addEventListener(events[_i3], function (e) {
-						var event = createEvent(e.type, vr);
+				var _loop = function _loop(_i3, _il3) {
+					vrPlayer.on(events[_i3], function () {
+						var event = mejs.Utils.createEvent(events[_i3], vr);
 						mediaElement.dispatchEvent(event);
 					});
+				};
+
+				for (var _i3 = 0, _il3 = events.length; _i3 < _il3; _i3++) {
+					_loop(_i3, _il3);
 				}
 			});
 		};
-
-		var vrContainer = document.createElement('div');
-
-		// Create <iframe> markup
-		vrContainer.setAttribute('id', vr.id);
-		vrContainer.style.width = '100%';
-		vrContainer.style.height = '100%';
 
 		mediaElement.originalNode.parentNode.insertBefore(vrContainer, mediaElement.originalNode);
 		mediaElement.originalNode.style.display = 'none';
 
 		if (mediaFiles && mediaFiles.length > 0) {
 			for (var _i4 = 0, _il4 = mediaFiles.length; _i4 < _il4; _i4++) {
-				if (renderer.renderers[options.prefix].canPlayType(mediaFiles[_i4].type)) {
+				if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[_i4].type)) {
 					options.vr.video = mediaFiles[_i4].src;
 					options.vr.width = '100%';
 					options.vr.height = '100%';
@@ -360,7 +379,7 @@ Object.assign(MediaElementPlayer.prototype, {
   * @param {$} layers
   * @param {HTMLElement} media
   */
-	buildvr: function buildvr(player, controls, layers, media) {
+	buildvrview: function buildvrview(player, controls, layers, media) {
 
 		var t = this;
 
@@ -370,7 +389,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		var url = media.getSrc(),
-		    mediaFiles = [{ src: url, type: getTypeFromFile(url) }],
+		    mediaFiles = [{ src: url, type: mejs.Utils.getTypeFromFile(url) }],
 		    renderInfo = mejs.Renderers.select(mediaFiles, ['vr']);
 
 		media.changeRenderer(renderInfo.rendererName, mediaFiles);
