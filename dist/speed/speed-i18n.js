@@ -13,7 +13,7 @@ if (mejs.i18n.es !== undefined) {
 	mejs.i18n.es["mejs.speed-rate"] = "Tasa de velocidad";
 }
 if (mejs.i18n.fr !== undefined) {
-	// mejs.i18n.fr["mejs.speed-rate"] = "Speed Rate";
+	mejs.i18n.fr["mejs.speed-rate"] = "Vitesse";
 }
 if (mejs.i18n.hr !== undefined) {
 	mejs.i18n.hr["mejs.speed-rate"] = "Brzina reprodukcije";

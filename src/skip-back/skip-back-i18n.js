@@ -13,7 +13,7 @@ if (mejs.i18n.es !== undefined) {
 	mejs.i18n.es["mejs.time-skip-back"] = ["Rebobinar 1 segundo", "Rebobinar %1 segundos"];
 }
 if (mejs.i18n.fr !== undefined) {
-	mejs.i18n.fr["mejs.time-skip-back"] = "Reculer de %1 secondes";
+	mejs.i18n.fr["mejs.time-skip-back"] = ["Reculer de %1 seconde", "Reculer de %1 secondes"];
 }
 if (mejs.i18n.hr !== undefined) {
 	mejs.i18n.hr["mejs.time-skip-back"] = ["Skoči natrag 1 sekundu", "Skoči natrag %1 sekunde", "Skoči natrag %1 sekundi"];

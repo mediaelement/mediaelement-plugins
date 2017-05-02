@@ -13,7 +13,7 @@ if (mejs.i18n.es !== undefined) {
 	mejs.i18n.es["mejs.loop"] = "Alternar Repetición";
 }
 if (mejs.i18n.fr !== undefined) {
-	// mejs.i18n.fr["mejs.loop"] = "Toggle Loop";
+	mejs.i18n.fr["mejs.loop"] = "Répéter";
 }
 if (mejs.i18n.hr !== undefined) {
 	mejs.i18n.hr["mejs.loop"] = "Uključi/isključi ponavljanje";

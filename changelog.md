@@ -1,10 +1,24 @@
 ### Version History
 
-*2.1.1 (2017/??/??)*
+*2.2.1 (2017/??/??)*
+
+* Fixed issues in Safari related to `Source Chooser` plugin @rafa8626
+* Added `babel-preset-env` to optimize bundles based on supported browsers @rafa8626
+
+*2.2.0 (2017/04/28)*
+
+* Modified commands on `package.json` to avoid creating source map on stylesheets @rafa8626
+* Integrated `AirPlay` plugin @rafa8626
+* Integrated `Chromecast` plugin @rafa8626
+* Improved documentation for each one of the plugins @rafa8626
+
+*2.1.1 (2017/04/19)*
 
 * Added demo file to show how to setup and configure plugins @rafa8626
 * Expanded `VAST` plugin to support VAST3.0 and added more events for preroll @rafa8626
 * Fixed typos in code in `Preview` and `Speed` plugins @rafa8626
+* Added new icons and modified CSS for them; fixed minor issues with `Skip Back` and `Jump Forward` plugins @rafa8626
+* Added missing French translations (https://github.com/mediaelement/mediaelement-plugins/pull/26) @kloh-fr
 
 *2.1.0 (2017/03/30)*
 

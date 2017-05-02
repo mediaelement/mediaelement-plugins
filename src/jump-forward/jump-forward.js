@@ -46,8 +46,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// add a click toggle event
 		button.addEventListener('click', function() {
-			if (media.duration) {
-				media.setCurrentTime(Math.min(media.currentTime + t.options.jumpForwardInterval, media.duration));
+			const duration = !isNaN(media.duration) ? media.duration : t.options.jumpForwardInterval;
+			if (duration) {
+				const current = media.currentTime === Infinity ? 0 : media.currentTime;
+				media.setCurrentTime(Math.min(current + t.options.jumpForwardInterval, duration));
 				this.querySelector('button').blur();
 			}
 		});
