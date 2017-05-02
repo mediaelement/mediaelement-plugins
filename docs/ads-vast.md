@@ -10,5 +10,5 @@ It will generate the proper structures after parsing VPAID2.0 or VAST3.0 XML fil
 
 Parameter | Type | Default | Description
 ------ | --------- | ------- | --------
-vastAdTagUrl | string | `x` | Character used to stop speeding media
+vastAdTagUrl | string | __empty__ | VAST or VPAID URL
 vastAdsType | string | `vast` | Type of Ads (`vast` or `vpaid`)

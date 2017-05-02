@@ -545,7 +545,7 @@ Object.assign(MediaElementPlayer.prototype, {
 								media.changeRenderer(renderInfo.rendererName, mediaFiles);
 
 								const
-									// captions = player.captionsButton.querySelectorAll('input[type=radio]'),
+									captions = player.captionsButton.querySelectorAll('input[type=radio]'),
 									castSession = cast.framework.CastContext.getInstance().getCurrentSession(),
 									deviceInfo = layers.querySelector(`.${t.options.classPrefix}chromecast-info`).querySelector('.device')
 								;
@@ -553,19 +553,19 @@ Object.assign(MediaElementPlayer.prototype, {
 								deviceInfo.innerText = castSession.getCastDevice().friendlyName;
 								player.chromecastLayer.style.display = 'block';
 
-								// for (let i = 0, total = captions.length; i < total; i++) {
-								// 	captions[i].addEventListener('click', function () {
-								// 		const
-								// 			trackId = parseInt(captions[i].id.replace(/^.*?track_(\d+)_.*$/, "$1")),
-								// 			setTracks = captions[i].value === 'none' ? [] : [trackId],
-								// 			tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks)
-								// 		;
-								//
-								// 		castSession.getMediaSession().editTracksInfo(tracksInfo, () => {}, (e) => {
-								// 			console.error(e);
-								// 		});
-								// 	});
-								// }
+								for (let i = 0, total = captions.length; i < total; i++) {
+									captions[i].addEventListener('click', function () {
+										const
+											trackId = parseInt(captions[i].id.replace(/^.*?track_(\d+)_.*$/, "$1")),
+											setTracks = captions[i].value === 'none' ? [] : [trackId],
+											tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks)
+										;
+
+										castSession.getMediaSession().editTracksInfo(tracksInfo, () => {}, (e) => {
+											console.error(e);
+										});
+									});
+								}
 
 								return;
 							}

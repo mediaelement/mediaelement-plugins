@@ -51,7 +51,7 @@
                    data-cast-description="Big Buck Bunny is now even more a world standard for video standards"
                    poster="http://sandbox.thewikies.com/vfe-generator/images/big-buck-bunny_poster.jpg">
                 <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
-                <track srclang="en" kind="subtitles" src="mediaelement.vtt" label="English">
+                <!--<track srclang="en" kind="subtitles" src="mediaelement.vtt" label="English">-->
             </video>
         </div>
     </div>
@@ -62,16 +62,16 @@
 <script src="../dist/skip-back/skip-back.min.js"></script>
 <script src="../dist/markers/markers.min.js"></script>
 <script src="../dist/speed/speed.min.js"></script>
-<script src="../dist/chromecast/chromecast.js"></script>
+<script src="../dist/chromecast/chromecast.min.js"></script>
 <script>
-	new MediaElementPlayer('player1', {
-		autoRewind: false,
-		features: ['playpause', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'tracks', 'markers', 'volume', 'chromecast'],
-	    markers: [5, 10, 25, 40],
-	    markerCallback: function (media, currentTime) {
-			console.log('Reached ' + currentTime + ' secs');
-        }
-    });
+	    new MediaElementPlayer('player1', {
+		    autoRewind: false,
+		    features: ['playpause', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'tracks', 'markers', 'volume', 'chromecast'],
+		    markers: [5, 10, 25, 40],
+		    markerCallback: function (media, currentTime) {
+			    console.log('Reached ' + currentTime + ' secs');
+		    }
+	    });
 </script>
 </body>
 </html>
