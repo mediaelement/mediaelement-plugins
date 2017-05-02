@@ -292,8 +292,11 @@ const CastRenderer = {
 
 								castSession.loadMedia(request).then(
 									() => {
-										// Autoplay media
+										// Autoplay media in the current position
+										const currentTime = mediaElement.originalNode.getCurrentTime();
+										c.setCurrentTime(currentTime);
 										castPlayerController.playOrPause();
+
 										setTimeout(() => {
 											const event = mejs.Utils.createEvent('play', c);
 											mediaElement.dispatchEvent(event);
@@ -535,6 +538,8 @@ Object.assign(MediaElementPlayer.prototype, {
 					media.castPlayer = new cast.framework.RemotePlayer();
 					media.castPlayerController = new cast.framework.RemotePlayerController(media.castPlayer);
 
+					let currentTime = 0;
+
 					// Set up renderer and device data
 					media.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, () => {
 
@@ -545,7 +550,7 @@ Object.assign(MediaElementPlayer.prototype, {
 								media.changeRenderer(renderInfo.rendererName, mediaFiles);
 
 								const
-									captions = player.captionsButton.querySelectorAll('input[type=radio]'),
+									captions = player.captionsButton !== undefined ? player.captionsButton.querySelectorAll('input[type=radio]') : null,
 									castSession = cast.framework.CastContext.getInstance().getCurrentSession(),
 									deviceInfo = layers.querySelector(`.${t.options.classPrefix}chromecast-info`).querySelector('.device')
 								;
@@ -553,27 +558,39 @@ Object.assign(MediaElementPlayer.prototype, {
 								deviceInfo.innerText = castSession.getCastDevice().friendlyName;
 								player.chromecastLayer.style.display = 'block';
 
-								for (let i = 0, total = captions.length; i < total; i++) {
-									captions[i].addEventListener('click', function () {
-										const
-											trackId = parseInt(captions[i].id.replace(/^.*?track_(\d+)_.*$/, "$1")),
-											setTracks = captions[i].value === 'none' ? [] : [trackId],
-											tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks)
-										;
+								if (captions !== null) {
+									for (let i = 0, total = captions.length; i < total; i++) {
+										captions[i].addEventListener('click', function () {
+											const
+												trackId = parseInt(captions[i].id.replace(/^.*?track_(\d+)_.*$/, "$1")),
+												setTracks = captions[i].value === 'none' ? [] : [trackId],
+												tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks)
+											;
 
-										castSession.getMediaSession().editTracksInfo(tracksInfo, () => {}, (e) => {
-											console.error(e);
+											castSession.getMediaSession().editTracksInfo(tracksInfo, () => {}, (e) => {
+												console.error(e);
+											});
 										});
-									});
+									}
 								}
+
+								media.addEventListener('timeupdate', () => {
+									currentTime = media.getCurrentTime();
+								});
 
 								return;
 							}
+						}
 
-							player.chromecastLayer.style.display = 'none';
-							media.style.display = '';
-							const renderInfo = mejs.Renderers.select(mediaFiles, media.renderers);
-							media.changeRenderer(renderInfo.rendererName, mediaFiles);
+						player.chromecastLayer.style.display = 'none';
+						media.style.display = '';
+						const renderInfo = mejs.Renderers.select(mediaFiles, media.renderers);
+						media.changeRenderer(renderInfo.rendererName, mediaFiles);
+						media.setCurrentTime(currentTime);
+
+						// Continue playing if already started
+						if (currentTime > 0 && !mejs.Features.IS_IOS && !mejs.Features.IS_ANDROID) {
+							media.play();
 						}
 					});
 				}

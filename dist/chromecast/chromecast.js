@@ -290,8 +290,11 @@ var CastRenderer = {
 							var request = new chrome.cast.media.LoadRequest(mediaInfo);
 
 							castSession.loadMedia(request).then(function () {
-								// Autoplay media
+								// Autoplay media in the current position
+								var currentTime = mediaElement.originalNode.getCurrentTime();
+								c.setCurrentTime(currentTime);
 								castPlayerController.playOrPause();
+
 								setTimeout(function () {
 									var event = mejs.Utils.createEvent('play', c);
 									mediaElement.dispatchEvent(event);
@@ -502,6 +505,8 @@ Object.assign(MediaElementPlayer.prototype, {
 					media.castPlayer = new cast.framework.RemotePlayer();
 					media.castPlayerController = new cast.framework.RemotePlayerController(media.castPlayer);
 
+					var currentTime = 0;
+
 					// Set up renderer and device data
 					media.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, function () {
 
@@ -512,28 +517,34 @@ Object.assign(MediaElementPlayer.prototype, {
 									var renderInfo = mejs.Renderers.select(mediaFiles, ['chromecast']);
 									media.changeRenderer(renderInfo.rendererName, mediaFiles);
 
-									var captions = player.captionsButton.querySelectorAll('input[type=radio]'),
+									var captions = player.captionsButton !== undefined ? player.captionsButton.querySelectorAll('input[type=radio]') : null,
 									    castSession = cast.framework.CastContext.getInstance().getCurrentSession(),
 									    deviceInfo = layers.querySelector('.' + t.options.classPrefix + 'chromecast-info').querySelector('.device');
 
 									deviceInfo.innerText = castSession.getCastDevice().friendlyName;
 									player.chromecastLayer.style.display = 'block';
 
-									var _loop = function _loop(i, total) {
-										captions[i].addEventListener('click', function () {
-											var trackId = parseInt(captions[i].id.replace(/^.*?track_(\d+)_.*$/, "$1")),
-											    setTracks = captions[i].value === 'none' ? [] : [trackId],
-											    tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks);
+									if (captions !== null) {
+										var _loop = function _loop(i, total) {
+											captions[i].addEventListener('click', function () {
+												var trackId = parseInt(captions[i].id.replace(/^.*?track_(\d+)_.*$/, "$1")),
+												    setTracks = captions[i].value === 'none' ? [] : [trackId],
+												    tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks);
 
-											castSession.getMediaSession().editTracksInfo(tracksInfo, function () {}, function (e) {
-												console.error(e);
+												castSession.getMediaSession().editTracksInfo(tracksInfo, function () {}, function (e) {
+													console.error(e);
+												});
 											});
-										});
-									};
+										};
 
-									for (var i = 0, total = captions.length; i < total; i++) {
-										_loop(i, total);
+										for (var i = 0, total = captions.length; i < total; i++) {
+											_loop(i, total);
+										}
 									}
+
+									media.addEventListener('timeupdate', function () {
+										currentTime = media.getCurrentTime();
+									});
 
 									return {
 										v: void 0
@@ -542,11 +553,17 @@ Object.assign(MediaElementPlayer.prototype, {
 
 								if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
 							}
+						}
 
-							player.chromecastLayer.style.display = 'none';
-							media.style.display = '';
-							var renderInfo = mejs.Renderers.select(mediaFiles, media.renderers);
-							media.changeRenderer(renderInfo.rendererName, mediaFiles);
+						player.chromecastLayer.style.display = 'none';
+						media.style.display = '';
+						var renderInfo = mejs.Renderers.select(mediaFiles, media.renderers);
+						media.changeRenderer(renderInfo.rendererName, mediaFiles);
+						media.setCurrentTime(currentTime);
+
+						// Continue playing if already started
+						if (currentTime > 0 && !mejs.Features.IS_IOS && !mejs.Features.IS_ANDROID) {
+							media.play();
 						}
 					});
 				}
