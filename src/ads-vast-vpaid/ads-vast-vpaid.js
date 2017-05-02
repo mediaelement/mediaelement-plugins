@@ -349,15 +349,29 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				if (t.media.canPlayType(type) !== '' || t.media.canPlayType(type).match(/(no|false)/) === null) {
 
-					adTag.mediaFiles.push({
-						id: mediaFile.getAttribute('id'),
-						delivery: mediaFile.getAttribute('delivery'),
-						type: mediaFile.getAttribute('type'),
-						bitrate: mediaFile.getAttribute('bitrate'),
-						width: mediaFile.getAttribute('width'),
-						height: mediaFile.getAttribute('height'),
-						url: mediaFile.textContent.trim()
-					});
+					// Execute JS files if found
+					if (mediaFile.getAttribute('type') === 'application/javascript') {
+						const
+							script = document.createElement('script'),
+							firstScriptTag = document.getElementsByTagName('script')[0]
+						;
+
+						script.src = mediaFile.textContent.trim();
+						firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
+
+					}
+					// Avoid Flash
+					else if (mediaFile.getAttribute('delivery') !== 'application/x-shockwave-flash') {
+						adTag.mediaFiles.push({
+							id: mediaFile.getAttribute('id'),
+							delivery: mediaFile.getAttribute('delivery'),
+							type: mediaFile.getAttribute('type'),
+							bitrate: mediaFile.getAttribute('bitrate'),
+							width: mediaFile.getAttribute('width'),
+							height: mediaFile.getAttribute('height'),
+							url: mediaFile.textContent.trim()
+						});
+					}
 				}
 			}
 		}
@@ -468,8 +482,12 @@ Object.assign(MediaElementPlayer.prototype, {
 		// Note: multiple preroll ads are supported.
 		let i = 0;
 		while (i < t.vastAdTags.length) {
-			t.options.adsPrerollMediaUrl[i] = t.vastAdTags[i].mediaFiles[0].url;
-			t.options.adsPrerollAdUrl[i] = t.vastAdTags[i].clickThrough;
+			if (typeof t.vastAdTags[i].mediaFiles !== 'undefined' && t.vastAdTags[i].mediaFiles.length) {
+				t.options.adsPrerollMediaUrl[i] = t.vastAdTags[i].mediaFiles[0].url;
+			}
+			if (typeof t.vastAdTags[i].clickThrough !== 'undefined') {
+				t.options.adsPrerollAdUrl[i] = t.vastAdTags[i].clickThrough;
+			}
 			i++;
 		}
 		t.adsStartPreroll();

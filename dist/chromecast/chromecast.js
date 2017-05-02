@@ -8,6 +8,14 @@
  * @see https://developers.google.com/cast/docs/developers
  */
 
+var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _typeof = typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol" ? function (obj) {
+	return typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+} : function (obj) {
+	return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+};
+
 var CastRenderer = {
 
 	name: 'chromecast',
@@ -499,33 +507,40 @@ Object.assign(MediaElementPlayer.prototype, {
 
 						if (cast && cast.framework) {
 							if (media.castPlayer.isConnected) {
+								var _ret = function () {
 
-								var _renderInfo = mejs.Renderers.select(mediaFiles, ['chromecast']);
-								media.changeRenderer(_renderInfo.rendererName, mediaFiles);
+									var renderInfo = mejs.Renderers.select(mediaFiles, ['chromecast']);
+									media.changeRenderer(renderInfo.rendererName, mediaFiles);
 
-								var
-								// captions = player.captionsButton.querySelectorAll('input[type=radio]'),
-								castSession = cast.framework.CastContext.getInstance().getCurrentSession(),
-								    deviceInfo = layers.querySelector('.' + t.options.classPrefix + 'chromecast-info').querySelector('.device');
+									var captions = player.captionsButton.querySelectorAll('input[type=radio]'),
+									    castSession = cast.framework.CastContext.getInstance().getCurrentSession(),
+									    deviceInfo = layers.querySelector('.' + t.options.classPrefix + 'chromecast-info').querySelector('.device');
 
-								deviceInfo.innerText = castSession.getCastDevice().friendlyName;
-								player.chromecastLayer.style.display = 'block';
+									deviceInfo.innerText = castSession.getCastDevice().friendlyName;
+									player.chromecastLayer.style.display = 'block';
 
-								// for (let i = 0, total = captions.length; i < total; i++) {
-								// 	captions[i].addEventListener('click', function () {
-								// 		const
-								// 			trackId = parseInt(captions[i].id.replace(/^.*?track_(\d+)_.*$/, "$1")),
-								// 			setTracks = captions[i].value === 'none' ? [] : [trackId],
-								// 			tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks)
-								// 		;
-								//
-								// 		castSession.getMediaSession().editTracksInfo(tracksInfo, () => {}, (e) => {
-								// 			console.error(e);
-								// 		});
-								// 	});
-								// }
+									var _loop = function _loop(i, total) {
+										captions[i].addEventListener('click', function () {
+											var trackId = parseInt(captions[i].id.replace(/^.*?track_(\d+)_.*$/, "$1")),
+											    setTracks = captions[i].value === 'none' ? [] : [trackId],
+											    tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks);
 
-								return;
+											castSession.getMediaSession().editTracksInfo(tracksInfo, function () {}, function (e) {
+												console.error(e);
+											});
+										});
+									};
+
+									for (var i = 0, total = captions.length; i < total; i++) {
+										_loop(i, total);
+									}
+
+									return {
+										v: void 0
+									};
+								}();
+
+								if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
 							}
 
 							player.chromecastLayer.style.display = 'none';
