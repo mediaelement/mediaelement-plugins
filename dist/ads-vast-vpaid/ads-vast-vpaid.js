@@ -46,8 +46,8 @@ Object.assign(MediaElementPlayer.prototype, {
   *
   * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
   * @param {MediaElementPlayer} player
-  * @param {$} controls
-  * @param {$} layers
+  * @param {HTMLElement} controls
+  * @param {HTMLElement} layers
   * @param {HTMLElement} media
   */
 	buildvast: function buildvast(player, controls, layers, media) {
@@ -458,7 +458,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		var i = 0;
 		while (i < t.vastAdTags.length) {
 			if (typeof t.vastAdTags[i].mediaFiles !== 'undefined' && t.vastAdTags[i].mediaFiles.length) {
-				console.log(t.vastAdTags[i].mediaFiles);
 				t.options.adsPrerollMediaUrl[i] = t.vastAdTags[i].mediaFiles[0].url;
 			}
 			if (typeof t.vastAdTags[i].clickThrough !== 'undefined') {

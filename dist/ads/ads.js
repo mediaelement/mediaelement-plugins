@@ -59,6 +59,14 @@ Object.assign(MediaElementPlayer.prototype, {
 	// true when the user clicks play for the first time, or if autoplay is set
 	adsPlayerHasStarted: false,
 
+	/**
+  * Feature constructor.
+  *
+  * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
+  * @param {MediaElementPlayer} player
+  * @param {HTMLElement} controls
+  * @param {HTMLElement} layers
+  */
 	buildads: function buildads(player, controls, layers) {
 
 		var t = this;
