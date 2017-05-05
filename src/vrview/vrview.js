@@ -403,10 +403,30 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		const button = document.createElement('div');
 
+		// Ensures that the proper fullscreen mode will be detected initially
+		player.detectFullscreenMode();
+
 		button.className = `${t.options.classPrefix}button ${t.options.classPrefix}vrview-button`;
 		button.innerHTML = `<button type="button" aria-controls="${t.id}" title="VR" aria-label="VR" tabindex="0"></button>`;
-		t.addControlElement(button, 'vrview');
+		button.addEventListener('click', () => {
+			// toggle fullscreen
+			const isFullScreen = (mejs.Features.HAS_TRUE_NATIVE_FULLSCREEN && mejs.Features.IS_FULLSCREEN) || player.isFullScreen;
 
+			if (isFullScreen) {
+				player.exitFullScreen();
+			} else {
+				player.enterFullScreen();
+			}
+		});
+
+		t.globalBind('keydown', (e) => {
+			const key = e.which || e.keyCode || 0;
+			if (key === 27 && ((mejs.Features.HAS_TRUE_NATIVE_FULLSCREEN && mejs.Features.IS_FULLSCREEN) || player.isFullScreen)) {
+				player.exitFullScreen();
+			}
+		});
+
+		t.addControlElement(button, 'vrview');
 
 		const
 			url = media.getSrc(),
