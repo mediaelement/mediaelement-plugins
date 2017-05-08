@@ -74,11 +74,9 @@
     color: rgba(33, 248, 248, 1);
 }
 
-.mejs__speed-selector
-{
+.mejs__speed-selector{
     visibility: hidden;
 }
-.mejs__speed-button:hover .mejs__speed-selector
-{
+.mejs__speed-button:hover .mejs__speed-selector{
     visibility: visible;
 }
