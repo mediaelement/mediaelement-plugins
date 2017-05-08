@@ -1,36 +1,45 @@
 'use strict';
 
-// VAST ads plugin
-// Sponsored by Minoto Video
-
-// 2013/02/01		0.5		research
-// 2013/02/09		1.5		build loading mechanism
-// 2013/02/10		2.5		events to play preroll, skip function, start/end calls, \
-// 2013/02/11		2		click events
-// ----
-// 2013/02/23		3.5		split into a generic pre-roll plugin
+/**
+ * Ads plugin.
+ * Sponsored by Minoto Video; updated to support VPAID and VAST3.0
+ */
 
 // Translations (English required)
 mejs.i18n.en["mejs.ad-skip"] = "Skip ad";
 mejs.i18n.en["mejs.ad-skip-info"] = ["Skip in 1 second", "Skip in %1 seconds"];
 
 Object.assign(mejs.MepDefaults, {
-	// URL to a media file
+	/**
+	 * URL(s) to a media file
+	 * @type {String[]}
+	 */
 	adsPrerollMediaUrl: [],
 
-	// URL for clicking ad
+	/**
+	 * URL(s) to clicking Ad
+	 * @type {String[]}
+	 */
 	adsPrerollAdUrl: [],
 
-	// if true, allows user to skip the pre-roll ad
+	/**
+	 * Allow user to skip the pre-roll Ad
+	 * @type {Boolean}
+	 */
 	adsPrerollAdEnableSkip: false,
 
-	// if adsPrerollAdEnableSkip=true and this is a positive number, it will only allow skipping after the time has elasped
+	/**
+	 * If `adsPrerollAdEnableSkip` is `true`, allow skipping after the time specified has elasped
+	 * @type {Number}
+	 */
 	adsPrerollAdSkipSeconds: -1,
 
-	// keep track of the index for the preroll ads to be able to show more than one preroll. Used for
-	// VAST3.0 Adpods
-	indexPreroll: 0,
-
+	/**
+	 * Keep track of the index for the preroll ads to be able to show more than one preroll.
+	 * Used for VAST3.0
+	 * @type {Number}
+	 */
+	indexPreroll: 0
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -48,6 +57,14 @@ Object.assign(MediaElementPlayer.prototype, {
 	// true when the user clicks play for the first time, or if autoplay is set
 	adsPlayerHasStarted: false,
 
+	/**
+	 * Feature constructor.
+	 *
+	 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
+	 * @param {MediaElementPlayer} player
+	 * @param {HTMLElement} controls
+	 * @param {HTMLElement} layers
+	 */
 	buildads (player, controls, layers)  {
 
 		const t = this;
@@ -84,6 +101,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.adsPrerollStartedProxy = t.adsPrerollStarted.bind(t);
 		t.adsPrerollMetaProxy = t.adsPrerollMeta.bind(t);
 		t.adsPrerollUpdateProxy = t.adsPrerollUpdate.bind(t);
+		t.adsPrerollVolumeProxy = t.adsPrerollVolume.bind(t);
 		t.adsPrerollEndedProxy = t.adsPrerollEnded.bind(t);
 		
 		// check for start
@@ -117,6 +135,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.media.addEventListener('playing', t.adsPrerollStartedProxy);
 		t.media.addEventListener('ended', t.adsPrerollEndedProxy);
 		t.media.addEventListener('timeupdate', t.adsPrerollUpdateProxy);
+		t.media.addEventListener('volumechange', t.adsPrerollVolumeProxy);
 
 		// change URLs to the preroll ad. Only save the video to be shown on first
 		// ad showing.
@@ -131,7 +150,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		// if autoplay was on, or if the user pressed play
 		// while the ad data was still loading, then start the ad right away
 		if (t.adsPlayerHasStarted) {
-			t.media.play();
+			setTimeout(() => {
+				t.media.play();
+			}, 100);
 		}
 	},
 
@@ -148,10 +169,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			newDuration = t.adsCurrentMediaDuration;
 		}
 
-		setTimeout(() => {
-			t.controls.querySelector(`.${t.options.classPrefix}duration`).innerHTML =
-				mejs.Utils.secondsToTimeCode(newDuration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
-		}, 250);
+		if (t.controls.querySelector(`.${t.options.classPrefix}duration`)) {
+			setTimeout(() => {
+				t.controls.querySelector(`.${t.options.classPrefix}duration`).innerHTML =
+					mejs.Utils.secondsToTimeCode(newDuration, t.options.alwaysShowHours,
+						t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
+			}, 250);
+		}
 
 		// send initialization events
 		const event = mejs.Utils.createEvent('mejsprerollinitialized', t.container);
@@ -216,18 +240,32 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.container.dispatchEvent(event);
 	},
 
+	adsPrerollVolume () {
+		const t = this;
+
+		const event = mejs.Utils.createEvent('mejsprerollvolumechanged', t.container);
+		t.container.dispatchEvent(event);
+
+	},
+
 	adsPrerollEnded ()  {
 		const t = this;
 
-		const event = mejs.Utils.createEvent('mejsprerollended', t.container);
-		t.container.dispatchEvent(event);
+		t.media.removeEventListener('ended', t.adsPrerollEndedProxy);
 
-		t.options.indexPreroll++;
-		if (t.options.indexPreroll < t.options.adsPrerollMediaUrl.length) {
-			t.adsStartPreroll();
-		} else {
-			t.adRestoreMainMedia();
-		}
+		// wrap in timeout to make sure it truly has ended
+		setTimeout(() => {
+
+			t.options.indexPreroll++;
+			if (t.options.indexPreroll < t.options.adsPrerollMediaUrl.length) {
+				t.adsStartPreroll();
+			} else {
+				t.adRestoreMainMedia();
+			}
+
+			const event = mejs.Utils.createEvent('mejsprerollended', t.container);
+			t.container.dispatchEvent(event);
+		}, 0);
 	},
 
 	adRestoreMainMedia ()  {
@@ -240,6 +278,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		}, 10);
 
 		t.enableControls();
+		if (t.adsSkipBlock) {
+			t.adsSkipBlock.remove();
+		}
 
 		t.adsLayer.style.display = 'none';
 
@@ -264,8 +305,10 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.container.dispatchEvent(event);
 	},
 
-	adsSkipClick ()  {
+	adsSkipClick (e)  {
 		const t = this;
+
+		t.media.removeEventListener('ended', t.adsPrerollEndedProxy);
 
 		let event = mejs.Utils.createEvent('mejsprerollskipclicked', t.container);
 		t.container.dispatchEvent(event);
@@ -279,6 +322,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		} else {
 			t.adRestoreMainMedia();
 		}
+
+		e.preventDefault();
+		e.stopPropagation();
 	},
 
 	// tells calling function if ads have finished running

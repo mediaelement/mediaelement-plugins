@@ -10,12 +10,6 @@
 
 // Translations (English required)
 
-var _templateObject = _taggedTemplateLiteral(["", "loop-on"], ["", "loop-on"]);
-
-function _taggedTemplateLiteral(strings, raw) {
-	return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } }));
-}
-
 mejs.i18n.en["mejs.loop"] = "Toggle Loop";
 
 // Feature configuration
@@ -32,11 +26,8 @@ Object.assign(MediaElementPlayer.prototype, {
   *
   * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
   * @param {MediaElementPlayer} player
-  * @param {$} controls
-  * @param {$} layers
-  * @param {HTMLElement} media
   */
-	buildloop: function buildloop(player, controls) {
+	buildloop: function buildloop(player) {
 		var t = this,
 		    loopTitle = mejs.Utils.isString(t.options.loopText) ? t.options.loopText : mejs.i18n.t('mejs.loop'),
 		    loop = document.createElement('div');
@@ -53,7 +44,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				mejs.Utils.removeClass(loop, t.options.classPrefix + "loop-off");
 				mejs.Utils.addClass(loop, t.options.classPrefix + "loop-on");
 			} else {
-				mejs.Utils.removeClass(loop(_templateObject, t.options.classPrefix));
+				mejs.Utils.removeClass(loop, t.options.classPrefix + "loop-on");
 				mejs.Utils.addClass(loop, t.options.classPrefix + "loop-off");
 			}
 		});

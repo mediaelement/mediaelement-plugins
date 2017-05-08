@@ -24,8 +24,8 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
 	 * @param {MediaElementPlayer} player
-	 * @param {$} controls
-	 * @param {$} layers
+	 * @param {HTMLElement} controls
+	 * @param {HTMLElement} layers
 	 * @param {HTMLElement} media
 	 */
 	buildsourcechooser (player, controls, layers, media)  {
@@ -34,7 +34,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			t = this,
 			sourceTitle = mejs.Utils.isString(t.options.sourcechooserText) ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
 			sources = [],
-			children = t.node.childNodes
+			children = t.mediaFiles ? t.mediaFiles : t.node.childNodes
 		;
 
 		// add to list
@@ -42,7 +42,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		for (let i = 0, total = children.length; i < total; i++) {
 			const s = children[i];
-			if (s.nodeName === 'SOURCE') {
+
+			if (t.mediaFiles) {
+				sources.push(s);
+			} else if (s.nodeName === 'SOURCE') {
 				sources.push(s);
 			}
 		}
@@ -61,7 +64,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		for (let i = 0, total = sources.length; i < total; i++) {
 			const src = sources[i];
-			if (src.type !== undefined && src.nodeName === 'SOURCE' && typeof media.canPlayType === 'function') {
+			if (src.type !== undefined && typeof media.canPlayType === 'function') {
 				player.addSourceButton(src.src, src.title, src.type, media.src === src.src);
 			}
 		}
@@ -141,27 +144,24 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				const src = this.value;
 
-				if (media.currentSrc !== src) {
+				if (media.getSrc() !== src) {
+					let currentTime = media.currentTime;
+
 					const
 						paused = media.paused,
 						canPlayAfterSourceSwitchHandler = () => {
 							if (!paused) {
+								media.setCurrentTime(currentTime);
 								media.play();
 							}
-							media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler, true);
+							media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
 						}
 					;
-
-					let currentTime = media.currentTime;
 
 					media.pause();
 					media.setSrc(src);
 					media.load();
-					media.addEventListener('loadedmetadata', () => {
-						media.currentTime = currentTime;
-					}, true);
-					media.addEventListener('canplay', canPlayAfterSourceSwitchHandler, true);
-					media.load();
+					media.addEventListener('canplay', canPlayAfterSourceSwitchHandler);
 				}
 			});
 		}

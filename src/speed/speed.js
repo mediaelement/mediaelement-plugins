@@ -40,8 +40,8 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
 	 * @param {MediaElementPlayer} player
-	 * @param {$} controls
-	 * @param {$} layers
+	 * @param {HTMLElement} controls
+	 * @param {HTMLElement} layers
 	 * @param {HTMLElement} media
 	 */
 	buildspeed (player, controls, layers, media)  {
@@ -143,7 +143,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// hover or keyboard focus
 		for (let i = 0, total = inEvents.length; i < total; i++) {
-			player.speedButton.addEventListener(inEvents[i], function () {
+			player.speedButton.addEventListener(inEvents[i], () => {
 				mejs.Utils.removeClass(player.speedSelector, `${t.options.classPrefix}offscreen`);
 				player.speedSelector.style.height = player.speedSelector.querySelector('ul').offsetHeight;
 				player.speedSelector.style.top = `${(-1 * parseFloat(player.speedSelector.offsetHeight))}px`;

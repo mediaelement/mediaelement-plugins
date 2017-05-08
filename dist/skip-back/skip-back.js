@@ -30,8 +30,8 @@ Object.assign(MediaElementPlayer.prototype, {
   *
   * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
   * @param {MediaElementPlayer} player
-  * @param {$} controls
-  * @param {$} layers
+  * @param {HTMLElement} controls
+  * @param {HTMLElement} layers
   * @param {HTMLElement} media
   */
 	buildskipback: function buildskipback(player, controls, layers, media) {
@@ -47,8 +47,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// add a click toggle event
 		button.addEventListener('click', function () {
-			if (media.duration) {
-				media.setCurrentTime(Math.max(media.currentTime - t.options.skipBackInterval, 0));
+			var duration = !isNaN(media.duration) ? media.duration : t.options.skipBackInterval;
+			if (duration) {
+				var current = media.currentTime === Infinity ? 0 : media.currentTime;
+				media.setCurrentTime(Math.max(current - t.options.jumpForwardInterval, 0));
 				this.querySelector('button').blur();
 			}
 		});

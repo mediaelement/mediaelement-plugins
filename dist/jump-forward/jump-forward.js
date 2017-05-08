@@ -28,8 +28,8 @@ Object.assign(MediaElementPlayer.prototype, {
   *
   * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
   * @param {MediaElementPlayer} player
-  * @param {$} controls
-  * @param {$} layers
+  * @param {HTMLElement} controls
+  * @param {HTMLElement} layers
   * @param {HTMLElement} media
   */
 	buildjumpforward: function buildjumpforward(player, controls, layers, media) {
@@ -46,8 +46,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// add a click toggle event
 		button.addEventListener('click', function () {
-			if (media.duration) {
-				media.setCurrentTime(Math.min(media.currentTime + t.options.jumpForwardInterval, media.duration));
+			var duration = !isNaN(media.duration) ? media.duration : t.options.jumpForwardInterval;
+			if (duration) {
+				var current = media.currentTime === Infinity ? 0 : media.currentTime;
+				media.setCurrentTime(Math.min(current + t.options.jumpForwardInterval, duration));
 				this.querySelector('button').blur();
 			}
 		});

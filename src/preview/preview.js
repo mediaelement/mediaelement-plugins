@@ -63,9 +63,6 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
 	 * @param {MediaElementPlayer} player
-	 * @param {$} controls
-	 * @param {$} layers
-	 * @param {HTMLElement} media
 	 */
 	buildpreview (player) {
 		let
@@ -109,7 +106,7 @@ Object.assign(MediaElementPlayer.prototype, {
 									clearInterval(interval);
 									interval = null;
 									t.media.setMuted(false);
-									setTimeout(function () {
+									setTimeout(() => {
 										initFadeIn = false;
 									}, 300);
 								}
@@ -152,7 +149,7 @@ Object.assign(MediaElementPlayer.prototype, {
 									clearInterval(interval);
 									interval = null;
 									t.media.setMuted(false);
-									setTimeout(function () {
+									setTimeout(() => {
 										initFadeOut = false;
 									}, 300);
 								}
@@ -172,7 +169,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		// fade-in/out should be available for both video/audio
-		t.media.addEventListener('timeupdate', function () {
+		t.media.addEventListener('timeupdate', () => {
 
 			if (initFadeIn) {
 				t.media.removeEventListener('timeupdate', fadeInCallback);

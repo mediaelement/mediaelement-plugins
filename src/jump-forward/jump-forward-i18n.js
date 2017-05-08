@@ -13,7 +13,7 @@ if (mejs.i18n.es !== undefined) {
 	mejs.i18n.es["mejs.time-jump-forward"] = ["Adelantar 1 segundo", "Adelantar %1 segundos"];
 }
 if (mejs.i18n.fr !== undefined) {
-	mejs.i18n.fr["mejs.time-jump-forward"] = "Avancer de %1 secondes";
+	mejs.i18n.fr["mejs.time-jump-forward"] = ["Avancer de %1 seconde", "Avancer de %1 secondes"];
 }
 if (mejs.i18n.hr !== undefined) {
 	mejs.i18n.hr["mejs.time-jump-forward"] = ["Skoči naprijed 1 sekundu", "Skoči naprijed %1 sekunde", "Skoči naprijed %1 sekundi"];

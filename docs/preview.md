@@ -1,5 +1,11 @@
 # Preview
 
+## Overview
+
+This plugin allows the creation of a preview effect on videos: playing on hover and with possibility of mute/fade-in/fade-out its audio.
+
+## API
+
 Parameter | Type | Default | Description
 ------ | --------- | ------- | --------
 muteOnPreviewMode | boolean | `true` | When playing in preview mode, turn on/off sound
