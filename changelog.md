@@ -4,6 +4,7 @@
 
 * Fixed issues in Safari related to `Source Chooser` plugin @rafa8626
 * Added `babel-preset-env` to optimize bundles based on supported browsers @rafa8626
+* Fixed issues with `Speed` and `Source chooser` related to their menu options (https://github.com/mediaelement/mediaelement-plugins/pull/41) @lebanggit 
 
 *2.2.0 (2017/04/28)*
 
