@@ -196,7 +196,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.adsSkipBlock.style.display = 'block';
 
 			if (t.options.adsPrerollAdSkipSeconds > 0) {
-				t.adsSkipMessage.innerHTML = mejs.i18n.t('mejs.ad-skip-info').replace('%1', t.options.adsPrerollAdSkipSeconds.toString());
+				t.adsSkipMessage.innerHTML = mejs.i18n.t('mejs.ad-skip-info', t.options.adsPrerollAdSkipSeconds);
 				t.adsSkipMessage.style.display = 'block';
 				t.adsSkipButton.style.display = 'none';
 			} else {
@@ -220,7 +220,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.adsSkipButton.style.display = 'block';
 				t.adsSkipMessage.style.display = 'none';
 			} else {
-				t.adsSkipMessage.innerHTML = mejs.i18n.t('mejs.ad-skip-info').replace('%1', Math.round(t.options.adsPrerollAdSkipSeconds - t.media.currentTime).toString());
+				t.adsSkipMessage.innerHTML = mejs.i18n.t('mejs.ad-skip-info', Math.round(t.options.adsPrerollAdSkipSeconds - t.media.currentTime));
 			}
 		}
 

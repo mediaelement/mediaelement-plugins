@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="../dist/skip-back/skip-back.min.css">
     <link rel="stylesheet" href="../dist/speed/speed.min.css">
     <link rel="stylesheet" href="../dist/chromecast/chromecast.min.css">
+    <link rel="stylesheet" href="../dist/ads/ads.min.css">
+    <link rel="stylesheet" href="../dist/context-menu/context-menu.min.css">
 
     <style>
         #container {
@@ -56,20 +58,28 @@
     </div>
 </div>
 
-<script src="//rawgit.com/mediaelement/mediaelement/master/build/mediaelement-and-player.min.js"></script>
+<script src="//rawgit.com/mediaelement/mediaelement/master/build/mediaelement-and-player.js"></script>
 <script src="../dist/jump-forward/jump-forward.min.js"></script>
 <script src="../dist/skip-back/skip-back.min.js"></script>
 <script src="../dist/markers/markers.min.js"></script>
 <script src="../dist/speed/speed.min.js"></script>
 <script src="../dist/chromecast/chromecast.min.js"></script>
+<script src="../dist/ads/ads.min.js"></script>
+<script src="../dist/ads-vast-vpaid/ads-vast-vpaid.min.js"></script>
+<script src="../dist/context-menu/context-menu.min.js"></script>
 <script>
 	    new MediaElementPlayer('player1', {
 		    autoRewind: false,
-		    features: ['playpause', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'tracks', 'markers', 'volume', 'chromecast'],
+		    features: ['playpause', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'tracks',
+                    'markers', 'volume', 'chromecast', 'ads', 'vast', 'contextmenu'],
 		    markers: [5, 10, 25, 40],
 		    markerCallback: function (media, currentTime) {
 			    console.log('Reached ' + currentTime + ' secs');
-		    }
+		    },
+		    vastAdTagUrl: 'vast_sample.xml',
+	        vastAdsType: 'vast',
+		    adsPrerollAdEnableSkip: true,
+		    adsPrerollAdSkipSeconds: 5
 	    });
 </script>
 </body>
