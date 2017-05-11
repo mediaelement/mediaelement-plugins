@@ -9,8 +9,7 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-    <link rel="stylesheet" type="text/css"
-          href="//rawgit.com/mediaelement/mediaelement/master/build/mediaelementplayer.min.css">
+    <link rel="stylesheet" type="text/css" href="//rawgit.com/mediaelement/mediaelement/master/build/mediaelementplayer.min.css">
     <link rel="stylesheet" href="../dist/jump-forward/jump-forward.min.css">
     <link rel="stylesheet" href="../dist/skip-back/skip-back.min.css">
     <link rel="stylesheet" href="../dist/speed/speed.min.css">
@@ -53,8 +52,7 @@
         <h2><em>audio/video</em> unification library</h2>
 
         <p><em>MediaElement</em> is a wrapper that mimics the native HTML5 MediaElement syntax (get/set) as a renderer
-            that
-            can handle media from HTML5, YouTube, Vimeo, Soundcloud, Flash, Facebook, and other libraries.</p>
+            that can handle media from HTML5, YouTube, Vimeo, Soundcloud, Flash, Facebook, and other libraries.</p>
 
         <p><em>MediaElementPlayer</em> is built off of MediaElement and creates a fully featured player on top of the
             unified syntax from MediaElement.</p>
@@ -88,12 +86,13 @@
 <script src="../dist/chromecast/chromecast.js"></script>
 <script src="../dist/ads/ads.min.js"></script>
 <script src="../dist/ads-vast-vpaid/ads-vast-vpaid.min.js"></script>
+<script src="../dist/context-menu/context-menu.min.js"></script>
 <script id="mejs-code">
 	new MediaElementPlayer('player1', {
 		// This is needed to make Jump Forward to work correctly
 		autoRewind: false,
 		features: ['playpause', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'tracks',
-			'markers', 'volume', 'chromecast', 'ads', 'vast'],
+			'markers', 'volume', 'chromecast', 'ads', 'vast', 'contextmenu'],
 		// Markers plugin configuration
 		markers: [5, 10, 25, 40],
 		markerCallback: function (media, currentTime) {

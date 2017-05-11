@@ -9,6 +9,7 @@
 * Added missing workflow to avoid interacting with progress bar and some buttons in control bar when playing Ads @rafa8626
 * Added new config element for `Chromecast` plugin to enable tracks @rafa8626
 * Changed `match` to `test` and `includes` to `indexOf` to improve performance @rafa8626
+* Fixed issues with `Context Menu` plugin not being displayed properly @rafa8626
 
 *2.2.0 (2017/04/28)*
 

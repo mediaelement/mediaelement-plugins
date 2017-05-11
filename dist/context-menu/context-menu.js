@@ -12,8 +12,6 @@ mejs.i18n.en["mejs.download-video"] = "Download Video";
  *
  */
 Object.assign(mejs.MepDefaults, {
-	isContextMenuEnabled: true,
-	contextMenuTimeout: null,
 	contextMenuItems: [{
 		// demo of a fullscreen option
 		render: function render(player) {
@@ -70,23 +68,26 @@ Object.assign(mejs.MepDefaults, {
 });
 
 Object.assign(MediaElementPlayer.prototype, {
+
+	isContextMenuEnabled: true,
+
+	contextMenuTimeout: null,
+
 	buildcontextmenu: function buildcontextmenu(player) {
 
-		if (document.querySelector("." + player.options.classPrefix + "contextmenu")) {
-			return;
-		}
-
 		// create context menu
-		player.contextMenu = document.createElement('div');
-		player.contextMenu.className = player.options.classPrefix + "contextmenu";
-		player.contextMenu.style.display = 'none';
+		if (!document.querySelector("." + player.options.classPrefix + "contextmenu")) {
+			player.contextMenu = document.createElement('div');
+			player.contextMenu.className = player.options.classPrefix + "contextmenu";
+			player.contextMenu.style.display = 'none';
 
-		document.body.appendChild(player.contextMenu);
+			document.body.appendChild(player.contextMenu);
+		}
 
 		// create events for showing context menu
 		player.container.addEventListener('contextmenu', function (e) {
-			if (player.isContextMenuEnabled) {
-				player.renderContextMenu(e.clientX - 1, e.clientY - 1);
+			if (player.isContextMenuEnabled && (e.keyCode === 3 || e.which === 3)) {
+				player.renderContextMenu(e);
 				e.preventDefault();
 				e.stopPropagation();
 			}
@@ -99,7 +100,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 	},
 	cleancontextmenu: function cleancontextmenu(player) {
-		player.contextMenu.parentNode.removeChild(player.contextMenu);
+		player.contextMenu.remove();
 	},
 	enableContextMenu: function enableContextMenu() {
 		this.isContextMenuEnabled = true;
@@ -128,7 +129,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	hideContextMenu: function hideContextMenu() {
 		this.contextMenu.style.display = 'none';
 	},
-	renderContextMenu: function renderContextMenu(x, y) {
+	renderContextMenu: function renderContextMenu(event) {
 
 		// alway re-render the items so that things like "turn fullscreen on" and "turn fullscreen off" are always written correctly
 		var t = this,
@@ -154,9 +155,20 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// position and show the context menu
 		t.contextMenu.innerHTML = html;
-		t.contextMenu.style.top = y;
-		t.contextMenu.style.left = x;
-		t.contextMenu.style.display = 'block';
+
+		var width = t.contextMenu.offsetWidth,
+		    height = t.contextMenu.offsetHeight,
+		    x = event.pageX,
+		    y = event.pageY,
+		    doc = document.documentElement,
+		    scrollLeft = (window.pageXOffset || doc.scrollLeft) - (doc.clientLeft || 0),
+		    scrollTop = (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0),
+		    left = x + width > window.innerWidth + scrollLeft ? x - width : x,
+		    top = y + height > window.innerHeight + scrollTop ? y - height : y;
+
+		t.contextMenu.style.display = '';
+		t.contextMenu.style.left = left + "px";
+		t.contextMenu.style.top = top + "px";
 
 		// bind events
 		var contextItems = t.contextMenu.querySelectorAll("." + t.options.classPrefix + "contextmenu-item");
@@ -191,7 +203,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// stop the controls from hiding
 		setTimeout(function () {
-			t.killControlsTimer('rev3');
+			t.killControlsTimer();
 		}, 100);
 	}
 });
