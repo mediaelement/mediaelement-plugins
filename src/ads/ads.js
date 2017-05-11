@@ -365,7 +365,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			rnd = Math.round(Math.random() * 100000)
 		;
 
-		img.src = `${url}${(url.includes('?') ? '&' : '?')}random${rnd}=${rnd}`;
+		img.src = `${url}${(~url.indexOf('?') ? '&' : '?')}random${rnd}=${rnd}`;
 		img.loaded = () => {
 			img = null;
 		};

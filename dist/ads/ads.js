@@ -272,8 +272,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.media.play();
 		}, 10);
 
-		// turn on controls
-		// turn off controls until the preroll is done
+		// turn on controls to restore original media
 		var controlElements = t.container.querySelector("." + t.options.classPrefix + "controls").childNodes;
 		for (var i = 0, total = controlElements.length; i < total; i++) {
 			var target = controlElements[i],
@@ -343,7 +342,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		var img = new Image(),
 		    rnd = Math.round(Math.random() * 100000);
 
-		img.src = "" + url + (url.includes('?') ? '&' : '?') + "random" + rnd + "=" + rnd;
+		img.src = "" + url + (~url.indexOf('?') ? '&' : '?') + "random" + rnd + "=" + rnd;
 		img.loaded = function () {
 			img = null;
 		};

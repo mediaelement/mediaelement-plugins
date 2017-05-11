@@ -47,7 +47,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	buildspeed (player, controls, layers, media)  {
 		const
 			t = this,
-			isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/) !== null
+			isNative = t.media.rendererName !== null && /(native|html5)/i.test(t.media.rendererName)
 		;
 
 		if (!isNative) {
