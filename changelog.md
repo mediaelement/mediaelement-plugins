@@ -7,6 +7,7 @@
 * Fixed issues with `Speed` and `Source chooser` related to their menu options (https://github.com/mediaelement/mediaelement-plugins/pull/41) @lebanggit
 * Expanded demo file with `Ads` and `VAST/VPAID` plugins @rafa8626
 * Added missing workflow to avoid interacting with progress bar and some buttons in control bar when playing Ads @rafa8626
+* Added new config element for `Chromecast` plugin to enable tracks @rafa8626
 
 *2.2.0 (2017/04/28)*
 
