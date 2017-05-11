@@ -188,7 +188,18 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.media.removeEventListener('playing', t.adsPrerollStartedProxy);
 
 		// turn off controls until the preroll is done
-		t.disableControls();
+		const controlElements = t.container.querySelector(`.${t.options.classPrefix}controls`).childNodes;
+		for (let i = 0, total = controlElements.length; i < total; i++) {
+			const
+				target = controlElements[i],
+				button = target.querySelector('button')
+			;
+			if (button && !mejs.Utils.hasClass(target, `${t.options.classPrefix}playpause-button`)) {
+				button.disabled = true;
+			} else if (target.querySelector(`.${t.options.classPrefix}time-slider`)) {
+				target.querySelector(`.${t.options.classPrefix}time-slider`).style.pointerEvents = 'none';
+			}
+		}
 
 		// enable clicking through
 		t.adsLayer.style.display = 'block';
@@ -277,7 +288,21 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.media.play();
 		}, 10);
 
-		t.enableControls();
+
+		// turn on controls to restore original media
+		const controlElements = t.container.querySelector(`.${t.options.classPrefix}controls`).childNodes;
+		for (let i = 0, total = controlElements.length; i < total; i++) {
+			const
+				target = controlElements[i],
+				button = target.querySelector('button')
+			;
+			if (button && !mejs.Utils.hasClass(target, `${t.options.classPrefix}playpause-button`)) {
+				button.disabled = false;
+			} else if (target.querySelector(`.${t.options.classPrefix}time-slider`)) {
+				target.querySelector(`.${t.options.classPrefix}time-slider`).style.pointerEvents = 'auto';
+			}
+		}
+
 		if (t.adsSkipBlock) {
 			t.adsSkipBlock.remove();
 		}

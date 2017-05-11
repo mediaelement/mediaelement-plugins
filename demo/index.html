@@ -84,14 +84,14 @@
 <script src="../dist/skip-back/skip-back.min.js"></script>
 <script src="../dist/markers/markers.min.js"></script>
 <script src="../dist/speed/speed.min.js"></script>
-<script src="../dist/chromecast/chromecast.min.js"></script>
+<script src="../dist/chromecast/chromecast.js"></script>
 <script src="../dist/ads/ads.min.js"></script>
 <script src="../dist/ads-vast-vpaid/ads-vast-vpaid.min.js"></script>
 <script id="mejs-code">
 	new MediaElementPlayer('player1', {
 		// This is needed to make jumpforward to work correctly
 		autoRewind: false,
-		features: ['playpause', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward',
+		features: ['playpause', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'tracks',
 			'markers', 'volume', 'chromecast', 'ads', 'vast'],
 		// Markers plugin configuration
 		markers: [5, 10, 25, 40],
