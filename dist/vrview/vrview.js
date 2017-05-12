@@ -122,7 +122,7 @@ var VrRenderer = {
   * @return {Boolean}
   */
 	canPlayType: function canPlayType(type) {
-		return ['video/mp4', 'application/x-mpegurl', 'vnd.apple.mpegurl', 'application/dash+xml'].includes(type.toLowerCase());
+		return ~['video/mp4', 'application/x-mpegurl', 'vnd.apple.mpegurl', 'application/dash+xml'].indexOf(type.toLowerCase());
 	},
 
 	/**
