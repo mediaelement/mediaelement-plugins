@@ -14,10 +14,31 @@
     <link rel="stylesheet" href="../dist/skip-back/skip-back.min.css">
     <link rel="stylesheet" href="../dist/speed/speed.min.css">
     <link rel="stylesheet" href="../dist/chromecast/chromecast.min.css">
+    <link rel="stylesheet" href="../dist/ads/ads.min.css">
+    <link rel="stylesheet" href="../dist/context-menu/context-menu.min.css">
 
     <style>
         #container {
             padding: 0 20px 50px;
+        }
+        pre {
+            white-space: pre-wrap;
+            tab-size: 2;
+            background: black;
+            color: white;
+        }
+        pre[data-lang]::before {
+            content: attr(data-lang);
+            display: block;
+            background-color: #FFA500;
+            background-image: -webkit-linear-gradient(top, #FFA500, #D67E21);
+            background-image:         linear-gradient(to bottom, #FFA500, #D67E21);
+            padding: 10px;
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            padding: 10px 20px;
+            display: inline-block;
         }
     </style>
 </head>
@@ -30,15 +51,13 @@
 
         <h2><em>audio/video</em> unification library</h2>
 
-        <p><em>MediaElement</em> is a wrapper that mimics the native HTML5 MediaElement syntax (get/set) as a renderer that
-            can handle media from HTML5, YouTube, Vimeo, Soundcloud, Flash, Facebook, and other libraries.</p>
+        <p><em>MediaElement</em> is a wrapper that mimics the native HTML5 MediaElement syntax (get/set) as a renderer
+            that can handle media from HTML5, YouTube, Vimeo, Soundcloud, Flash, Facebook, and other libraries.</p>
 
         <p><em>MediaElementPlayer</em> is built off of MediaElement and creates a fully featured player on top of the
             unified syntax from MediaElement.</p>
 
-        <p>This demo shows how to setup (and for some, configure) the plugins to expand the player. As an example,
-            <strong><em>Speed</em></strong>, <strong><em>Skip Back</em></strong>, <strong><em>Jump Forward</em></strong>
-            and <strong><em>Markers</em></strong> are enabled </p>
+        <p>This demo shows how to setup (and for some, configure) the plugins to expand the player.</p>
     </section>
 
     <div class="players" id="player1-container">
@@ -51,27 +70,43 @@
                    data-cast-description="Big Buck Bunny is now even more a world standard for video standards"
                    poster="http://sandbox.thewikies.com/vfe-generator/images/big-buck-bunny_poster.jpg">
                 <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
-                <!--<track srclang="en" kind="subtitles" src="mediaelement.vtt" label="English">-->
+                <track srclang="en" kind="subtitles" src="mediaelement.vtt" label="English">
             </video>
         </div>
+        <h4>Code snippet</h4>
+        <pre data-lang="Javascript"><code></code></pre>
     </div>
 </div>
 
-<script src="//rawgit.com/mediaelement/mediaelement/master/build/mediaelement-and-player.min.js"></script>
+<script src="//rawgit.com/mediaelement/mediaelement/master/build/mediaelement-and-player.js"></script>
 <script src="../dist/jump-forward/jump-forward.min.js"></script>
 <script src="../dist/skip-back/skip-back.min.js"></script>
 <script src="../dist/markers/markers.min.js"></script>
 <script src="../dist/speed/speed.min.js"></script>
-<script src="../dist/chromecast/chromecast.min.js"></script>
+<script src="../dist/chromecast/chromecast.js"></script>
+<script src="../dist/ads/ads.min.js"></script>
+<script src="../dist/ads-vast-vpaid/ads-vast-vpaid.min.js"></script>
+<script src="../dist/context-menu/context-menu.min.js"></script>
+<script id="mejs-code">
+	new MediaElementPlayer('player1', {
+		// This is needed to make Jump Forward to work correctly
+		autoRewind: false,
+		features: ['playpause', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'tracks',
+			'markers', 'volume', 'chromecast', 'ads', 'vast', 'contextmenu'],
+		// Markers plugin configuration
+		markers: [5, 10, 25, 40],
+		markerCallback: function (media, currentTime) {
+			console.log('Reached ' + currentTime + ' secs');
+		},
+		// Ads/Vast/VPAID configuration
+		vastAdTagUrl: 'vast_sample.xml',
+		vastAdsType: 'vast',
+		adsPrerollAdEnableSkip: true,
+		adsPrerollAdSkipSeconds: 5
+	});
+</script>
 <script>
-	    new MediaElementPlayer('player1', {
-		    autoRewind: false,
-		    features: ['playpause', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'tracks', 'markers', 'volume', 'chromecast'],
-		    markers: [5, 10, 25, 40],
-		    markerCallback: function (media, currentTime) {
-			    console.log('Reached ' + currentTime + ' secs');
-		    }
-	    });
+	document.body.querySelector('code').innerText = document.getElementById('mejs-code').innerText;
 </script>
 </body>
 </html>

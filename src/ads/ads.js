@@ -57,6 +57,14 @@ Object.assign(MediaElementPlayer.prototype, {
 	// true when the user clicks play for the first time, or if autoplay is set
 	adsPlayerHasStarted: false,
 
+	/**
+	 * Feature constructor.
+	 *
+	 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
+	 * @param {MediaElementPlayer} player
+	 * @param {HTMLElement} controls
+	 * @param {HTMLElement} layers
+	 */
 	buildads (player, controls, layers)  {
 
 		const t = this;
@@ -180,7 +188,18 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.media.removeEventListener('playing', t.adsPrerollStartedProxy);
 
 		// turn off controls until the preroll is done
-		t.disableControls();
+		const controlElements = t.container.querySelector(`.${t.options.classPrefix}controls`).childNodes;
+		for (let i = 0, total = controlElements.length; i < total; i++) {
+			const
+				target = controlElements[i],
+				button = target.querySelector('button')
+			;
+			if (button && !mejs.Utils.hasClass(target, `${t.options.classPrefix}playpause-button`)) {
+				button.disabled = true;
+			} else if (target.querySelector(`.${t.options.classPrefix}time-slider`)) {
+				target.querySelector(`.${t.options.classPrefix}time-slider`).style.pointerEvents = 'none';
+			}
+		}
 
 		// enable clicking through
 		t.adsLayer.style.display = 'block';
@@ -196,7 +215,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.adsSkipBlock.style.display = 'block';
 
 			if (t.options.adsPrerollAdSkipSeconds > 0) {
-				t.adsSkipMessage.innerHTML = mejs.i18n.t('mejs.ad-skip-info').replace('%1', t.options.adsPrerollAdSkipSeconds.toString());
+				t.adsSkipMessage.innerHTML = mejs.i18n.t('mejs.ad-skip-info', t.options.adsPrerollAdSkipSeconds);
 				t.adsSkipMessage.style.display = 'block';
 				t.adsSkipButton.style.display = 'none';
 			} else {
@@ -221,7 +240,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.adsSkipButton.style.display = 'block';
 				t.adsSkipMessage.style.display = 'none';
 			} else {
-				t.adsSkipMessage.innerHTML = (mejs.i18n.t('mejs.ad-skip-info').replace('%1', Math.round(t.options.adsPrerollAdSkipSeconds - t.media.currentTime).toString()));
+				t.adsSkipMessage.innerHTML = mejs.i18n.t('mejs.ad-skip-info', Math.round(t.options.adsPrerollAdSkipSeconds - t.media.currentTime));
 			}
 
 		}
@@ -269,7 +288,21 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.media.play();
 		}, 10);
 
-		t.enableControls();
+
+		// turn on controls to restore original media
+		const controlElements = t.container.querySelector(`.${t.options.classPrefix}controls`).childNodes;
+		for (let i = 0, total = controlElements.length; i < total; i++) {
+			const
+				target = controlElements[i],
+				button = target.querySelector('button')
+			;
+			if (button && !mejs.Utils.hasClass(target, `${t.options.classPrefix}playpause-button`)) {
+				button.disabled = false;
+			} else if (target.querySelector(`.${t.options.classPrefix}time-slider`)) {
+				target.querySelector(`.${t.options.classPrefix}time-slider`).style.pointerEvents = 'auto';
+			}
+		}
+
 		if (t.adsSkipBlock) {
 			t.adsSkipBlock.remove();
 		}
@@ -332,7 +365,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			rnd = Math.round(Math.random() * 100000)
 		;
 
-		img.src = `${url}${(url.includes('?') ? '&' : '?')}random${rnd}=${rnd}`;
+		img.src = `${url}${(~url.indexOf('?') ? '&' : '?')}random${rnd}=${rnd}`;
 		img.loaded = () => {
 			img = null;
 		};
