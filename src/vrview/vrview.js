@@ -382,7 +382,7 @@ Object.assign(mejs.MepDefaults, {
 	 * Path to load Google VRView library
 	 * @type {?String}
 	 */
-	vrPath: '//storage.googleapis.com/vrview/2.0/build/vrview.min.js',
+	vrPath: null,
 	/**
 	 * Is media a stereo
 	 * @type {Boolean}
