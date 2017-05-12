@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * VR renderer
+ * Google VRView renderer
  *
  * It uses Google's VR View and creates an <iframe> that allows the user to see 360 videos
  * @see https://developers.google.com/vr/concepts/vrview-web
@@ -98,23 +98,10 @@ const VrAPI = {
 };
 
 const VrRenderer = {
-	name: 'vr',
+	name: 'vrview',
 
 	options: {
-		prefix: 'vr',
-		/**
-		 * https://developers.google.com/vr/concepts/vrview-web#vr_view
-		 */
-		vr: {
-			path: '//storage.googleapis.com/vrview/2.0/build/vrview.min.js',
-			image: '',
-			is_stereo: true,
-			is_autopan_off: true,
-			is_debug: false,
-			is_vr_off: false,
-			default_yaw: 0,
-			is_yaw_only: false
-		}
+		prefix: 'vrview'
 	},
 
 	/**
@@ -342,19 +329,29 @@ const VrRenderer = {
 		mediaElement.originalNode.parentNode.insertBefore(vrContainer, mediaElement.originalNode);
 		mediaElement.originalNode.style.display = 'none';
 
+		const vrSettings = {
+			path: options.vrPath,
+			is_stereo: options.vrIsStereo,
+			is_autopan_off: options.vrIsAutopanOff,
+			is_debug: options.vrDebug,
+			default_yaw: options.vrDefaultYaw,
+			is_yaw_only: options.vrIsYawOnly,
+			loop: options.loop
+		};
+
 		if (mediaFiles && mediaFiles.length > 0) {
 			for (let i = 0, il = mediaFiles.length; i < il; i++) {
 				if (mejs.Renderers.renderers[options.prefix].canPlayType(mediaFiles[i].type)) {
-					options.vr.video = mediaFiles[i].src;
-					options.vr.width = '100%';
-					options.vr.height = '100%';
+					vrSettings.video = mediaFiles[i].src;
+					vrSettings.width = '100%';
+					vrSettings.height = '100%';
 					break;
 				}
 			}
 		}
 
 		VrAPI.prepareSettings({
-			options: options.vr,
+			options: vrSettings,
 			id: vr.id
 		});
 
@@ -379,6 +376,39 @@ const VrRenderer = {
 
 mejs.Renderers.add(VrRenderer);
 
+// Feature configuration
+Object.assign(mejs.MepDefaults, {
+	/**
+	 * Path to load Google VRView library
+	 * @type {?String}
+	 */
+	vrPath: '//storage.googleapis.com/vrview/2.0/build/vrview.min.js',
+	/**
+	 * Is media a stereo
+	 * @type {Boolean}
+	 */
+	vrIsStereo: true,
+	/**
+	 *
+	 * @type {Boolean}
+	 */
+	vrIsAutopanOff: true,
+	/**
+	 * Debug interaction with VRView
+	 * @type {Boolean}
+	 */
+	vrDebug: false,
+	/**
+	 *
+	 * @type {Number}
+	 */
+	vrDefaultYaw: 0,
+	/**
+	 *
+	 * @type {Boolean}
+	 */
+	vrIsYawOnly: false
+});
 
 Object.assign(MediaElementPlayer.prototype, {
 
@@ -431,7 +461,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		const
 			url = media.getSrc(),
 			mediaFiles = [{ src: url, type: mejs.Utils.getTypeFromFile(url) }],
-			renderInfo = mejs.Renderers.select(mediaFiles, ['vr'])
+			renderInfo = mejs.Renderers.select(mediaFiles, ['vrview'])
 		;
 
 		media.changeRenderer(renderInfo.rendererName, mediaFiles);
