@@ -10,6 +10,7 @@
 * Added new config element for `Chromecast` plugin to enable tracks @rafa8626
 * Changed `match` to `test` and `includes` to `indexOf` to improve performance @rafa8626
 * Fixed issues with `Context Menu` plugin not being displayed properly @rafa8626
+* Enforced `https` on Chromecast library (https://github.com/mediaelement/mediaelement-plugins/pull/46) @jimmywarting
 
 *2.2.0 (2017/04/28)*
 
