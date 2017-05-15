@@ -50,7 +50,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			var duration = !isNaN(media.duration) ? media.duration : t.options.skipBackInterval;
 			if (duration) {
 				var current = media.currentTime === Infinity ? 0 : media.currentTime;
-				media.setCurrentTime(Math.max(current - t.options.jumpForwardInterval, 0));
+				media.setCurrentTime(Math.max(current - t.options.skipBackInterval, 0));
 				this.querySelector('button').blur();
 			}
 		});

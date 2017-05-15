@@ -11,6 +11,7 @@
 * Changed `match` to `test` and `includes` to `indexOf` to improve performance @rafa8626
 * Fixed issues with `Context Menu` plugin not being displayed properly @rafa8626
 * Enforced `https` on Chromecast library (https://github.com/mediaelement/mediaelement-plugins/pull/46) @jimmywarting
+* Fixed issue with `Skip Back` plugin (https://github.com/mediaelement/mediaelement-plugins/pull/48) @joelkraft
 
 *2.2.0 (2017/04/28)*
 
