@@ -7,7 +7,7 @@
     left: 0;
     background: #fff;
     border: solid 1px #999;
-    z-index: 1001; /* make sure it shows on fullscreen */
+    z-index: 9999999999; /* make sure it shows on fullscreen */
 }
 
 .mejs__contextmenu-separator, .mejs-contextmenu-separator {

@@ -64,15 +64,15 @@ Once installed, at the command prompt, type `npm install`, which will download a
 ## General Conventions
 
 * Tab size is **8** for indentation.
-* **ALWAYS** make changes to the files in the `/src/` directory, and **NEVER** in `/build/` directory. This is with the sole purpose of facilitating the merging (and further, the compiling) operation, and help people to see changes more easily.
+* **ALWAYS** make changes to the files in the `/src/` directory, and **NEVER** in `/dist/` directory. This is with the sole purpose of facilitating the merging (and further, the compiling) operation, and help people to see changes more easily.
 * Use [JSDoc](http://usejsdoc.org/) conventions to document code. This facilitates the contributions of other developers and ensures more quality in the product.
-* **BEFORE PUSHING** any changes, run `npm run jshint` to ensure code quality.
+* **BEFORE PUSHING** any changes, run `npm run eslint` to ensure code quality.
 * The file for the feature must be placed inside a folder matching its name, as well as any SVG/CSS elements needed (i.e, `loop/loop.js`).
 * Update `package.json` with a command under the `script` configuration to make sure it will be bundled and compiled properly. For more reference, [review the file](package.json).
 * Make sure you also write comments about their purpose, and add them into the README file to keep documentation up-to-date.
-* **DO NOT REINVENT THE WHEEL**: Use the utilities that `MediaElement` provides for DOM manipulation/AJAX/etc. Check [this link](https://github.com/mediaelement/mediaelement/blob/master/docs/utils.md) for more details.  
+* **DO NOT REINVENT THE WHEEL**: Use the utilities that `MediaElement` provides for DOM manipulation/AJAX/etc. Check [this link](https://github.com/mediaelement/mediaelement/blob/master/docs/utils.md) for more details.
 * You can also include CSS inside the feature folder, matching the name of the feature JS file and adding CSS styles for "legacy" and BEM naming convention.
-* If using an icon, its size **MUST** be **20x20px**, so it matches all the rest of the icons' dimensions. 
+* If using an icon, its size **MUST** be **20x20px**, so it matches all the rest of the icons' dimensions.
 ```css
 .mejs__[feature_name], .mejs-[feature_name] {
     // all your styles
@@ -80,7 +80,7 @@ Once installed, at the command prompt, type `npm install`, which will download a
 ```
 
 <a id="template"></a>
-## Template to create a Feature 
+## Template to create a Feature
 ```javascript
 'use strict';
 
@@ -101,7 +101,7 @@ Object.assign(mejs.MepDefaults, {
     // Add comments about the nature of each of these variables.
 });
 
-	
+
 Object.assign(MediaElementPlayer.prototype, {
 
     // Public variables (also documented according to JSDoc specifications)
@@ -117,17 +117,17 @@ Object.assign(MediaElementPlayer.prototype, {
      */
     build[feature_name] (player, controls, layers, media) {
         // This allows us to access options and other useful elements already set.
-        // Adding variables to the object is a good idea if you plan to reuse 
+        // Adding variables to the object is a good idea if you plan to reuse
         // those variables in further operations.
         const t = this;
-        
+
         // All code required inside here to keep it private;
         // otherwise, you can create more methods or add variables
         // outside of this scope
     },
-    
+
     // Optionally, each feature can be destroyed setting a `clean` method
-    
+
     /**
      * Feature destructor.
      *
@@ -138,13 +138,13 @@ Object.assign(MediaElementPlayer.prototype, {
      * @param {HTMLElement} media
      */
     clean[feature_name] (player, controls, layers, media) {}
-            
+
     // Other optional public methods (all documented according to JSDoc specifications)
 });
 ```
 <a id="translations"></a>
 ## Template for Translations
- 
+
 If translatable strings are part of the plugin, you will need to create a `[feature_name]-i18n.js` file with this format:
 ```javascript
 'use strict';
@@ -215,12 +215,12 @@ if (mejs.i18n['zh-CN'] !== undefined) {
 ```
 **NOTE**: The more languages are integrated on `MediaElementPlayer`, the bigger this template will become. So account for more languages.
 
-Also, if you are adding a new language to `MediaElementPlayer`, you will need to add it in all the existing `i18n` files in the same way described in the template above. 
+Also, if you are adding a new language to `MediaElementPlayer`, you will need to add it in all the existing `i18n` files in the same way described in the template above.
 
 <a id="es6"></a>
 ### A word on `ES6` for Features
 
-All the features are written using `Ecmascript 2015` specifications. 
+All the features are written using `Ecmascript 2015` specifications.
 
 See`src/` directory, and check how the files were written to ensure compatibility.
 

@@ -616,7 +616,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			};
 
 			const script = document.createElement('script');
-			script.src = '//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1';
+			script.src = 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1';
 			document.body.appendChild(script);
 			loadedCastAPI = true;
 		}

@@ -9,7 +9,7 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-    <link rel="stylesheet" type="text/css" href="//rawgit.com/mediaelement/mediaelement/master/build/mediaelementplayer.min.css">
+    <link rel="stylesheet" type="text/css" href="https://rawgit.com/mediaelement/mediaelement/master/build/mediaelementplayer.min.css">
     <link rel="stylesheet" href="../dist/jump-forward/jump-forward.min.css">
     <link rel="stylesheet" href="../dist/skip-back/skip-back.min.css">
     <link rel="stylesheet" href="../dist/speed/speed.min.css">
@@ -21,20 +21,23 @@
         #container {
             padding: 0 20px 50px;
         }
+
         pre {
             white-space: pre-wrap;
             tab-size: 2;
             background: black;
             color: white;
         }
+
         pre[data-lang]::before {
             content: attr(data-lang);
             display: block;
             background-color: #FFA500;
             background-image: -webkit-linear-gradient(top, #FFA500, #D67E21);
-            background-image:         linear-gradient(to bottom, #FFA500, #D67E21);
+            background-image: linear-gradient(to bottom, #FFA500, #D67E21);
             padding: 10px;
         }
+
         code {
             font-family: "Courier New", Courier, monospace;
             padding: 10px 20px;
@@ -78,7 +81,7 @@
     </div>
 </div>
 
-<script src="//rawgit.com/mediaelement/mediaelement/master/build/mediaelement-and-player.js"></script>
+<script src="https://rawgit.com/mediaelement/mediaelement/master/build/mediaelement-and-player.js"></script>
 <script src="../dist/jump-forward/jump-forward.min.js"></script>
 <script src="../dist/skip-back/skip-back.min.js"></script>
 <script src="../dist/markers/markers.min.js"></script>
@@ -95,6 +98,7 @@
 			'markers', 'volume', 'chromecast', 'ads', 'vast', 'contextmenu'],
 		// Markers plugin configuration
 		markers: [5, 10, 25, 40],
+		markerWidth: 5,
 		markerCallback: function (media, currentTime) {
 			console.log('Reached ' + currentTime + ' secs');
 		},
