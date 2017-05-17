@@ -21,20 +21,23 @@
         #container {
             padding: 0 20px 50px;
         }
+
         pre {
             white-space: pre-wrap;
             tab-size: 2;
             background: black;
             color: white;
         }
+
         pre[data-lang]::before {
             content: attr(data-lang);
             display: block;
             background-color: #FFA500;
             background-image: -webkit-linear-gradient(top, #FFA500, #D67E21);
-            background-image:         linear-gradient(to bottom, #FFA500, #D67E21);
+            background-image: linear-gradient(to bottom, #FFA500, #D67E21);
             padding: 10px;
         }
+
         code {
             font-family: "Courier New", Courier, monospace;
             padding: 10px 20px;
@@ -95,6 +98,7 @@
 			'markers', 'volume', 'chromecast', 'ads', 'vast', 'contextmenu'],
 		// Markers plugin configuration
 		markers: [5, 10, 25, 40],
+		markerWidth: 5,
 		markerCallback: function (media, currentTime) {
 			console.log('Reached ' + currentTime + ' secs');
 		},
