@@ -3,6 +3,7 @@
 *2.2.2 (2017/??/??)*
 
 * Added `markerWidth` property for `Markers` plugin (https://github.com/mediaelement/mediaelement-plugins/pull/49) @leocaseiro
+* Fixed typos in README file (https://github.com/mediaelement/mediaelement-plugins/pull/50) @leocaseiro
 
 *2.2.1 (2017/05/16)*
 
