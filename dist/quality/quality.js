@@ -10,7 +10,7 @@
 
 // Translations (English required)
 
-mejs.i18n.en["mejs.quality-quality"] = "Quality Chooser";
+mejs.i18n.en["mejs.quality-chooser"] = "Quality Chooser";
 
 // Feature configuration
 Object.assign(mejs.MepDefaults, {

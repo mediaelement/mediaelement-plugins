@@ -9,14 +9,14 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-    <link rel="stylesheet" type="text/css" href="https://rawgit.com/mediaelement/mediaelement/master/build/mediaelementplayer.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://rawgit.com/mediaelement/mediaelement/master/build/mediaelementplayer.min.css">
     <link rel="stylesheet" href="../dist/jump-forward/jump-forward.min.css">
     <link rel="stylesheet" href="../dist/skip-back/skip-back.min.css">
     <link rel="stylesheet" href="../dist/speed/speed.min.css">
     <link rel="stylesheet" href="../dist/chromecast/chromecast.min.css">
     <link rel="stylesheet" href="../dist/ads/ads.min.css">
     <link rel="stylesheet" href="../dist/context-menu/context-menu.min.css">
-    <link rel="stylesheet" href="../dist/quality/quality.css">
 
     <style>
         #container {
@@ -61,7 +61,7 @@
         <p><em>MediaElementPlayer</em> is built off of MediaElement and creates a fully featured player on top of the
             unified syntax from MediaElement.</p>
 
-        <p>This demo shows how to setup (and for some, configure) the plugins to expand the player.</p>
+        <p>This demo shows how to setup (and for some, configure) plugins to expand the player.</p>
     </section>
 
     <div class="players" id="player1-container">
@@ -73,9 +73,7 @@
                    data-cast-title="Big Buck Bunny"
                    data-cast-description="Big Buck Bunny is now even more a world standard for video standards"
                    poster="http://sandbox.thewikies.com/vfe-generator/images/big-buck-bunny_poster.jpg">
-                <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4" data-quality="144p">
-                <source src="https://upload.wikimedia.org/wikipedia/commons/2/22/Volcano_Lava_Sample.webm" type="video/webm" data-quality="360p">
-                <source src="http://dash.edgesuite.net/envivio/EnvivioDash3/manifest.mpd" type="application/dash+xml" data-quality="720p">
+                <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
                 <track srclang="en" kind="subtitles" src="mediaelement.vtt" label="English">
             </video>
         </div>
@@ -93,13 +91,12 @@
 <script src="../dist/ads/ads.min.js"></script>
 <script src="../dist/ads-vast-vpaid/ads-vast-vpaid.min.js"></script>
 <script src="../dist/context-menu/context-menu.min.js"></script>
-<script src="../dist/quality/quality.js"></script>
 <script id="mejs-code">
 	new MediaElementPlayer('player1', {
 		// This is needed to make Jump Forward to work correctly
 		autoRewind: false,
-		features: ['playpause', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'tracks', 'quality',
-			'markers', 'volume', 'chromecast', 'contextmenu'],
+		features: ['playpause', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'tracks',
+			'markers', 'volume', 'chromecast', 'ads', 'vast', 'contextmenu'],
 		// Markers plugin configuration
 		markers: [5, 10, 25, 40],
 		markerWidth: 5,
