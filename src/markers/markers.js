@@ -18,6 +18,11 @@ Object.assign(mejs.MepDefaults, {
 	 */
 	markerColor: '#E9BC3D',
 	/**
+	 * Default marker width
+	 * @type {Number}
+	 */
+	markerWidth: 1,
+	/**
 	 * @type {Number[]}
 	 */
 	markers: [],
@@ -103,7 +108,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					marker = markers[i]
 				;
 
-				marker.style.width = '1px';
+				marker.style.width = t.options.markerWidth + 'px';
 				marker.style.left = `${left}%`;
 				marker.style.background = t.options.markerColor;
 			}
