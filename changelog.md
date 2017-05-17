@@ -1,9 +1,22 @@
 ### Version History
 
-*2.2.1 (2017/??/??)*
+*2.2.2 (2017/??/??)*
+
+* Added `markerWidth` property for `Markers` plugin (https://github.com/mediaelement/mediaelement-plugins/pull/49) @leocaseiro
+* Fixed typos in README file (https://github.com/mediaelement/mediaelement-plugins/pull/50) @leocaseiro
+
+*2.2.1 (2017/05/16)*
 
 * Fixed issues in Safari related to `Source Chooser` plugin @rafa8626
 * Added `babel-preset-env` to optimize bundles based on supported browsers @rafa8626
+* Fixed issues with `Speed` and `Source chooser` related to their menu options (https://github.com/mediaelement/mediaelement-plugins/pull/41) @lebanggit
+* Expanded demo file with `Ads` and `VAST/VPAID` plugins @rafa8626
+* Added missing workflow to avoid interacting with progress bar and some buttons in control bar when playing Ads @rafa8626
+* Added new config element for `Chromecast` plugin to enable tracks @rafa8626
+* Changed `match` to `test` and `includes` to `indexOf` to improve performance @rafa8626
+* Fixed issues with `Context Menu` plugin not being displayed properly @rafa8626
+* Enforced `https` on Chromecast library (https://github.com/mediaelement/mediaelement-plugins/pull/46) @jimmywarting
+* Fixed issue with `Skip Back` plugin (https://github.com/mediaelement/mediaelement-plugins/pull/48) @joelkraft
 
 *2.2.0 (2017/04/28)*
 

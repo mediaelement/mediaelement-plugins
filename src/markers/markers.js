@@ -18,6 +18,11 @@ Object.assign(mejs.MepDefaults, {
 	 */
 	markerColor: '#E9BC3D',
 	/**
+	 * Default marker width
+	 * @type {Number}
+	 */
+	markerWidth: 1,
+	/**
 	 * @type {Number[]}
 	 */
 	markers: [],
@@ -34,8 +39,8 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
 	 * @param {MediaElementPlayer} player
-	 * @param {$} controls
-	 * @param {$} layers
+	 * @param {HTMLElement} controls
+	 * @param {HTMLElement} layers
 	 * @param {HTMLElement} media
 	 */
 	buildmarkers (player, controls, layers, media)  {
@@ -103,7 +108,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					marker = markers[i]
 				;
 
-				marker.style.width = '1px';
+				marker.style.width = t.options.markerWidth + 'px';
 				marker.style.left = `${left}%`;
 				marker.style.background = t.options.markerColor;
 			}

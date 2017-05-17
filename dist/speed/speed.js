@@ -42,13 +42,13 @@ Object.assign(MediaElementPlayer.prototype, {
   *
   * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
   * @param {MediaElementPlayer} player
-  * @param {$} controls
-  * @param {$} layers
+  * @param {HTMLElement} controls
+  * @param {HTMLElement} layers
   * @param {HTMLElement} media
   */
 	buildspeed: function buildspeed(player, controls, layers, media) {
 		var t = this,
-		    isNative = t.media.rendererName !== null && t.media.rendererName.match(/(native|html5)/) !== null;
+		    isNative = t.media.rendererName !== null && /(native|html5)/i.test(t.media.rendererName);
 
 		if (!isNative) {
 			return;

@@ -11,9 +11,7 @@ const CastRenderer = {
 	name: 'chromecast',
 
 	options: {
-		prefix: 'chromecast',
-
-		cast: {}
+		prefix: 'chromecast'
 	},
 
 	/**
@@ -30,7 +28,7 @@ const CastRenderer = {
 	 * @param {Object} options All the player configuration options passed through constructor
 	 * @return {Object}
 	 */
-	create: (mediaElement, options, mediaFiles) => {
+	create: (mediaElement, options) => {
 
 		// API objects
 		const
@@ -238,41 +236,45 @@ const CastRenderer = {
 									url = mediaElement.originalNode.getAttribute('src'),
 									type = mejs.Utils.getTypeFromFile(url),
 									mediaInfo = new chrome.cast.media.MediaInfo(url, type),
-									children = mediaElement.originalNode.childNodes,
 									castSession = cast.framework.CastContext.getInstance().getCurrentSession()
 								;
 
 								// Find captions/audioTracks
-								const tracks = [];
+								if (options.castEnableTracks === true) {
+									const
+										tracks = [],
+										children = mediaElement.originalNode.childNodes
+									;
 
-								let counter = 1;
+									let counter = 1;
 
-								for (let i = 0, total = children.length; i < total; i++) {
-									const child = children[i];
+									for (let i = 0, total = children.length; i < total; i++) {
+										const child = children[i];
 
-									if (child.nodeType !== Node.TEXT_NODE) {
-										const tag = child.tagName.toLowerCase();
+										if (child.nodeType !== Node.TEXT_NODE) {
+											const tag = child.tagName.toLowerCase();
 
-										if (tag === 'track' && (child.getAttribute('kind') === 'subtitles' || child.getAttribute('kind') === 'captions')) {
-											const el = new chrome.cast.media.Track(counter, chrome.cast.media.TrackType.TEXT);
-											el.trackContentId = mejs.Utils.absolutizeUrl(child.getAttribute('src'));
-											el.trackContentType = 'text/vtt';
-											el.subtype = chrome.cast.media.TextTrackType.SUBTITLES;
-											el.name = child.getAttribute('label');
-											el.language = child.getAttribute('srclang');
-											el.customData = null;
-											tracks.push(el);
-											counter++;
+											if (tag === 'track' && (child.getAttribute('kind') === 'subtitles' || child.getAttribute('kind') === 'captions')) {
+												const el = new chrome.cast.media.Track(counter, chrome.cast.media.TrackType.TEXT);
+												el.trackContentId = mejs.Utils.absolutizeUrl(child.getAttribute('src'));
+												el.trackContentType = 'text/vtt';
+												el.subtype = chrome.cast.media.TextTrackType.SUBTITLES;
+												el.name = child.getAttribute('label');
+												el.language = child.getAttribute('srclang');
+												el.customData = null;
+												tracks.push(el);
+												counter++;
+											}
 										}
 									}
+									mediaInfo.textTrackStyle = new chrome.cast.media.TextTrackStyle();
+									mediaInfo.tracks = tracks;
 								}
 
 								mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
-								mediaInfo.customData = null;
 								mediaInfo.streamType = chrome.cast.media.StreamType.BUFFERED;
-								mediaInfo.textTrackStyle = new chrome.cast.media.TextTrackStyle();
+								mediaInfo.customData = null;
 								mediaInfo.duration = null;
-								mediaInfo.tracks = tracks;
 
 								if (mediaElement.originalNode.getAttribute('data-cast-title')) {
 									mediaInfo.metadata.title = mediaElement.originalNode.getAttribute('data-cast-title');
@@ -292,8 +294,11 @@ const CastRenderer = {
 
 								castSession.loadMedia(request).then(
 									() => {
-										// Autoplay media
+										// Autoplay media in the current position
+										const currentTime = mediaElement.originalNode.getCurrentTime();
+										c.setCurrentTime(currentTime);
 										castPlayerController.playOrPause();
+
 										setTimeout(() => {
 											const event = mejs.Utils.createEvent('play', c);
 											mediaElement.dispatchEvent(event);
@@ -437,7 +442,18 @@ Object.assign(mejs.MepDefaults, {
 	 *
 	 * @type {String}
 	 */
-	castPolicy: 'origin'
+	castPolicy: 'origin',
+
+	/**
+	 * Whether to load tracks or not through Chromecast
+	 *
+	 * In order to process tracks correctly, `tracks` feature must be enable on the player configuration
+	 * and user MUST set a custom receiver application.
+	 * @see https://github.com/googlecast/CastReferencePlayer
+	 * @see https://developers.google.com/cast/docs/receiver_apps
+	 * @type {Boolean}
+	 */
+	castEnableTracks: false
 
 });
 
@@ -448,8 +464,8 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
 	 * @param {MediaElementPlayer} player
-	 * @param {$} controls
-	 * @param {$} layers
+	 * @param {HTMLElement} controls
+	 * @param {HTMLElement} layers
 	 * @param {HTMLElement} media
 	 */
 	buildchromecast (player, controls, layers, media)  {
@@ -535,6 +551,8 @@ Object.assign(MediaElementPlayer.prototype, {
 					media.castPlayer = new cast.framework.RemotePlayer();
 					media.castPlayerController = new cast.framework.RemotePlayerController(media.castPlayer);
 
+					let currentTime = 0;
+
 					// Set up renderer and device data
 					media.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, () => {
 
@@ -545,7 +563,6 @@ Object.assign(MediaElementPlayer.prototype, {
 								media.changeRenderer(renderInfo.rendererName, mediaFiles);
 
 								const
-									captions = player.captionsButton.querySelectorAll('input[type=radio]'),
 									castSession = cast.framework.CastContext.getInstance().getCurrentSession(),
 									deviceInfo = layers.querySelector(`.${t.options.classPrefix}chromecast-info`).querySelector('.device')
 								;
@@ -553,34 +570,53 @@ Object.assign(MediaElementPlayer.prototype, {
 								deviceInfo.innerText = castSession.getCastDevice().friendlyName;
 								player.chromecastLayer.style.display = 'block';
 
-								for (let i = 0, total = captions.length; i < total; i++) {
-									captions[i].addEventListener('click', function () {
-										const
-											trackId = parseInt(captions[i].id.replace(/^.*?track_(\d+)_.*$/, "$1")),
-											setTracks = captions[i].value === 'none' ? [] : [trackId],
-											tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks)
-										;
+								if (t.options.castEnableTracks === true) {
+									const captions = player.captionsButton !== undefined ?
+											player.captionsButton.querySelectorAll('input[type=radio]') : null;
 
-										castSession.getMediaSession().editTracksInfo(tracksInfo, () => {}, (e) => {
-											console.error(e);
-										});
-									});
+									if (captions !== null) {
+										for (let i = 0, total = captions.length; i < total; i++) {
+											captions[i].addEventListener('click', function () {
+												const
+													trackId = parseInt(captions[i].id.replace(/^.*?track_(\d+)_.*$/, "$1")),
+													setTracks = captions[i].value === 'none' ? [] : [trackId],
+													tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks)
+												;
+
+												castSession.getMediaSession().editTracksInfo(tracksInfo, () => {}, (e) => {
+													console.error(e);
+												});
+											});
+										}
+
+									}
 								}
+
+
+								media.addEventListener('timeupdate', () => {
+									currentTime = media.getCurrentTime();
+								});
 
 								return;
 							}
+						}
 
-							player.chromecastLayer.style.display = 'none';
-							media.style.display = '';
-							const renderInfo = mejs.Renderers.select(mediaFiles, media.renderers);
-							media.changeRenderer(renderInfo.rendererName, mediaFiles);
+						player.chromecastLayer.style.display = 'none';
+						media.style.display = '';
+						const renderInfo = mejs.Renderers.select(mediaFiles, media.renderers);
+						media.changeRenderer(renderInfo.rendererName, mediaFiles);
+						media.setCurrentTime(currentTime);
+
+						// Continue playing if already started
+						if (currentTime > 0 && !mejs.Features.IS_IOS && !mejs.Features.IS_ANDROID) {
+							media.play();
 						}
 					});
 				}
 			};
 
 			const script = document.createElement('script');
-			script.src = '//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1';
+			script.src = 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1';
 			document.body.appendChild(script);
 			loadedCastAPI = true;
 		}

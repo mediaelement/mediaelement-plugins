@@ -28,8 +28,8 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
 	 * @param {MediaElementPlayer} player
-	 * @param {$} controls
-	 * @param {$} layers
+	 * @param {HTMLElement} controls
+	 * @param {HTMLElement} layers
 	 * @param {HTMLElement} media
 	 */
 	buildskipback (player, controls, layers, media)  {
@@ -50,7 +50,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			const duration = !isNaN(media.duration) ? media.duration : t.options.skipBackInterval;
 			if (duration) {
 				const current = media.currentTime === Infinity ? 0 : media.currentTime;
-				media.setCurrentTime(Math.max(current - t.options.jumpForwardInterval, 0));
+				media.setCurrentTime(Math.max(current - t.options.skipBackInterval, 0));
 				this.querySelector('button').blur();
 			}
 		});

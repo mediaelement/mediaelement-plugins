@@ -44,8 +44,8 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
 	 * @param {MediaElementPlayer} player
-	 * @param {$} controls
-	 * @param {$} layers
+	 * @param {HTMLElement} controls
+	 * @param {HTMLElement} layers
 	 * @param {HTMLElement} media
 	 */
 	buildvast (player, controls, layers, media)  {
@@ -347,7 +347,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					type = mediaFile.getAttribute('type')
 				;
 
-				if (t.media.canPlayType(type) !== '' || t.media.canPlayType(type).match(/(no|false)/) === null) {
+				if (t.media.canPlayType(type) !== '' || /(no|false)/i.test(t.media.canPlayType(type))) {
 
 					// Execute JS files if found
 					if (mediaFile.getAttribute('type') === 'application/javascript') {
@@ -419,7 +419,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			for (let i = 0, total = adData.media.tracking.beacon.length; i < total; i++) {
 				const trackingEvent = adData.media.tracking.beacon[i];
 
-				if (trackingPoints.includes(trackingEvent.type)) {
+				if (~trackingPoints.indexOf(trackingEvent.type)) {
 					if (adTag.trackingEvents[trackingEvent.type] === undefined) {
 						adTag.trackingEvents[trackingEvent.type] = [];
 					}
@@ -437,7 +437,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					type = mediaFile.mime_type.trim()
 				;
 
-				if (t.media.canPlayType(type) !== '' || t.media.canPlayType(type).match(/(no|false)/) === null) {
+				if (t.media.canPlayType(type) !== '' || /(no|false)/i.test(t.media.canPlayType(type))) {
 
 					adTag.mediaFiles.push({
 						id: mediaFile.media_id,

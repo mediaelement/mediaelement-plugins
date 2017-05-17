@@ -1,0 +1,86 @@
+<VAST version="3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vast.xsd">
+    <Ad id="2447226.251866656" sequence="1">
+        <InLine>
+            <AdSystem>FreeWheel</AdSystem>
+            <AdTitle>Ooyla test m3u8 midroll 1</AdTitle>
+<Error><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447226&reid=1698599&arid=0&iw=&uxnw=&uxss=&uxct=&et=e&cn=[ERRORCODE]]]></Error>
+            <Impression id="FWi_2447226.0"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447226&reid=1698599&arid=0&auid=&cn=defaultImpression&et=i&_cc=&tpos=15&iw=&uxnw=&uxss=&uxct=&metr=121&init=1&_dic=1&cr=]]></Impression>
+            
+            <Creatives>
+                <Creative AdID="2447226">
+                    <Linear>
+                        <Duration>00:00:15</Duration>
+                        <TrackingEvents>
+                            <Tracking event="complete"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447226&reid=1698599&arid=0&auid=&cn=complete&et=i&_cc=&tpos=15&init=1&iw=&uxnw=&uxss=&uxct=&metr=121]]></Tracking>
+                            <Tracking event="firstQuartile"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447226&reid=1698599&arid=0&auid=&cn=firstQuartile&et=i&_cc=&tpos=15&init=1&iw=&uxnw=&uxss=&uxct=&metr=121]]></Tracking>
+                            <Tracking event="midpoint"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447226&reid=1698599&arid=0&auid=&cn=midPoint&et=i&_cc=&tpos=15&init=1&iw=&uxnw=&uxss=&uxct=&metr=121]]></Tracking>
+                            <Tracking event="thirdQuartile"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447226&reid=1698599&arid=0&auid=&cn=thirdQuartile&et=i&_cc=&tpos=15&init=1&iw=&uxnw=&uxss=&uxct=&metr=121]]></Tracking>
+                        </TrackingEvents>
+                        <VideoClicks>
+                            <ClickTracking id="FWc_2447226.0"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447226&reid=1698599&arid=0&auid=&cn=defaultClick&et=c&_cc=&tpos=15&cr=]]></ClickTracking>
+                        </VideoClicks>
+                        <MediaFiles>
+                            <MediaFile delivery="streaming" height="0" type="application/x-mpegURL" width="0"><![CDATA[http://hdadshds-f.akamaihd.net/i/video/campaigns/fox/tmobile/tmo15unlimitedh641080_,130,80,180,340,450,250,50,30,22,15,0.mp4.csmil/master.m3u8]]></MediaFile>
+                        </MediaFiles>
+                    </Linear>
+                </Creative>
+            </Creatives>
+        </InLine>
+    </Ad>
+    <Ad id="2447227.255243472" sequence="2">
+        <InLine>
+            <AdSystem>FreeWheel</AdSystem>
+            <AdTitle>Ooyla test m3u8 midroll 2</AdTitle>
+<Error><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447227&reid=1698600&arid=0&iw=&uxnw=&uxss=&uxct=&et=e&cn=[ERRORCODE]]]></Error>
+            <Impression id="FWi_2447227.0"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447227&reid=1698600&arid=0&auid=&cn=defaultImpression&et=i&_cc=&tpos=15&iw=&uxnw=&uxss=&uxct=&metr=121&init=1&_dic=1&cr=]]></Impression>
+            
+            <Creatives>
+                <Creative AdID="2447227">
+                    <Linear>
+                        <Duration>00:00:31</Duration>
+                        <TrackingEvents>
+                            <Tracking event="complete"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447227&reid=1698600&arid=0&auid=&cn=complete&et=i&_cc=&tpos=15&init=1&iw=&uxnw=&uxss=&uxct=&metr=121]]></Tracking>
+                            <Tracking event="firstQuartile"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447227&reid=1698600&arid=0&auid=&cn=firstQuartile&et=i&_cc=&tpos=15&init=1&iw=&uxnw=&uxss=&uxct=&metr=121]]></Tracking>
+                            <Tracking event="midpoint"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447227&reid=1698600&arid=0&auid=&cn=midPoint&et=i&_cc=&tpos=15&init=1&iw=&uxnw=&uxss=&uxct=&metr=121]]></Tracking>
+                            <Tracking event="thirdQuartile"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447227&reid=1698600&arid=0&auid=&cn=thirdQuartile&et=i&_cc=&tpos=15&init=1&iw=&uxnw=&uxss=&uxct=&metr=121]]></Tracking>
+                        </TrackingEvents>
+                        <VideoClicks>
+                            <ClickTracking id="FWc_2447227.0"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447227&reid=1698600&arid=0&auid=&cn=defaultClick&et=c&_cc=&tpos=15&cr=]]></ClickTracking>
+                        </VideoClicks>
+                        <MediaFiles>
+                            <MediaFile delivery="streaming" height="0" type="application/x-mpegURL" width="0"><![CDATA[http://hdadshds-f.akamaihd.net/i/video/campaigns/fox/showtime/homelandlookagain30qsbj2330h_,340,450,180,250,130,80,50,30,22,15,0.mp4.csmil/master.m3u8]]></MediaFile>
+                        </MediaFiles>
+                    </Linear>
+                </Creative>
+            </Creatives>
+        </InLine>
+    </Ad>
+    <Ad id="2447228.257609712" sequence="3">
+        <InLine>
+            <AdSystem>FreeWheel</AdSystem>
+            <AdTitle>Ooyla test m3u8 midroll 3</AdTitle>
+<Error><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447228&reid=1698602&arid=0&iw=&uxnw=&uxss=&uxct=&et=e&cn=[ERRORCODE]]]></Error> 
+           <Impression id="FWi_2447228.0"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447228&reid=1698602&arid=0&auid=&cn=defaultImpression&et=i&_cc=&tpos=15&iw=&uxnw=&uxss=&uxct=&metr=121&init=1&_dic=1&cr=]]></Impression>
+            
+            <Creatives>
+                <Creative AdID="2447228">
+                    <Linear>
+                        <Duration>00:00:31</Duration>
+                        <TrackingEvents>
+                            <Tracking event="complete"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447228&reid=1698602&arid=0&auid=&cn=complete&et=i&_cc=&tpos=15&init=1&iw=&uxnw=&uxss=&uxct=&metr=121]]></Tracking>
+                            <Tracking event="firstQuartile"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447228&reid=1698602&arid=0&auid=&cn=firstQuartile&et=i&_cc=&tpos=15&init=1&iw=&uxnw=&uxss=&uxct=&metr=121]]></Tracking>
+                            <Tracking event="midpoint"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447228&reid=1698602&arid=0&auid=&cn=midPoint&et=i&_cc=&tpos=15&init=1&iw=&uxnw=&uxss=&uxct=&metr=121]]></Tracking>
+                            <Tracking event="thirdQuartile"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447228&reid=1698602&arid=0&auid=&cn=thirdQuartile&et=i&_cc=&tpos=15&init=1&iw=&uxnw=&uxss=&uxct=&metr=121]]></Tracking>
+                        </TrackingEvents>
+                        <VideoClicks>
+                            <ClickTracking id="FWc_2447228.0"><![CDATA[http://g1.v.fwmrm.net/ad/l/1?s=a032&n=164515&t=1366755844262714011&adid=2447228&reid=1698602&arid=0&auid=&cn=defaultClick&et=c&_cc=&tpos=15&cr=]]></ClickTracking>
+                        </VideoClicks>
+                        <MediaFiles>
+                            <MediaFile delivery="streaming" height="0" type="application/x-mpegURL" width="0"><![CDATA[http://hdadshds-f.akamaihd.net/i/video/campaigns/fx/millercoors/snowparty30enhdns_,340,50,30,22,15,450,180,250,130,80,0.mp4.csmil/master.m3u8]]></MediaFile>
+                        </MediaFiles>
+                    </Linear>
+                </Creative>
+            </Creatives>
+        </InLine>
+    </Ad>
+</VAST>
