@@ -4,7 +4,7 @@
  * Qualities feature
  *
  * This feature allows the generation of a menu with different video/audio qualities, depending of the elements set
- * in the <source> tags, such as `label` and `data-quality`
+ * in the <source> tags, such as `title` and `data-quality`
  */
 
 // Translations (English required)
@@ -98,7 +98,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					`${(quality === defaultValue ? ' checked="checked"' : '')}/>` +
 				`<label for="${inputId}" class="${t.options.classPrefix}qualities-selector-label` +
 					`${(quality === defaultValue ? ` ${t.options.classPrefix}qualities-selected` : '')}">` +
-					`${quality}</label>` +
+					`${src.title || quality}</label>` +
 			`</li>`;
 		}
 
@@ -135,7 +135,6 @@ Object.assign(MediaElementPlayer.prototype, {
 					newQuality = self.value
 				;
 
-				player.qualitiesButton.querySelector('button').innerHTML = (getQualityNameFromValue(newQuality));
 				const selected = player.qualitiesButton.querySelectorAll(`.${t.options.classPrefix}qualities-selected`);
 				for (let i = 0, total = selected.length; i < total; i++) {
 					mejs.Utils.removeClass(selected[i], `${t.options.classPrefix}qualities-selected`);
@@ -168,6 +167,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					;
 
 					if (quality === newQuality) {
+						player.qualitiesButton.querySelector('button').innerHTML = src.title || getQualityNameFromValue(newQuality);
 						media.pause();
 						media.setSrc(src.src);
 						media.load();

@@ -84,7 +84,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			    quality = src instanceof HTMLElement ? src.getAttribute('data-quality') : src['data-quality'],
 			    inputId = t.id + "-qualities-" + quality;
 
-			player.qualitiesButton.querySelector('ul').innerHTML += "<li class=\"" + t.options.classPrefix + "qualities-selector-list-item\">" + ("<input class=\"" + t.options.classPrefix + "qualities-selector-input\" type=\"radio\" name=\"" + t.id + "_qualities\"") + ("disabled=\"disabled\" value=\"" + quality + "\" id=\"" + inputId + "\"  ") + ((quality === defaultValue ? ' checked="checked"' : '') + "/>") + ("<label for=\"" + inputId + "\" class=\"" + t.options.classPrefix + "qualities-selector-label") + ((quality === defaultValue ? " " + t.options.classPrefix + "qualities-selected" : '') + "\">") + (quality + "</label>") + "</li>";
+			player.qualitiesButton.querySelector('ul').innerHTML += "<li class=\"" + t.options.classPrefix + "qualities-selector-list-item\">" + ("<input class=\"" + t.options.classPrefix + "qualities-selector-input\" type=\"radio\" name=\"" + t.id + "_qualities\"") + ("disabled=\"disabled\" value=\"" + quality + "\" id=\"" + inputId + "\"  ") + ((quality === defaultValue ? ' checked="checked"' : '') + "/>") + ("<label for=\"" + inputId + "\" class=\"" + t.options.classPrefix + "qualities-selector-label") + ((quality === defaultValue ? " " + t.options.classPrefix + "qualities-selected" : '') + "\">") + ((src.title || quality) + "</label>") + "</li>";
 		}
 
 		var inEvents = ['mouseenter', 'focusin'],
@@ -118,7 +118,6 @@ Object.assign(MediaElementPlayer.prototype, {
 				var self = this,
 				    newQuality = self.value;
 
-				player.qualitiesButton.querySelector('button').innerHTML = getQualityNameFromValue(newQuality);
 				var selected = player.qualitiesButton.querySelectorAll("." + t.options.classPrefix + "qualities-selected");
 				for (var _i5 = 0, _total5 = selected.length; _i5 < _total5; _i5++) {
 					mejs.Utils.removeClass(selected[_i5], t.options.classPrefix + "qualities-selected");
@@ -148,6 +147,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					    _quality = _src instanceof HTMLElement ? _src.getAttribute('data-quality') : _src['data-quality'];
 
 					if (_quality === newQuality) {
+						player.qualitiesButton.querySelector('button').innerHTML = _src.title || getQualityNameFromValue(newQuality);
 						media.pause();
 						media.setSrc(_src.src);
 						media.load();

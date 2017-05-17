@@ -3,7 +3,7 @@
 ## Overview
 
 This plugin allows the generation of a menu with different video/audio qualities, depending of the elements set 
-in the <source> tags, such as `label` and `data-quality`
+in the <source> tags, such as `title` and `data-quality`
 
 ## API
 
