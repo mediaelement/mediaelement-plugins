@@ -15,7 +15,7 @@
     height: 100px;
     background: rgba(50,50,50,0.7);
     border: solid 1px transparent;
-    padding: 0px;
+    padding: 0;
     overflow: hidden;
     border-radius: 0;
 }
@@ -44,7 +44,7 @@
 .mejs__sourcechooser-selector input, .mejs-sourcechooser-selector input {
     clear: both;
     float: left;
-    margin: 3px 3px 0 0px;
+    margin: 3px 3px 0 0;
 }
 
 .mejs__sourcechooser-selector label, .mejs-sourcechooser-selector label {

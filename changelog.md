@@ -4,6 +4,7 @@
 
 * Added `markerWidth` property for `Markers` plugin (https://github.com/mediaelement/mediaelement-plugins/pull/49) @leocaseiro
 * Fixed typos in README file (https://github.com/mediaelement/mediaelement-plugins/pull/50) @leocaseiro
+* Integrated `Quality` plugin for different quality media files @rafa8626
 
 *2.2.1 (2017/05/16)*
 
