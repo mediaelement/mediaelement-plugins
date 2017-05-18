@@ -156,6 +156,7 @@ Object.assign(MediaElementPlayer.prototype, {
             ;
             if (button && !mejs.Utils.hasClass(target, `${t.options.classPrefix}playpause-button`)) {
                 button.disabled = true;
+                target.style.pointerEvents = 'none';
             } else if (target.querySelector(`.${t.options.classPrefix}time-slider`)) {
                 target.querySelector(`.${t.options.classPrefix}time-slider`).style.pointerEvents = 'none';
             }
@@ -297,6 +298,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				button = target.querySelector('button')
 			;
 			if (button && !mejs.Utils.hasClass(target, `${t.options.classPrefix}playpause-button`)) {
+                target.style.pointerEvents = 'auto';
 				button.disabled = false;
 			} else if (target.querySelector(`.${t.options.classPrefix}time-slider`)) {
 				target.querySelector(`.${t.options.classPrefix}time-slider`).style.pointerEvents = 'auto';
