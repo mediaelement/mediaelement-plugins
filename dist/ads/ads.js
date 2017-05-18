@@ -143,6 +143,18 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.media.setSrc(t.options.adsPrerollMediaUrl[t.options.indexPreroll]);
 		t.media.load();
 
+		// turn off controls until the preroll is done
+		var controlElements = t.container.querySelector("." + t.options.classPrefix + "controls").childNodes;
+		for (var i = 0, total = controlElements.length; i < total; i++) {
+			var target = controlElements[i],
+			    button = target.querySelector('button');
+			if (button && !mejs.Utils.hasClass(target, t.options.classPrefix + "playpause-button")) {
+				button.disabled = true;
+			} else if (target.querySelector("." + t.options.classPrefix + "time-slider")) {
+				target.querySelector("." + t.options.classPrefix + "time-slider").style.pointerEvents = 'none';
+			}
+		}
+
 		// if autoplay was on, or if the user pressed play
 		// while the ad data was still loading, then start the ad right away
 		if (t.adsPlayerHasStarted) {
@@ -178,18 +190,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		var t = this;
 
 		t.media.removeEventListener('playing', t.adsPrerollStartedProxy);
-
-		// turn off controls until the preroll is done
-		var controlElements = t.container.querySelector("." + t.options.classPrefix + "controls").childNodes;
-		for (var i = 0, total = controlElements.length; i < total; i++) {
-			var target = controlElements[i],
-			    button = target.querySelector('button');
-			if (button && !mejs.Utils.hasClass(target, t.options.classPrefix + "playpause-button")) {
-				button.disabled = true;
-			} else if (target.querySelector("." + t.options.classPrefix + "time-slider")) {
-				target.querySelector("." + t.options.classPrefix + "time-slider").style.pointerEvents = 'none';
-			}
-		}
 
 		// enable clicking through
 		t.adsLayer.style.display = 'block';
