@@ -5,6 +5,7 @@
 * Added `markerWidth` property for `Markers` plugin (https://github.com/mediaelement/mediaelement-plugins/pull/49) @leocaseiro
 * Fixed typos in README file (https://github.com/mediaelement/mediaelement-plugins/pull/50) @leocaseiro
 * Disabled correctly controls on pre-roll (https://github.com/mediaelement/mediaelement-plugins/pull/52) @jonathanex and @rafa8626
+* Fixed issue with `Stop` not allowing the current time to be rendered once media starts again @rafa8626
 
 *2.2.1 (2017/05/16)*
 
