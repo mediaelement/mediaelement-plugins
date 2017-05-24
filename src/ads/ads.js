@@ -140,7 +140,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		// change URLs to the preroll ad. Only save the video to be shown on first
 		// ad showing.
 		if (t.options.indexPreroll === 0) {
-			t.adsCurrentMediaUrl = t.media.src;
+			t.adsCurrentMediaUrl = t.media.originalNode.getAttribute('src');
 			t.adsCurrentMediaDuration = t.media.duration;
 		}
 

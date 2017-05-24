@@ -110,7 +110,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			var inputId = t.id + "-speed-" + speeds[_i].value;
 
-			player.speedButton.querySelector('ul').innerHTML += "<li class=\"" + t.options.classPrefix + "speed-selector-list-item\">" + ("<input class=\"" + t.options.classPrefix + "speed-selector-input\" type=\"radio\" name=\"" + t.id + "_speed\"") + ("disabled=\"disabled\" value=\"" + speeds[_i].value + "\" id=\"" + inputId + "\"  ") + ((speeds[_i].value === t.options.defaultSpeed ? ' checked="checked"' : '') + "/>") + ("<label class=\"" + t.options.classPrefix + "speed-selector-label") + ((speeds[_i].value === t.options.defaultSpeed ? " " + t.options.classPrefix + "speed-selected" : '') + "\">") + (speeds[_i].name + "</label>") + "</li>";
+			player.speedButton.querySelector('ul').innerHTML += "<li class=\"" + t.options.classPrefix + "speed-selector-list-item\">" + ("<input class=\"" + t.options.classPrefix + "speed-selector-input\" type=\"radio\" name=\"" + t.id + "_speed\"") + ("disabled=\"disabled\" value=\"" + speeds[_i].value + "\" id=\"" + inputId + "\"  ") + ((speeds[_i].value === t.options.defaultSpeed ? ' checked="checked"' : '') + "/>") + ("<label for=\"" + inputId + "\" class=\"" + t.options.classPrefix + "speed-selector-label") + ((speeds[_i].value === t.options.defaultSpeed ? " " + t.options.classPrefix + "speed-selected" : '') + "\">") + (speeds[_i].name + "</label>") + "</li>";
 		}
 
 		playbackSpeed = t.options.defaultSpeed;

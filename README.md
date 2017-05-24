@@ -240,6 +240,7 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 * [Markers](docs/markers.md)
 * [Postroll](docs/postroll.md)
 * [Preview](docs/preview.md)
+* [Quality](docs/quality.md)
 * [Skip Back](docs/skip-back.md)
 * [Source Chooser](docs/source-chooser.md)
 * [Speed](docs/speed.md)
