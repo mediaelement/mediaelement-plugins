@@ -48,8 +48,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (media.currentTime > 0) {
 				media.setCurrentTime(0);
 				media.pause();
-				controls.querySelector("." + t.options.classPrefix + "time-current").style.width = '0px';
-				controls.querySelector("." + t.options.classPrefix + "time-handle").style.left = '0px';
 				controls.querySelector("." + t.options.classPrefix + "time-float-current").innerHTML = mejs.Utils.secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond);
 				controls.querySelector("." + t.options.classPrefix + "currenttime").innerHTML = mejs.Utils.secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond);
 				layers.querySelector("." + t.options.classPrefix + "poster").style.display = 'block';
