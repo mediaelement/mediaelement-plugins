@@ -585,9 +585,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 			};
 
-			var script = document.createElement('script');
-			script.src = 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1';
-			document.body.appendChild(script);
+			mejs.Utils.loadScript('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1');
 			loadedCastAPI = true;
 		}
 	},
