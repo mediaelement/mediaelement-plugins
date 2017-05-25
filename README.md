@@ -27,7 +27,7 @@ This repository contains plugins built for MediaElementJS.
 
 Download the package from https://github.com/johndyer/mediaelement-plugins, and reference any plugins you need from `dist` folder and add any configuration related to the plugin.
 
-Or you can use a CDN; check http://www.jsdelivr.com/projects/mediaelement-plugins or https://cdnjs.com/libraries/mediaelement-plugins.
+Or you can use a CDN; check http://cdn.jsdelivr.net/npm/mediaelement-plugins/ or https://cdnjs.com/libraries/mediaelement-plugins.
 
 For example, if you want to install `Speed` plugin do the following:
 ```html
