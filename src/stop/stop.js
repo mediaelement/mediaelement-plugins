@@ -42,23 +42,27 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.addControlElement(button, 'stop');
 
 		button.addEventListener('click', () => {
-			if (!media.paused) {
-				media.pause();
-			}
-			if (media.currentTime > 0) {
-				media.setCurrentTime(0);
-				media.pause();
-				if (controls.querySelector(`.${t.options.classPrefix}time-float-current`)) {
-					controls.querySelector(`.${t.options.classPrefix}time-float-current`).innerHTML =
-						(mejs.Utils.secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond));
+			if (typeof media.stop === 'function') {
+				media.stop();
+			} else if (media.readyState > 0) {
+				if (!media.paused) {
+					media.pause();
 				}
+				media.setSrc('');
+				media.load();
 
-				if (controls.querySelector(`.${t.options.classPrefix}currenttime`)) {
-					controls.querySelector(`.${t.options.classPrefix}currenttime`).innerHTML =
-						(mejs.Utils.secondsToTimeCode(0, player.options.alwaysShowHours, player.options.showTimecodeFrameCount, player.options.framesPerSecond));
-				}
-				layers.querySelector(`.${t.options.classPrefix}poster`).style.display = 'block';
+				const playButton = controls.querySelector(`.${t.options.classPrefix}playpause-button`);
+				mejs.Utils.removeClass(playButton, `${t.options.classPrefix}pause`);
+				mejs.Utils.addClass(playButton, `${t.options.classPrefix}play`);
+
+				// It will throw an error trying to load an empty source, so remove it since it's expected
+				t.container.querySelector('.me_cannotplay').remove();
+				layers.querySelector(`.${t.options.classPrefix}overlay-error`).parentNode.style.display = 'none';
+				layers.querySelector(`.${t.options.classPrefix}overlay-error`).remove();
 			}
+
+			const event = mejs.Utils.createEvent('timeupdate', media);
+			media.dispatchEvent(event);
 		});
 	}
 });
