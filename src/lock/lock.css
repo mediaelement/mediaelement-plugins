@@ -1,3 +1,14 @@
 .mejs__lock-button>button, .mejs-lock-button>button {
     background: url("lock.svg") no-repeat transparent;
 }
+.mejs__unlock-button>button, .mejs-unlock-button>button {
+    background: url("unlock.svg") no-repeat transparent;
+    position: absolute;
+    margin: -10px 0 0 -10px;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    height: 20px;
+    width: 20px;
+    border: 0;
+}
