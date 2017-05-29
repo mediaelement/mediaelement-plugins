@@ -1,5 +1,9 @@
 ### Version History
 
+*2.2.3 (2017/??/??)*
+
+* Integrated `Facebook Pixel` plugin (https://github.com/mediaelement/mediaelement-plugins/pull/58) @isantolin
+
 *2.2.2 (2017/05/25)*
 
 * Added `markerWidth` property for `Markers` plugin (https://github.com/mediaelement/mediaelement-plugins/pull/49) @leocaseiro

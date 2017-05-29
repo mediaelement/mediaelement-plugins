@@ -16,11 +16,7 @@ Object.assign(mejs.MepDefaults, {
     /**
      * @type {String}
      */
-    facebookPixelCategory: 'Videos',
-    /**
-     * @type {String}
-     */
-    facebookPixelEventTime: 'Time'
+    facebookPixelCategory: 'Videos'
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -34,7 +30,7 @@ Object.assign(MediaElementPlayer.prototype, {
      * @param {HTMLElement} layers
      * @param {HTMLElement} media
      */
-    buildfacebookpixel: function buildfacebookpixel(player, controls, layers, media) {
+    buildfacebookpixel (player, controls, layers, media) {
 
         media.addEventListener('play', function () {
             if (typeof fbq !== 'undefined') {
