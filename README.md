@@ -234,6 +234,7 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 * [VAST/VPAID](docs/ads-vast.md)
 * [Chromecast](docs/chromecast.md)
 * [Context Menu](docs/context-menu.md)
+* [Facebook Pixel](docs/facebook-pixel.md)
 * [Google Analytics](docs/google-analytics.md)
 * [Jump Forward](docs/jump-forward.md)
 * [Loop](docs/loop.md)
