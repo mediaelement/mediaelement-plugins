@@ -30,7 +30,12 @@ Object.assign(mejs.MepDefaults, {
 	 * Number of clicks to unlock
 	 * @type {Number}
 	 */
-	unlockClicks: 3
+	unlockClicks: 3,
+	/**
+	 * The amount of time in which to register the unlock clicks in milliseconds
+	 * @type {Number}
+	 */
+	unlockTimeWindow: 2000
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -41,38 +46,18 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {MediaElementPlayer} player
 	 * @param {$} controls
 	 * @param {$} layers
+	 * @param {HTMLElement} media
 	 */
-	buildlock (player, controls, layers)  {
+	buildlock (player, controls, layers, media)  {
 		const
 			t = this,
 			lockText = mejs.Utils.isString(t.options.lockText) ? t.options.lockText : mejs.i18n.t('mejs.lock'),
 			unlockText = mejs.Utils.isString(t.options.unlockText) ? t.options.unlockText : mejs.i18n.t('mejs.unlock')
 		;
-		let locked = false;
-
-		Object.defineProperty(t, 'locked', {
-			get: function() {
-				return locked;
-			},
-
-			set: function(value) {
-				locked = value;
-				if (locked) {
-					t.options.clickToPlayPause = false;
-					t.options.disableControls = true;
-					t.controls.style.display = 'none';
-					t.unlockButton.style.display = '';
-				} else {
-					t.options.clickToPlayPause = true;
-					t.options.disableControls = false;
-					t.controls.style.display = '';
-					t.unlockButton.style.display = 'none';
-				}
-			}
-		});
-
-		window.player = t;
-		window.layers = layers;
+		let
+			clicks = 0,
+			locked = false,
+			timeouts = [];
 
 		// Unlock button
 		player.unlockButton = document.createElement('div');
@@ -82,7 +67,19 @@ Object.assign(MediaElementPlayer.prototype, {
 		layers.insertBefore(player.unlockButton, layers.firstChild);
 
 		player.unlockButton.addEventListener('click', () => {
-			console.log(unlockText);
+			clicks += 1;
+			if (clicks >= t.options.unlockClicks) {
+				while(timeouts.length > 0) {
+					clearTimeout(timeouts.pop());
+				}
+				t.unlock();
+			}
+			timeouts.push(setTimeout(() => {
+				clicks -= 1;
+				if (clicks === 0 && t.options.autohideUnlock) {
+					player.unlockButton.style.display = 'none';
+				}
+			}, t.options.unlockTimeWindow));
 		});
 
 		// Lock button
@@ -94,7 +91,46 @@ Object.assign(MediaElementPlayer.prototype, {
 		// add a click toggle event
 		player.lockButton.addEventListener('click', () => {
 			t.lock();
-			console.log(lockText);
+		});
+
+		/**
+		 * Show unlock button
+		 *
+		 *@private
+		 */
+		const showUnlock = () => {
+			player.unlockButton.style.display = '';
+			setTimeout(() => {
+				if (clicks === 0 && t.options.autohideUnlock) {
+					player.unlockButton.style.display = 'none'
+				}
+			}, t.options.unlockTimeWindow);
+		}
+
+		Object.defineProperty(t, 'locked', {
+			get: function() {
+				return locked;
+			},
+
+			set: function(value) {
+				locked = value;
+				if (locked) {
+					clicks = 0;
+					media.addEventListener('click', showUnlock)
+					t.options.clickToPlayPause = false;
+					t.options.disableControls = true;
+					t.controls.style.display = 'none';
+					if (!t.options.autohideUnlock) {
+						t.unlockButton.style.display = '';
+					}
+				} else {
+					media.removeEventListener('click', showUnlock)
+					t.options.clickToPlayPause = true;
+					t.options.disableControls = false;
+					t.controls.style.display = '';
+					t.unlockButton.style.display = 'none';
+				}
+			}
 		});
 	},
 
