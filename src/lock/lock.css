@@ -1,0 +1,10 @@
+.mejs__lock-button>button, .mejs-lock-button>button {
+    background: url("lock.svg") no-repeat transparent;
+}
+.mejs__lock-off > button, .mejs-lock-off > button {
+    background-position: -20px 1px;
+}
+
+.mejs__lock-on > button, .mejs-lock-on > button {
+    background-position: 0 1px;
+}
