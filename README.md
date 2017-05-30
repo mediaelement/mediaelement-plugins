@@ -237,6 +237,7 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 * [Google Analytics](docs/google-analytics.md)
 * [Jump Forward](docs/jump-forward.md)
 * [Loop](docs/loop.md)
+* [Lock](docs/lock.md)
 * [Markers](docs/markers.md)
 * [Postroll](docs/postroll.md)
 * [Preview](docs/preview.md)
