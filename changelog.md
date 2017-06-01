@@ -5,6 +5,7 @@
 * Integrated `Facebook Pixel` plugin (https://github.com/mediaelement/mediaelement-plugins/pull/58) @isantolin
 * Cleaned comments on bundles @rafa8626
 * Moved definition of media files to be used on `Chromecast` when checking if Cast it's connected @rafa8626
+* Restricted `Chromecast` to allow only one sender per page @rafa8626
 * Replaced `childNodes` with `children` to avoid issues with non Node elements inside video/audio tag @rafa8626
 
 *2.2.2 (2017/05/25)*

@@ -343,7 +343,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		    button = document.createElement('div'),
 		    castTitle = mejs.Utils.isString(t.options.castTitle) ? t.options.castTitle : 'Chromecast';
 
-		if (!player.isVideo) {
+		if (!player.isVideo || document.createElement('google-cast-button').constructor === HTMLElement) {
 			return;
 		}
 

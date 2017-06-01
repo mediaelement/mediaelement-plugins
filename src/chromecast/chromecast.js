@@ -437,7 +437,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			castTitle = mejs.Utils.isString(t.options.castTitle) ? t.options.castTitle : 'Chromecast'
 		;
 
-		if (!player.isVideo) {
+		// Only one sender per page
+		if (!player.isVideo || document.createElement('google-cast-button').constructor === HTMLElement) {
 			return;
 		}
 
