@@ -1,45 +1,20 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
 
-/**
- * Qualities feature
- *
- * This feature allows the generation of a menu with different video/audio qualities, depending of the elements set
- * in the <source> tags, such as `label` and `data-quality`
- */
-
-// Translations (English required)
-
 mejs.i18n.en["mejs.quality-chooser"] = "Quality Chooser";
 
-// Feature configuration
 Object.assign(mejs.MepDefaults, {
-	/**
-  * @type {String}
-  */
 	defaultQuality: 'auto',
-	/**
-  * @type {String}
-  */
+
 	qualityText: null
 });
 
 Object.assign(MediaElementPlayer.prototype, {
-
-	/**
-  * Feature constructor.
-  *
-  * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list
-  * @param {MediaElementPlayer} player
-  * @param {HTMLElement} controls
-  * @param {HTMLElement} layers
-  * @param {HTMLElement} media
-  */
 	buildquality: function buildquality(player, controls, layers, media) {
 
 		var t = this,
 		    qualities = [],
-		    children = t.mediaFiles ? t.mediaFiles : t.node.childNodes;
+		    children = t.mediaFiles ? t.mediaFiles : t.node.children;
 
 		for (var i = 0, total = children.length; i < total; i++) {
 			var s = children[i];
@@ -71,8 +46,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		},
 		    defaultValue = getQualityNameFromValue(t.options.defaultQuality);
 
-		// Get initial quality
-
 		player.qualitiesButton = document.createElement('div');
 		player.qualitiesButton.className = t.options.classPrefix + "button " + t.options.classPrefix + "qualities-button";
 		player.qualitiesButton.innerHTML = "<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + qualityTitle + "\" " + ("aria-label=\"" + qualityTitle + "\" tabindex=\"0\">" + defaultValue + "</button>") + ("<div class=\"" + t.options.classPrefix + "qualities-selector " + t.options.classPrefix + "offscreen\">") + ("<ul class=\"" + t.options.classPrefix + "qualities-selector-list\"></ul>") + "</div>";
@@ -89,14 +62,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		var inEvents = ['mouseenter', 'focusin'],
 		    outEvents = ['mouseleave', 'focusout'],
-
-
-		// Enable inputs after they have been appended to controls to avoid tab and up/down arrow focus issues
-		radios = player.qualitiesButton.querySelectorAll('input[type="radio"]'),
+		    radios = player.qualitiesButton.querySelectorAll('input[type="radio"]'),
 		    labels = player.qualitiesButton.querySelectorAll("." + t.options.classPrefix + "qualities-selector-label"),
 		    selector = player.qualitiesButton.querySelector("." + t.options.classPrefix + "qualities-selector");
 
-		// hover or keyboard focus
 		for (var _i2 = 0, _total2 = inEvents.length; _i2 < _total2; _i2++) {
 			player.qualitiesButton.addEventListener(inEvents[_i2], function () {
 				mejs.Utils.removeClass(selector, t.options.classPrefix + "offscreen");
@@ -167,18 +136,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			});
 		}
 
-		//Allow up/down arrow to change the selected radio without changing the volume.
 		selector.addEventListener('keydown', function (e) {
 			e.stopPropagation();
 		});
 	},
-
-	/**
-  * Feature destructor.
-  *
-  * Always has to be prefixed with `clean` and the name that was used in MepDefaults.features list
-  * @param {MediaElementPlayer} player
-  */
 	clearquality: function clearquality(player) {
 		if (player) {
 			if (player.qualitiesButton) {

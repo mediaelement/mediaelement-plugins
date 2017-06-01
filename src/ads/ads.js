@@ -148,7 +148,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.media.load();
 
         // turn off controls until the preroll is done
-        const controlElements = t.container.querySelector(`.${t.options.classPrefix}controls`).childNodes;
+        const controlElements = t.container.querySelector(`.${t.options.classPrefix}controls`).children;
         for (let i = 0, total = controlElements.length; i < total; i++) {
             const
                 target = controlElements[i],
@@ -291,7 +291,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 
 		// turn on controls to restore original media
-		const controlElements = t.container.querySelector(`.${t.options.classPrefix}controls`).childNodes;
+		const controlElements = t.container.querySelector(`.${t.options.classPrefix}controls`).children;
 		for (let i = 0, total = controlElements.length; i < total; i++) {
 			const
 				target = controlElements[i],

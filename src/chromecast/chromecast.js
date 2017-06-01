@@ -7,9 +7,7 @@
  * @see https://developers.google.com/cast/docs/developers
  */
 const CastRenderer = {
-
 	name: 'chromecast',
-
 	options: {
 		prefix: 'chromecast'
 	},
@@ -88,39 +86,28 @@ const CastRenderer = {
 		const
 			props = mejs.html5media.properties,
 			assignGettersSetters = (propName) => {
-
-				// add to flash state that we will store
-
 				const capName = `${propName.substring(0, 1).toUpperCase()}${propName.substring(1)}`;
 
 				c[`get${capName}`] = () => {
 					if (castPlayer !== null) {
 						const value = null;
 
-						// figure out how to get Twitch dta here
 						switch (propName) {
 							case 'currentTime':
 								return castPlayer.currentTime;
-
 							case 'duration':
 								return castPlayer.duration;
-
 							case 'volume':
 								volume = castPlayer.volumeLevel;
 								return volume;
-
 							case 'paused':
 								return castPlayer.isPaused;
-
 							case 'ended':
 								return castPlayer.ended;
-
 							case 'muted':
 								return castPlayer.isMuted;
-
 							case 'src':
 								return mediaElement.originalNode.getAttribute('src');
-
 							case 'readyState':
 								return readyState;
 						}
@@ -132,45 +119,35 @@ const CastRenderer = {
 				};
 
 				c[`set${capName}`] = (value) => {
-
 					if (castPlayer !== null) {
-
-						// do something
 						switch (propName) {
-
 							case 'src':
 								const url = typeof value === 'string' ? value : value[0].src;
 								mediaElement.originalNode.setAttribute('src', url);
 								break;
-
 							case 'currentTime':
 								castPlayer.currentTime = value;
 								castPlayerController.seek();
-
 								setTimeout(() => {
 									const event = mejs.Utils.createEvent('timeupdate', c);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
-
 							case 'muted':
 								if (value === true && !castPlayer.isMuted) {
 									castPlayerController.muteOrUnmute();
 								} else if (value === false && castPlayer.isMuted) {
 									castPlayerController.muteOrUnmute();
 								}
-
 								setTimeout(() => {
 									const event = mejs.Utils.createEvent('volumechange', c);
 									mediaElement.dispatchEvent(event);
 								}, 50);
 								break;
-
 							case 'volume':
 								volume = value;
 								castPlayer.volumeLevel = value;
 								castPlayerController.setVolumeLevel();
-
 								setTimeout(() => {
 									const event = mejs.Utils.createEvent('volumechange', c);
 									mediaElement.dispatchEvent(event);
@@ -180,11 +157,9 @@ const CastRenderer = {
 								const event = mejs.Utils.createEvent('canplay', c);
 								mediaElement.dispatchEvent(event);
 								break;
-
 							case 'playbackRate':
 								mediaElement.originalNode.playbackRate = value;
 								break;
-
 							default:
 								console.log('Chromecast ' + c.id, propName, 'UNSUPPORTED property');
 								break;
@@ -204,13 +179,8 @@ const CastRenderer = {
 		const
 			methods = mejs.html5media.methods,
 			assignMethods = (methodName) => {
-
-				// run the method on the native HTMLMediaElement
 				c[methodName] = () => {
-
 					if (castPlayer !== null) {
-
-						// DO method
 						switch (methodName) {
 							case 'play':
 								if (castPlayer.isPaused) {
@@ -231,7 +201,6 @@ const CastRenderer = {
 								}
 								break;
 							case 'load':
-
 								const
 									url = mediaElement.originalNode.getAttribute('src'),
 									type = mejs.Utils.getTypeFromFile(url),
@@ -243,28 +212,26 @@ const CastRenderer = {
 								if (options.castEnableTracks === true) {
 									const
 										tracks = [],
-										children = mediaElement.originalNode.childNodes
+										children = mediaElement.originalNode.children
 									;
 
 									let counter = 1;
 
 									for (let i = 0, total = children.length; i < total; i++) {
-										const child = children[i];
+										const
+											child = children[i],
+											tag = child.tagName.toLowerCase();
 
-										if (child.nodeType !== Node.TEXT_NODE) {
-											const tag = child.tagName.toLowerCase();
-
-											if (tag === 'track' && (child.getAttribute('kind') === 'subtitles' || child.getAttribute('kind') === 'captions')) {
-												const el = new chrome.cast.media.Track(counter, chrome.cast.media.TrackType.TEXT);
-												el.trackContentId = mejs.Utils.absolutizeUrl(child.getAttribute('src'));
-												el.trackContentType = 'text/vtt';
-												el.subtype = chrome.cast.media.TextTrackType.SUBTITLES;
-												el.name = child.getAttribute('label');
-												el.language = child.getAttribute('srclang');
-												el.customData = null;
-												tracks.push(el);
-												counter++;
-											}
+										if (tag === 'track' && (child.getAttribute('kind') === 'subtitles' || child.getAttribute('kind') === 'captions')) {
+											const el = new chrome.cast.media.Track(counter, chrome.cast.media.TrackType.TEXT);
+											el.trackContentId = mejs.Utils.absolutizeUrl(child.getAttribute('src'));
+											el.trackContentType = 'text/vtt';
+											el.subtype = chrome.cast.media.TextTrackType.SUBTITLES;
+											el.name = child.getAttribute('label');
+											el.language = child.getAttribute('srclang');
+											el.customData = null;
+											tracks.push(el);
+											counter++;
 										}
 									}
 									mediaInfo.textTrackStyle = new chrome.cast.media.TextTrackStyle();
@@ -303,7 +270,6 @@ const CastRenderer = {
 											const event = mejs.Utils.createEvent('play', c);
 											mediaElement.dispatchEvent(event);
 										}, 50);
-
 									},
 									(error) => {
 										getErrorMessage(error);
@@ -334,12 +300,10 @@ const CastRenderer = {
 					}
 				}
 			);
-
 			castPlayerController.addEventListener(
 				cast.framework.RemotePlayerEventType.IS_MUTED_CHANGED,
 				() => c.setMuted(castPlayer.isMuted)
 			);
-
 			castPlayerController.addEventListener(
 				cast.framework.RemotePlayerEventType.IS_MEDIA_LOADED_CHANGED,
 				() => {
@@ -349,7 +313,6 @@ const CastRenderer = {
 					}, 50);
 				}
 			);
-
 			castPlayerController.addEventListener(
 				cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED,
 				() => {
@@ -357,7 +320,6 @@ const CastRenderer = {
 					mediaElement.dispatchEvent(event);
 				}
 			);
-
 			castPlayerController.addEventListener(
 				cast.framework.RemotePlayerEventType.DURATION_CHANGED,
 				() => {
@@ -367,7 +329,6 @@ const CastRenderer = {
 					}, 50);
 				}
 			);
-
 			castPlayerController.addEventListener(
 				cast.framework.RemotePlayerEventType.CURRENT_TIME_CHANGED,
 				() => {
@@ -497,25 +458,19 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.chromecastLayer.innerHTML = `<div class="${t.options.classPrefix}chromecast-container">` +
 			`<span class="${t.options.classPrefix}chromecast-icon"></span>` +
 			`<span class="${t.options.classPrefix}chromecast-info">${mejs.i18n.t('mejs.chromecast-legend')} <span class="device"></span></span>` +
-			`</div>`;
+		`</div>`;
 
 		if (media.originalNode.getAttribute('poster')) {
 			player.chromecastLayer.innerHTML += `<img src="${media.originalNode.getAttribute('poster')}" width="100%" height="100%">`;
 		}
 
 		// Search for Chromecast
-		const
-			url = media.originalNode.getAttribute('src'),
-			mediaFiles = [{src: url, type: mejs.Utils.getTypeFromFile(url)}]
-		;
-
 		let loadedCastAPI = false;
 
 		if (!loadedCastAPI) {
 
 			// Start SDK
 			window.__onGCastApiAvailable = (isAvailable) => {
-
 				if (isAvailable) {
 
 					// Add renderer to the list
@@ -542,7 +497,6 @@ Object.assign(MediaElementPlayer.prototype, {
 							break;
 					}
 
-
 					cast.framework.CastContext.getInstance().setOptions({
 						receiverApplicationId: t.options.castAppID || chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
 						autoJoinPolicy: chrome.cast.AutoJoinPolicy[origin]
@@ -555,9 +509,12 @@ Object.assign(MediaElementPlayer.prototype, {
 
 					// Set up renderer and device data
 					media.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, () => {
-
 						if (cast && cast.framework) {
 							if (media.castPlayer.isConnected) {
+								const
+									url = media.getSrc(),
+									mediaFiles = [{src: url, type: mejs.Utils.getTypeFromFile(url)}]
+								;
 
 								const renderInfo = mejs.Renderers.select(mediaFiles, ['chromecast']);
 								media.changeRenderer(renderInfo.rendererName, mediaFiles);
@@ -591,7 +548,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 									}
 								}
-
 
 								media.addEventListener('timeupdate', () => {
 									currentTime = media.getCurrentTime();

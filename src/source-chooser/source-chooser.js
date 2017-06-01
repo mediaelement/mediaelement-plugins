@@ -34,7 +34,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			t = this,
 			sourceTitle = mejs.Utils.isString(t.options.sourcechooserText) ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
 			sources = [],
-			children = t.mediaFiles ? t.mediaFiles : t.node.childNodes
+			children = t.mediaFiles ? t.mediaFiles : t.node.children
 		;
 
 		// add to list
