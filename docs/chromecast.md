@@ -20,6 +20,10 @@ The following snippet shows the `data-cast-*` attributes needed to achieve Chrom
 The `poster` attribute is not required as well, but most of the media players use a static image when media is being broadcast in Chromecast, 
 so **it is recommended its use**.
 
+Also, a page can contain **ONLY ONE** sender; otherwise, an error indicating that `cast-button` has been registered will be logged.
+
+To avoid that, [this link](https://jsfiddle.net/Luuwnjfm/6/) shows a way to get away with it if you have to render your player dynamically.
+
 ## API
 
 Parameter | Type | Default | Description
@@ -27,4 +31,4 @@ Parameter | Type | Default | Description
 castTitle | string | `null` | Chromecast button title for ARIA purposes 
 castAppId | string | `null` |  Chromecast Application ID; if `null` is provided, it will default to `chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID`
 castPolicy | string | `origin` | Chromecast default policy: `origin` (by default, auto connect from same appId and page origin), `tab` (auto connect from same appId, page origin, and tab) and `page` (no auto connect)
-castEnableTracks | boolean | `false` | Whether to load tracks or not through Chromecast. In order to process tracks correctly, `tracks` feature must be enable on the player configuration and user **MUST** set a custom receiver application. Read [this](https://github.com/googlecast/CastReferencePlayer) and [this](https://developers.google.com/cast/docs/receiver_apps) pages for more references.
+castEnableTracks | boolean | `false` | Whether to load tracks or not through Chromecast. In order to process tracks correctly, `tracks` feature must be enable on the player configuration and CORS **MUST** be setup correctly. Read [this link](https://developers.google.com/cast/docs/player) for more information.

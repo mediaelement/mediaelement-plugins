@@ -34,7 +34,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			t = this,
 			sourceTitle = mejs.Utils.isString(t.options.sourcechooserText) ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
 			sources = [],
-			children = t.mediaFiles ? t.mediaFiles : t.node.childNodes
+			children = t.mediaFiles ? t.mediaFiles : t.node.children
 		;
 
 		// add to list
@@ -193,7 +193,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		type = type.split('/')[1];
 
 		t.sourcechooserButton.querySelector('ul').innerHTML += `<li>` +
-			`<input type="radio" name="${t.id}_sourcechooser" id="${t.id}_sourcechooser_${label}${type}"` +
+			`<input type="radio" name="${t.id}_sourcechooser" id="${t.id}_sourcechooser_${label}${type}" ` +
 				`role="menuitemradio" value="${src}" ${(isCurrent ? 'checked="checked"' : '')} aria-selected="${isCurrent}"/>` +
 			`<label for="${t.id}_sourcechooser_${label}${type}" aria-hidden="true">${label} (${type})</label>` +
 		`</li>`;

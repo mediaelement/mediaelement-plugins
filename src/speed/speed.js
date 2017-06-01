@@ -123,7 +123,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				`<input class="${t.options.classPrefix}speed-selector-input" type="radio" name="${t.id}_speed"` +
 					`disabled="disabled" value="${speeds[i].value}" id="${inputId}"  ` +
 					`${(speeds[i].value === t.options.defaultSpeed ? ' checked="checked"' : '')}/>` +
-				`<label class="${t.options.classPrefix}speed-selector-label` +
+				`<label for="${inputId}" class="${t.options.classPrefix}speed-selector-label` +
 					`${(speeds[i].value === t.options.defaultSpeed ? ` ${t.options.classPrefix}speed-selected` : '')}">` +
 					`${speeds[i].name}</label>` +
 				`</li>`;
