@@ -113,21 +113,22 @@ Object.assign(MediaElementPlayer.prototype, {
 			},
 
 			set: function(value) {
+				if (locked === value) {
+					return;
+				}
 				locked = value;
 				if (locked) {
 					clicks = 0;
 					media.addEventListener('click', showUnlock)
 					t.options.clickToPlayPause = false;
-					t.options.disableControls = true;
-					t.controls.style.display = 'none';
+					t.options.disableControls();
 					if (!t.options.autohideUnlock) {
 						t.unlockButton.style.display = '';
 					}
 				} else {
 					media.removeEventListener('click', showUnlock)
 					t.options.clickToPlayPause = true;
-					t.options.disableControls = false;
-					t.controls.style.display = '';
+					t.options.enableControls();
 					t.unlockButton.style.display = 'none';
 				}
 			}
