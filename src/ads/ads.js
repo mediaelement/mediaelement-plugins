@@ -140,12 +140,27 @@ Object.assign(MediaElementPlayer.prototype, {
 		// change URLs to the preroll ad. Only save the video to be shown on first
 		// ad showing.
 		if (t.options.indexPreroll === 0) {
-			t.adsCurrentMediaUrl = t.media.src;
+			t.adsCurrentMediaUrl = t.media.originalNode.getAttribute('src');
 			t.adsCurrentMediaDuration = t.media.duration;
 		}
 
 		t.media.setSrc(t.options.adsPrerollMediaUrl[t.options.indexPreroll]);
 		t.media.load();
+
+        // turn off controls until the preroll is done
+        const controlElements = t.container.querySelector(`.${t.options.classPrefix}controls`).children;
+        for (let i = 0, total = controlElements.length; i < total; i++) {
+            const
+                target = controlElements[i],
+                button = target.querySelector('button')
+            ;
+            if (button && !mejs.Utils.hasClass(target, `${t.options.classPrefix}playpause-button`)) {
+                button.disabled = true;
+                target.style.pointerEvents = 'none';
+            } else if (target.querySelector(`.${t.options.classPrefix}time-slider`)) {
+                target.querySelector(`.${t.options.classPrefix}time-slider`).style.pointerEvents = 'none';
+            }
+        }
 
 		// if autoplay was on, or if the user pressed play
 		// while the ad data was still loading, then start the ad right away
@@ -186,20 +201,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		const t = this;
 
 		t.media.removeEventListener('playing', t.adsPrerollStartedProxy);
-
-		// turn off controls until the preroll is done
-		const controlElements = t.container.querySelector(`.${t.options.classPrefix}controls`).childNodes;
-		for (let i = 0, total = controlElements.length; i < total; i++) {
-			const
-				target = controlElements[i],
-				button = target.querySelector('button')
-			;
-			if (button && !mejs.Utils.hasClass(target, `${t.options.classPrefix}playpause-button`)) {
-				button.disabled = true;
-			} else if (target.querySelector(`.${t.options.classPrefix}time-slider`)) {
-				target.querySelector(`.${t.options.classPrefix}time-slider`).style.pointerEvents = 'none';
-			}
-		}
 
 		// enable clicking through
 		t.adsLayer.style.display = 'block';
@@ -290,13 +291,14 @@ Object.assign(MediaElementPlayer.prototype, {
 
 
 		// turn on controls to restore original media
-		const controlElements = t.container.querySelector(`.${t.options.classPrefix}controls`).childNodes;
+		const controlElements = t.container.querySelector(`.${t.options.classPrefix}controls`).children;
 		for (let i = 0, total = controlElements.length; i < total; i++) {
 			const
 				target = controlElements[i],
 				button = target.querySelector('button')
 			;
 			if (button && !mejs.Utils.hasClass(target, `${t.options.classPrefix}playpause-button`)) {
+                target.style.pointerEvents = 'auto';
 				button.disabled = false;
 			} else if (target.querySelector(`.${t.options.classPrefix}time-slider`)) {
 				target.querySelector(`.${t.options.classPrefix}time-slider`).style.pointerEvents = 'auto';

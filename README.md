@@ -27,7 +27,7 @@ This repository contains plugins built for MediaElementJS.
 
 Download the package from https://github.com/johndyer/mediaelement-plugins, and reference any plugins you need from `dist` folder and add any configuration related to the plugin.
 
-Or you can use a CDN; check http://www.jsdelivr.com/projects/mediaelement-plugins or https://cdnjs.com/libraries/mediaelement-plugins.
+Or you can use a CDN; check http://cdn.jsdelivr.net/npm/mediaelement-plugins/ or https://cdnjs.com/libraries/mediaelement-plugins.
 
 For example, if you want to install `Speed` plugin do the following:
 ```html
@@ -234,12 +234,14 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 * [VAST/VPAID](docs/ads-vast.md)
 * [Chromecast](docs/chromecast.md)
 * [Context Menu](docs/context-menu.md)
+* [Facebook Pixel](docs/facebook-pixel.md)
 * [Google Analytics](docs/google-analytics.md)
 * [Jump Forward](docs/jump-forward.md)
 * [Loop](docs/loop.md)
 * [Markers](docs/markers.md)
 * [Postroll](docs/postroll.md)
 * [Preview](docs/preview.md)
+* [Quality](docs/quality.md)
 * [Skip Back](docs/skip-back.md)
 * [Source Chooser](docs/source-chooser.md)
 * [Speed](docs/speed.md)
