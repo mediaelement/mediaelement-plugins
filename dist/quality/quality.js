@@ -58,33 +58,59 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.clearquality(player);
 
 		var qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-quality'),
-		    getQualityNameFromValue = function getQualityNameFromValue(value) {
-			var label = void 0;
-			if (value === 'auto') {
-				var src = qualities[0];
-				label = src instanceof HTMLElement ? src.getAttribute('data-quality') : src['data-quality'];
-			} else {
-				label = value;
-			}
+			defaultValue = false,
+			defaultHD = false;
 
-			return label;
-		},
-		    defaultValue = getQualityNameFromValue(t.options.defaultQuality);
+		for (var i=0; i<qualities.length; i++)
+		{
+			var src = qualities[i];
+			var label = src instanceof HTMLElement ? src.getAttribute('data-quality') : src['data-quality'];
+			var is_hd = src instanceof HTMLElement ? src.getAttribute('data-hd') : src['data-hd'];
+			var is_default = src instanceof HTMLElement ? src.getAttribute('data-default') : src['data-default'];
+
+			is_hd = is_hd == 'true';
+			is_default = is_default == 'true';
+
+			if(label == t.options.defaultQuality || is_default)
+			{
+				defaultValue = label;
+				defaultHD = is_hd;
+				break;
+			}
+		}
+
+		if(!defaultValue)
+		{
+			var src = qualities[0];
+
+			var label = src instanceof HTMLElement ? src.getAttribute('data-quality') : src['data-quality'];
+			var is_hd = src instanceof HTMLElement ? src.getAttribute('data-hd') : src['data-hd'];
+			var is_default = src instanceof HTMLElement ? src.getAttribute('data-default') : src['data-default'];
+
+			is_hd = is_hd == 'true';
+			is_default = is_default == 'true';
+
+			defaultValue = label;
+			defaultHD = is_hd;
+		}
 
 		// Get initial quality
 
 		player.qualitiesButton = document.createElement('div');
 		player.qualitiesButton.className = t.options.classPrefix + "button " + t.options.classPrefix + "qualities-button";
-		player.qualitiesButton.innerHTML = "<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + qualityTitle + "\" " + ("aria-label=\"" + qualityTitle + "\" tabindex=\"0\">" + defaultValue + "</button>") + ("<div class=\"" + t.options.classPrefix + "qualities-selector " + t.options.classPrefix + "offscreen\">") + ("<ul class=\"" + t.options.classPrefix + "qualities-selector-list\"></ul>") + "</div>";
+		player.qualitiesButton.innerHTML = "<button type=\"button\" aria-controls=\"" + t.id + "\" title=\"" + qualityTitle + "\" " + ("aria-label=\"" + qualityTitle + "\" tabindex=\"0\">" + defaultValue + (defaultHD ? "<sup>HD</sup></button>" : "") ) + ("<div class=\"" + t.options.classPrefix + "qualities-selector " + t.options.classPrefix + "offscreen\">") + ("<ul class=\"" + t.options.classPrefix + "qualities-selector-list\"></ul>") + "</div>";
 
 		t.addControlElement(player.qualitiesButton, 'qualities');
 
 		for (var _i = 0, _total = qualities.length; _i < _total; _i++) {
 			var src = qualities[_i],
 			    quality = src instanceof HTMLElement ? src.getAttribute('data-quality') : src['data-quality'],
+			    is_hd = src instanceof HTMLElement ? src.getAttribute('data-hd') : src['data-hd'],
 			    inputId = t.id + "-qualities-" + quality;
 
-			player.qualitiesButton.querySelector('ul').innerHTML += "<li class=\"" + t.options.classPrefix + "qualities-selector-list-item\">" + ("<input class=\"" + t.options.classPrefix + "qualities-selector-input\" type=\"radio\" name=\"" + t.id + "_qualities\"") + ("disabled=\"disabled\" value=\"" + quality + "\" id=\"" + inputId + "\"  ") + ((quality === defaultValue ? ' checked="checked"' : '') + "/>") + ("<label for=\"" + inputId + "\" class=\"" + t.options.classPrefix + "qualities-selector-label") + ((quality === defaultValue ? " " + t.options.classPrefix + "qualities-selected" : '') + "\">") + ((src.title || quality) + "</label>") + "</li>";
+		    is_hd = is_hd == 'true';
+
+			player.qualitiesButton.querySelector('ul').innerHTML += "<li class=\"" + t.options.classPrefix + "qualities-selector-list-item\">" + ("<input class=\"" + t.options.classPrefix + "qualities-selector-input\" type=\"radio\" name=\"" + t.id + "_qualities\"") + ("disabled=\"disabled\" value=\"" + quality + "\" id=\"" + inputId + "\"  ") + ((quality === defaultValue ? ' checked="checked"' : '') + "/>") + ("<label for=\"" + inputId + "\" class=\"" + t.options.classPrefix + "qualities-selector-label") + ((quality === defaultValue ? " " + t.options.classPrefix + "qualities-selected" : '') + "\">") + ((src.title || quality) + (is_hd ? "<sup>HD</sup></button>" : "") + "</label>") + "</li>";
 		}
 
 		var inEvents = ['mouseenter', 'focusin'],
@@ -144,10 +170,13 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				for (var _i6 = 0, _total7 = qualities.length; _i6 < _total7; _i6++) {
 					var _src = qualities[_i6],
-					    _quality = _src instanceof HTMLElement ? _src.getAttribute('data-quality') : _src['data-quality'];
+					    _quality = _src instanceof HTMLElement ? _src.getAttribute('data-quality') : _src['data-quality'],
+					    _is_hd = _src instanceof HTMLElement ? _src.getAttribute('data-hd') : _src['data-hd'];
+
+				    _is_hd = _is_hd == 'true';
 
 					if (_quality === newQuality) {
-						player.qualitiesButton.querySelector('button').innerHTML = _src.title || getQualityNameFromValue(newQuality);
+						player.qualitiesButton.querySelector('button').innerHTML = _quality + (_is_hd ? '<sup>HD</sup>' : '');
 						media.pause();
 						media.setSrc(_src.src);
 						media.load();

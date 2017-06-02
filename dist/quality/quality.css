@@ -1,21 +1,34 @@
 .mejs__qualities-button, .mejs-qualities-button {
     position: relative;
+    height: 19px;
+    text-align: center;
+    width: 55px;
 }
 
 .mejs__qualities-button > button, .mejs-qualities-button > button {
-    background: transparent;
-    width: 36px;
-    margin: 11px 0 0;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 3px;
+    width: 100%;
+    margin: 10px 5px 0 0;
+    padding: 2px 3px 0;
     font-size: 11px;
     line-height: normal;
-    color: #fff;
+    color: #312d2e;
+    font-weight: bold;
+}
+.mejs__qualities-button > button > sup, .mejs-qualities-button > button > sup
+{
+    font-size: 8px;
+    font-weight: bold;
+    color: red;
+    padding-left: 2px;
 }
 
 .mejs__qualities-selector, .mejs-qualities-selector {
     position: absolute;
     top: -100px;
     left: -10px;
-    width: 60px;
+    width: 80px;
     height: 100px;
     background: rgba(50, 50, 50, 0.7);
     border: solid 1px transparent;
@@ -33,8 +46,8 @@
 }
 
 .mejs__qualities-selector li, .mejs-qualities-selector li {
-    margin: 0 0 6px;
-    padding: 0 10px;
+    margin: 0;
+    padding: 0;
     list-style-type: none!important;
     display: block;
     color: #fff;
@@ -55,14 +68,32 @@
 }
 
 .mejs__qualities-selector label, .mejs-qualities-selector label {
-    width: 55px;
     float: left;
-    padding: 4px 0 0;
-    line-height: 15px;
-    font-size: 10px;
+    padding-left: 10px;
+    line-height: 25px;
+    font-size: 12px;
     cursor: pointer;
+}
+.mejs__qualities-selector label sup, .mejs-qualities-selector label sup {
+    font-size: 8px;
+    font-weight: bold;
+    color: red;
+    padding-left: 2px;
 }
 
 .mejs__qualities-selected, .mejs-qualities-selected {
     color: rgba(33, 248, 248, 1);
+}
+
+.mejs-qualities-selector,
+.mejs__qualities-selector
+{
+    visibility: hidden;
+}
+.mejs__qualities-button:hover .mejs-qualities-selector,
+.mejs__qualities-button:hover .mejs__qualities-selector,
+.mejs-qualities-button:hover .mejs__qualities-selector,
+.mejs-qualities-button:hover .mejs-qualities-selector
+{
+    visibility: visible;
 }
