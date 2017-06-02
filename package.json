@@ -10,22 +10,31 @@
   },
   "private": false,
   "devDependencies": {
-    "autoprefixer": "^6.5.1",
-    "babel-cli": "^6.18.0",
-    "babel-core": "^6.18.2",
-    "babel-preset-env": "^1.4.0",
-    "babel-register": "^6.18.0",
+    "autoprefixer": "^6.7.7",
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.24.1",
+    "babel-preset-env": "^1.5.0",
+    "babel-register": "^6.24.1",
     "babelify": "^7.3.0",
     "browserify": "^13.1.1",
     "browserify-derequire": "^0.9.4",
-    "browserify-versionify": "^1.0.6",
     "bundle-collapser": "^1.2.1",
     "cssnano": "^3.8.0",
-    "cssnano-cli": "^1.0.5",
-    "eslint": "^3.16.0",
-    "postcss": "^5.2.17",
-    "postcss-cli": "^3.1.1",
-    "uglify-js": "^2.4.21"
+    "grunt": "^1.0.1",
+    "grunt-babel": "^6.0.0",
+    "grunt-browserify": "^5.0.0",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-uglify": "^3.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-eslint": "^19.0.0",
+    "grunt-postcss": "^0.8.0",
+    "grunt-remove-logging": "^0.2.0",
+    "grunt-shell": "^2.1.0",
+    "grunt-text-replace": "^0.4.0",
+    "uglify-js": "^3.0.10"
   },
   "scripts": {
     "ads": "eslint src/ads && postcss --no-map -u autoprefixer -r src/ads/ads.css && cp src/ads/ads.css dist/ads/ads.css && cssnano dist/ads/ads.css dist/ads/ads.min.css && browserify -t browserify-versionify -t [babelify] -p browserify-derequire -p bundle-collapser/plugin src/ads/ads.js > dist/ads/ads.js && uglifyjs dist/ads/ads.js -c sequences=true,dead_code=true,conditionals=true,booleans=true,unused=true,if_return=true,join_vars=true,pure_funcs=['console.log'] -m --screw-ie8 > dist/ads/ads.min.js && cp src/ads/ads-i18n.js dist/ads",
@@ -49,5 +58,33 @@
   "dependencies": {
     "global": "^4.3.1",
     "mediaelement": "^4.0.7"
+  },
+  "browserify": {
+    "extensions": [
+      ".js"
+    ],
+    "transform": [
+      [
+        "babelify",
+        {
+          "comments": false,
+          "presets": [
+            [
+              "env",
+              {
+                "targets": {
+                  "browsers": [
+                    "last 5 versions",
+                    "ie > 8",
+                    "ios > 7",
+                    "android > 3"
+                  ]
+                }
+              }
+            ]
+          ]
+        }
+      ]
+    ]
   }
 }

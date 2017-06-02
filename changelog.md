@@ -7,6 +7,7 @@
 * Moved definition of media files to be used on `Chromecast` when checking if Cast it's connected @rafa8626
 * Restricted `Chromecast` to allow only one sender per page @rafa8626
 * Replaced `childNodes` with `children` to avoid issues with non Node elements inside video/audio tag @rafa8626
+* Integrated `grunt` to simplify tasks and removed elements from `package.json` @rafa8626 
 
 *2.2.2 (2017/05/25)*
 
