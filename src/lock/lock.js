@@ -121,14 +121,14 @@ Object.assign(MediaElementPlayer.prototype, {
 					clicks = 0;
 					media.addEventListener('click', showUnlock)
 					t.options.clickToPlayPause = false;
-					t.options.disableControls();
+					t.disableControls();
 					if (!t.options.autohideUnlock) {
 						t.unlockButton.style.display = '';
 					}
 				} else {
 					media.removeEventListener('click', showUnlock)
 					t.options.clickToPlayPause = true;
-					t.options.enableControls();
+					t.enableControls();
 					t.unlockButton.style.display = 'none';
 				}
 			}
