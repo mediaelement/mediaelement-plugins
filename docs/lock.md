@@ -14,4 +14,4 @@ lockText         | string    | `null`  | Title for Lock button for WARIA purpose
 unlockText       | string    | `null`  | Title for Unlock button for WARIA purposes when lock feature is activated
 autohideUnlock   | boolean   | `true`  | Whether the unlock button should hide when not being used to unlock playback controls
 unlockClicks     | number    | `3`     | The number of clicks required on the unlock button to unlock
-unlockTimeWindow | number  | `2000`  | The timeframe in milliseconds in which the unlock clicks must occur.
+unlockTimeWindow | number    | `2000`  | The timeframe in milliseconds in which the unlock clicks must occur.
