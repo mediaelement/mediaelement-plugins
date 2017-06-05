@@ -42,7 +42,7 @@
     padding: 0 10px;
 }
 .mejs__qualities-selector li:hover, .mejs-qualities-selector li:hover {
-    background-color: rgba(255, 255, 255, .2);
+    background-color: rgba(255, 255, 255, 0.2);
     cursor: pointer;
 }
 

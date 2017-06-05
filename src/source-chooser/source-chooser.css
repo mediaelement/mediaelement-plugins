@@ -37,7 +37,7 @@
     padding: 5px 0;
 }
 .mejs__sourcechooser-selector li:hover, .mejs-sourcechooser-selector li:hover {
-    background-color: rgba(255, 255, 255, .2);
+    background-color: rgba(255, 255, 255, 0.2);
     cursor: pointer;
 }
 
