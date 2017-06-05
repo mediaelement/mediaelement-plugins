@@ -12,6 +12,7 @@
         ]
       }
     ],
+    "indentation": 4,
     "length-zero-no-unit": true,
     "number-leading-zero": "always",
     "number-no-trailing-zeros": true,
