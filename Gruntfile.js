@@ -11,6 +11,8 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-eslint');
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-stylelint');
+
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
@@ -23,6 +25,10 @@ module.exports = function (grunt) {
 				files: ['src/**/*.css', 'src/css/**/*.png', 'src/css/**/*.svg'],
 				tasks: ['postcss', 'copy:build']
 			}
+		},
+
+		stylelint: {
+			all: ['src/**/*.css']
 		},
 
 		eslint: {
@@ -92,23 +98,57 @@ module.exports = function (grunt) {
 			}
 		},
 		postcss: {
-			options: {
-				processors: [
-					// Add vendor prefixes.
-					require('autoprefixer')({browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'}),
-					// Minify the result.
-					require('cssnano')()
-				]
+			uncompressed: {
+				options: {
+					processors: [
+						// Add vendor prefixes.
+						require('autoprefixer')({
+							browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'
+						})
+					]
+				},
+				files: {
+					'dist/ads/ads.css': 'src/ads/ads.css',
+					'dist/airplay/airplay.css': 'src/airplay/airplay.css',
+					'dist/chromecast/chromecast.css': 'src/chromecast/chromecast.css',
+					'dist/context-menu/context-menu.css': 'src/context-menu/context-menu.css',
+					'dist/jump-forward/jump-forward.css': 'src/jump-forward/jump-forward.css',
+					'dist/loop/loop.css': 'src/loop/loop.css',
+					'dist/postroll/postroll.css': 'src/postroll/postroll.css',
+					'dist/quality/quality.css': 'src/quality/quality.css',
+					'dist/skip-back/skip-back.css': 'src/skip-back/skip-back.css',
+					'dist/source-chooser/source-chooser.css': 'src/source-chooser/source-chooser.css',
+					'dist/speed/speed.css': 'src/speed/speed.css',
+					'dist/stop/stop.css': 'src/stop/stop.css'
+				}
 			},
-			files: {
-				'dist/airplay/airplay.min.css': 'src/airplay/airplay.css',
-				'dist/chromecast/chromecast.min.css': 'src/chromecast/chromecast.css',
-				'dist/jump-forward/jump-forward.min.css': 'src/jump-forward/jump-forward.css',
-				'dist/loop/loop.min.css': 'src/loop/loop.css',
-				'dist/skip-back/skip-back.min.css': 'src/skip-back/skip-back.css',
-				'dist/source-chooser/source-chooser.min.css': 'src/source-chooser/source-chooser.css',
-				'dist/stop/stop.min.css': 'src/stop/stop.css'
-			}
+			compressed: {
+				options: {
+					processors: [
+						// Add vendor prefixes.
+						require('autoprefixer')({
+							browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'
+						}),
+						// Minify the result.
+						require('cssnano')()
+					]
+				},
+				files: {
+					'dist/ads/ads.min.css': 'dist/ads/ads.css',
+					'dist/airplay/airplay.min.css': 'dist/airplay/airplay.css',
+					'dist/chromecast/chromecast.min.css': 'dist/chromecast/chromecast.css',
+					'dist/context-menu/context-menu.min.css': 'dist/context-menu/context-menu.css',
+					'dist/jump-forward/jump-forward.min.css': 'dist/jump-forward/jump-forward.css',
+					'dist/loop/loop.min.css': 'dist/loop/loop.css',
+					'dist/postroll/postroll.min.css': 'dist/postroll/postroll.css',
+					'dist/quality/quality.min.css': 'dist/quality/quality.css',
+					'dist/skip-back/skip-back.min.css': 'dist/skip-back/skip-back.css',
+					'dist/source-chooser/source-chooser.min.css': 'dist/source-chooser/source-chooser.css',
+					'dist/speed/speed.min.css': 'dist/speed/speed.css',
+					'dist/stop/stop.min.css': 'dist/stop/stop.css'
+				}
+			},
+
 		},
 		copy: {
 			main: {
@@ -116,7 +156,7 @@ module.exports = function (grunt) {
 					{
 						cwd: 'src',
 						expand: true,
-						src: ['**/*.png', '**/*.svg', '**/*.css', '**/*-i18n.js'],
+						src: ['**/*.png', '**/*.svg', '**/*-i18n.js'],
 						dest: 'dist/'
 					}
 				]
@@ -124,6 +164,6 @@ module.exports = function (grunt) {
 		}
 	});
 
-	grunt.registerTask('default', ['eslint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy']);
-	grunt.registerTask('debug', ['eslint', 'browserify', 'concat', 'uglify', 'postcss', 'copy']);
+	grunt.registerTask('default', ['eslint', 'stylelint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy']);
+	grunt.registerTask('debug', ['eslint', 'stylelint', 'browserify', 'concat', 'uglify', 'postcss', 'copy']);
 };

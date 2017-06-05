@@ -5,27 +5,27 @@
     background: none;
 }
 .mejs__chromecast-container, .mejs-chromecast-container {
-    top: 0;
-    left: 0;
     background: #000;
     color: #fff;
-    padding: 5px;
     font-size: 10px;
-    z-index: 1;
+    left: 0;
+    padding: 5px;
     position: absolute;
+    top: 0;
+    z-index: 1;
 }
 
 .mejs__chromecast-layer > img, .mejs-chromecast-layer > img {
+    left: 0;
     position: absolute;
     top: 0;
-    left: 0;
     z-index: 0;
 }
 
 .mejs__chromecast-icon, .mejs-chromecast-icon {
     background: url("chromecast.svg") no-repeat 0 0;
-    width: 17px;
-    height: 14px;
     display: inline-block;
+    height: 14px;
     margin-right: 5px;
+    width: 17px;
 }
