@@ -1,8 +1,10 @@
-.mejs__qualities-button, .mejs-qualities-button {
+.mejs__qualities-button,
+.mejs-qualities-button {
     position: relative;
 }
 
-.mejs__qualities-button > button, .mejs-qualities-button > button {
+.mejs__qualities-button > button,
+.mejs-qualities-button > button {
     background: transparent;
     color: #fff;
     font-size: 11px;
@@ -11,7 +13,8 @@
     width: 36px;
 }
 
-.mejs__qualities-selector, .mejs-qualities-selector {
+.mejs__qualities-selector,
+.mejs-qualities-selector {
     background: rgba(50, 50, 50, 0.7);
     border: solid 1px transparent;
     border-radius: 0;
@@ -24,7 +27,8 @@
     width: 60px;
 }
 
-.mejs__qualities-selector ul, .mejs-qualities-selector ul {
+.mejs__qualities-selector ul,
+.mejs-qualities-selector ul {
     display: block;
     list-style-type: none !important;
     margin: 0;
@@ -32,7 +36,8 @@
     padding: 0;
 }
 
-.mejs__qualities-selector li, .mejs-qualities-selector li {
+.mejs__qualities-selector li,
+.mejs-qualities-selector li {
     color: #fff;
     cursor: pointer;
     display: block;
@@ -41,12 +46,14 @@
     overflow: hidden;
     padding: 0 10px;
 }
-.mejs__qualities-selector li:hover, .mejs-qualities-selector li:hover {
-    background-color: rgba(255, 255, 255, .2);
+.mejs__qualities-selector li:hover,
+.mejs-qualities-selector li:hover {
+    background-color: rgba(255, 255, 255, 0.2);
     cursor: pointer;
 }
 
-.mejs__qualities-selector input, .mejs-qualities-selector input {
+.mejs__qualities-selector input,
+.mejs-qualities-selector input {
     clear: both;
     float: left;
     left: -1000px;
@@ -54,7 +61,8 @@
     position: absolute;
 }
 
-.mejs__qualities-selector label, .mejs-qualities-selector label {
+.mejs__qualities-selector label,
+.mejs-qualities-selector label {
     cursor: pointer;
     float: left;
     font-size: 10px;
@@ -63,6 +71,7 @@
     width: 55px;
 }
 
-.mejs__qualities-selected, .mejs-qualities-selected {
+.mejs__qualities-selected,
+.mejs-qualities-selected {
     color: rgba(33, 248, 248, 1);
 }

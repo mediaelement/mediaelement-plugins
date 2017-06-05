@@ -1,4 +1,5 @@
-.mejs__contextmenu, .mejs-contextmenu {
+.mejs__contextmenu,
+.mejs-contextmenu {
     background: #fff;
     border: solid 1px #999;
     border-radius: 4px;
@@ -10,21 +11,24 @@
     z-index: 9999999999; /* make sure it shows on fullscreen */
 }
 
-.mejs__contextmenu-separator, .mejs-contextmenu-separator {
+.mejs__contextmenu-separator,
+.mejs-contextmenu-separator {
     background: #333;
     font-size: 0;
     height: 1px;
     margin: 5px 6px;
 }
 
-.mejs__contextmenu-item, .mejs-contextmenu-item  {
+.mejs__contextmenu-item,
+.mejs-contextmenu-item  {
     color: #333;
     cursor: pointer;
     font-size: 12px;
     padding: 4px 6px;
 }
 
-.mejs__contextmenu-item:hover, .mejs-contextmenu-item:hover {
+.mejs__contextmenu-item:hover,
+.mejs-contextmenu-item:hover {
     background: #2c7c91;
     color: #fff;
 }
