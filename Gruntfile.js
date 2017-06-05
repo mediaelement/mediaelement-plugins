@@ -147,7 +147,7 @@ module.exports = function (grunt) {
 					'dist/source-chooser/source-chooser.min.css': 'dist/source-chooser/source-chooser.css',
 					'dist/speed/speed.min.css': 'dist/speed/speed.css',
 					'dist/stop/stop.min.css': 'dist/stop/stop.css',
-					'dist/vrview/vrview.min.css': 'src/vrview/vrview.css'
+					'dist/vrview/vrview.min.css': 'dist/vrview/vrview.css'
 				}
 			},
 
