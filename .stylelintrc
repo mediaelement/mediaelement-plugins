@@ -4,6 +4,7 @@
   ],
   "rules": {
     "color-hex-case": ["lower"],
+    "color-hex-length": "short",
     "declaration-block-no-duplicate-properties": [
       true,
       {
