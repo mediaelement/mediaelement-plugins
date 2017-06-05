@@ -1,4 +1,5 @@
-.mejs__postroll-layer, .mejs-postroll-layer {
+.mejs__postroll-layer,
+.mejs-postroll-layer {
     background: rgba(50,50,50,0.7);
     bottom: 0;
     height: 100%;
@@ -9,11 +10,13 @@
     z-index: 1000;
 }
 
-.mejs__postroll-layer-content, .mejs-postroll-layer-content {
+.mejs__postroll-layer-content,
+.mejs-postroll-layer-content {
     height: 100%;
     width: 100%;
 }
-.mejs__postroll-close, .mejs-postroll-close {
+.mejs__postroll-close,
+.mejs-postroll-close {
     background: rgba(50,50,50,0.7);
     color: #fff;
     cursor: pointer;

@@ -1,4 +1,5 @@
-.mejs__ads>a, .mejs-ads>a {
+.mejs__ads>a,
+.mejs-ads>a {
     display: block;
     height: 100%;
     position: absolute;
@@ -6,7 +7,8 @@
     top: 0;
     width: 100%;
 }
-.mejs__ads-skip-block, .mejs-ads-skip-block {
+.mejs__ads-skip-block,
+.mejs-ads-skip-block {
     background: #000;
     background: rgba(0,0,0,0.5);
     color: #fff;
@@ -16,9 +18,11 @@
     right: 0;
     top: 0;
 }
-.mejs__ads-skip-button, .mejs-ads-skip-button {
+.mejs__ads-skip-button,
+.mejs-ads-skip-button {
     cursor: pointer;
 }
-.mejs__ads-skip-button:hover, .mejs-ads-skip-button:hover  {
+.mejs__ads-skip-button:hover,
+.mejs-ads-skip-button:hover  {
     text-decoration: underline;
 }

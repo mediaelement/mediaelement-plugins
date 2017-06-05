@@ -1,10 +1,13 @@
-.mejs__chromecast-button, .mejs-chromecast-button {
+.mejs__chromecast-button,
+.mejs-chromecast-button {
     width: auto;
 }
-.mejs__chromecast-button > button, .mejs-chromecast-button > button {
+.mejs__chromecast-button > button,
+.mejs-chromecast-button > button {
     background: none;
 }
-.mejs__chromecast-container, .mejs-chromecast-container {
+.mejs__chromecast-container,
+.mejs-chromecast-container {
     background: #000;
     color: #fff;
     font-size: 10px;
@@ -15,14 +18,16 @@
     z-index: 1;
 }
 
-.mejs__chromecast-layer > img, .mejs-chromecast-layer > img {
+.mejs__chromecast-layer > img,
+.mejs-chromecast-layer > img {
     left: 0;
     position: absolute;
     top: 0;
     z-index: 0;
 }
 
-.mejs__chromecast-icon, .mejs-chromecast-icon {
+.mejs__chromecast-icon,
+.mejs-chromecast-icon {
     background: url("chromecast.svg") no-repeat 0 0;
     display: inline-block;
     height: 14px;
