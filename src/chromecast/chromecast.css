@@ -28,7 +28,7 @@
 
 .mejs__chromecast-icon,
 .mejs-chromecast-icon {
-    background: url("chromecast.svg") no-repeat 0 0;
+    background: url('chromecast.svg') no-repeat 0 0;
     display: inline-block;
     height: 14px;
     margin-right: 5px;

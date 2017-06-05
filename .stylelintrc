@@ -23,6 +23,7 @@
     "property-case": "lower",
     "property-no-unknown": true,
     "selector-list-comma-newline-after": "always",
-    "shorthand-property-no-redundant-values": true
+    "shorthand-property-no-redundant-values": true,
+    "string-quotes": "single"
   }
 }
