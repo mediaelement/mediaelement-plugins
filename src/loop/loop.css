@@ -1,5 +1,5 @@
-.mejs__loop-button>button,
-.mejs-loop-button>button {
+.mejs__loop-button > button,
+.mejs-loop-button > button {
     background: url('loop.svg') no-repeat transparent;
 }
 .mejs__loop-off > button,
