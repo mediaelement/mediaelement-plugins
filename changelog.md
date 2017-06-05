@@ -9,6 +9,7 @@
 * Replaced `childNodes` with `children` to avoid issues with non Node elements inside video/audio tag @rafa8626
 * Integrated `grunt` to simplify tasks and removed elements from `package.json` @rafa8626
 * Integrated [Stylelint](https://stylelint.io/) for CSS quality @rafa8626
+* Inmproved CSS quality (https://github.com/mediaelement/mediaelement-plugins/pull/64) @
 
 *2.2.2 (2017/05/25)*
 
