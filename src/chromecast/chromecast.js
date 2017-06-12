@@ -438,7 +438,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		;
 
 		// Only one sender per page
-		if (!player.isVideo || document.createElement('google-cast-button').constructor === HTMLElement) {
+		if (!player.isVideo) {
 			return;
 		}
 
@@ -465,116 +465,131 @@ Object.assign(MediaElementPlayer.prototype, {
 			player.chromecastLayer.innerHTML += `<img src="${media.originalNode.getAttribute('poster')}" width="100%" height="100%">`;
 		}
 
-		// Search for Chromecast
-		let loadedCastAPI = false;
+		// Start SDK
+		window.__onGCastApiAvailable = (isAvailable) => {
+			if (isAvailable) {
 
-		if (!loadedCastAPI) {
+				// Add renderer to the list
+				mejs.Renderers.add(CastRenderer);
 
-			// Start SDK
-			window.__onGCastApiAvailable = (isAvailable) => {
-				if (isAvailable) {
+				button.style.width = '20px';
 
-					// Add renderer to the list
-					mejs.Renderers.add(CastRenderer);
+				setTimeout(() => {
+					t.setPlayerSize(t.width, t.height);
+					t.setControlsSize();
+				}, 0);
 
-					button.style.width = '20px';
+				let origin;
 
-					setTimeout(() => {
-						t.setPlayerSize(t.width, t.height);
-						t.setControlsSize();
-					}, 0);
+				switch (t.options.castPolicy) {
+					case 'tab':
+						origin = 'TAB_AND_ORIGIN_SCOPED';
+						break;
+					case 'page':
+						origin = 'PAGE_SCOPED';
+						break;
+					default:
+						origin = 'ORIGIN_SCOPED';
+						break;
+				}
 
-					let origin;
+				cast.framework.CastContext.getInstance().setOptions({
+					receiverApplicationId: t.options.castAppID || chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+					autoJoinPolicy: chrome.cast.AutoJoinPolicy[origin]
+				});
 
-					switch (t.options.castPolicy) {
-						case 'tab':
-							origin = 'TAB_AND_ORIGIN_SCOPED';
-							break;
-						case 'page':
-							origin = 'PAGE_SCOPED';
-							break;
-						default:
-							origin = 'ORIGIN_SCOPED';
-							break;
+				media.castPlayer = new cast.framework.RemotePlayer();
+				media.castPlayerController = new cast.framework.RemotePlayerController(media.castPlayer);
+
+				let currentTime = 0;
+
+				// Set up renderer and device data
+				media.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, () => {
+					if (cast && cast.framework) {
+						if (media.castPlayer.isConnected) {
+							const
+								url = media.getSrc(),
+								mediaFiles = [{src: url, type: mejs.Utils.getTypeFromFile(url)}]
+							;
+
+							const renderInfo = mejs.Renderers.select(mediaFiles, ['chromecast']);
+							media.changeRenderer(renderInfo.rendererName, mediaFiles);
+
+							const
+								castSession = cast.framework.CastContext.getInstance().getCurrentSession(),
+								deviceInfo = layers.querySelector(`.${t.options.classPrefix}chromecast-info`).querySelector('.device')
+							;
+
+							deviceInfo.innerText = castSession.getCastDevice().friendlyName;
+							player.chromecastLayer.style.display = 'block';
+
+							if (t.options.castEnableTracks === true) {
+								const captions = player.captionsButton !== undefined ?
+										player.captionsButton.querySelectorAll('input[type=radio]') : null;
+
+								if (captions !== null) {
+									for (let i = 0, total = captions.length; i < total; i++) {
+										captions[i].addEventListener('click', function () {
+											const
+												trackId = parseInt(captions[i].id.replace(/^.*?track_(\d+)_.*$/, "$1")),
+												setTracks = captions[i].value === 'none' ? [] : [trackId],
+												tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks)
+											;
+
+											castSession.getMediaSession().editTracksInfo(tracksInfo, () => {}, (e) => {
+												console.error(e);
+											});
+										});
+									}
+
+								}
+							}
+
+							media.addEventListener('timeupdate', () => {
+								currentTime = media.getCurrentTime();
+							});
+
+							return;
+						}
 					}
 
-					cast.framework.CastContext.getInstance().setOptions({
-						receiverApplicationId: t.options.castAppID || chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
-						autoJoinPolicy: chrome.cast.AutoJoinPolicy[origin]
-					});
+					player.chromecastLayer.style.display = 'none';
+					media.style.display = '';
 
-					media.castPlayer = new cast.framework.RemotePlayer();
-					media.castPlayerController = new cast.framework.RemotePlayerController(media.castPlayer);
-
-					let currentTime = 0;
-
-					// Set up renderer and device data
-					media.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, () => {
-						if (cast && cast.framework) {
-							if (media.castPlayer.isConnected) {
-								const
-									url = media.getSrc(),
-									mediaFiles = [{src: url, type: mejs.Utils.getTypeFromFile(url)}]
-								;
-
-								const renderInfo = mejs.Renderers.select(mediaFiles, ['chromecast']);
-								media.changeRenderer(renderInfo.rendererName, mediaFiles);
-
-								const
-									castSession = cast.framework.CastContext.getInstance().getCurrentSession(),
-									deviceInfo = layers.querySelector(`.${t.options.classPrefix}chromecast-info`).querySelector('.device')
-								;
-
-								deviceInfo.innerText = castSession.getCastDevice().friendlyName;
-								player.chromecastLayer.style.display = 'block';
-
-								if (t.options.castEnableTracks === true) {
-									const captions = player.captionsButton !== undefined ?
-											player.captionsButton.querySelectorAll('input[type=radio]') : null;
-
-									if (captions !== null) {
-										for (let i = 0, total = captions.length; i < total; i++) {
-											captions[i].addEventListener('click', function () {
-												const
-													trackId = parseInt(captions[i].id.replace(/^.*?track_(\d+)_.*$/, "$1")),
-													setTracks = captions[i].value === 'none' ? [] : [trackId],
-													tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks)
-												;
-
-												castSession.getMediaSession().editTracksInfo(tracksInfo, () => {}, (e) => {
-													console.error(e);
-												});
-											});
-										}
-
-									}
-								}
-
-								media.addEventListener('timeupdate', () => {
-									currentTime = media.getCurrentTime();
+					let mediaFiles = [];
+					if (t.mediaFiles) {
+						mediaFiles = t.mediaFiles;
+					} else if (media.originalNode.hasChildNodes()) {
+						const children = media.originalNode.children();
+						for (let i =0, total = children.length; i < total; i++) {
+							const childNode = children[i];
+							if (childNode.tagName.toLowerCase() === 'source') {
+								const elements = {};
+								Array.prototype.slice.call(childNode.attributes).forEach((item) => {
+									elements[item.name] = item.value;
 								});
-
-								return;
+								elements.type = formatType(elements.src, elements.type);
+								mediaFiles.push(elements);
 							}
 						}
+					} else {
+						const url = media.originalNode.getAttribute('src');
+						mediaFiles = [{src: url, type: mejs.Utils.getTypeFromFile(url)}];
+					}
 
-						player.chromecastLayer.style.display = 'none';
-						media.style.display = '';
-						const renderInfo = mejs.Renderers.select(mediaFiles, media.renderers);
-						media.changeRenderer(renderInfo.rendererName, mediaFiles);
-						media.setCurrentTime(currentTime);
+					const renderInfo = mejs.Renderers.select(mediaFiles, media.renderers);
+					media.changeRenderer(renderInfo.rendererName, mediaFiles);
+					media.setCurrentTime(currentTime);
 
-						// Continue playing if already started
-						if (currentTime > 0 && !mejs.Features.IS_IOS && !mejs.Features.IS_ANDROID) {
-							media.play();
-						}
-					});
-				}
-			};
+					// Continue playing if already started
+					if (currentTime > 0 && !mejs.Features.IS_IOS && !mejs.Features.IS_ANDROID) {
+						media.play();
+					}
+				});
+			}
+		};
 
-			mejs.Utils.loadScript('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1');
-			loadedCastAPI = true;
-		}
+		mejs.Utils.loadScript('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1');
 	},
 
 	clearchromecast (player) {

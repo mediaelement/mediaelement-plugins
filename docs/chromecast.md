@@ -22,7 +22,7 @@ so **it is recommended its use**.
 
 Also, a page can contain **ONLY ONE** sender; otherwise, an error indicating that `cast-button` has been registered will be logged.
 
-To avoid that, [this link](https://jsfiddle.net/Luuwnjfm/6/) shows a way to get away with it if you have to render your player dynamically.
+To avoid that, [this link](https://jsfiddle.net/Luuwnjfm/11/) shows a way to get away with it if you have to render your player dynamically.
 
 ## API
 
