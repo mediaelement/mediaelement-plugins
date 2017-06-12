@@ -19,8 +19,8 @@ var CastRenderer = {
 		prefix: 'chromecast'
 	},
 
-	canPlayType: function canPlayType() {
-		return true;
+	canPlayType: function canPlayType(type) {
+		return ['application/x-mpegurl', 'vnd.apple.mpegurl', 'video/hls', 'application/dash+xml', 'video/mp4'].indexOf(type.toLowerCase()) > -1;
 	},
 
 	create: function create(mediaElement, options) {

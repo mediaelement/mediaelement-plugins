@@ -17,7 +17,8 @@ const CastRenderer = {
 	 *
 	 * @return {Boolean}
 	 */
-	canPlayType: () => true,
+	canPlayType: (type) => ['application/x-mpegurl', 'vnd.apple.mpegurl', 'video/hls', 'application/dash+xml',
+		'video/mp4'].indexOf(type.toLowerCase()) > -1,
 
 	/**
 	 * Create the player instance and add all native events/methods/properties as possible
