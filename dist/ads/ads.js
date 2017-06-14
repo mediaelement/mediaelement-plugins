@@ -82,7 +82,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		var t = this;
 
-		if (t.adsDataIsLoading && !t.media.paused) {
+		if (t.adsDataIsLoading && !t.media.paused && t.options.indexPreroll < t.options.adsPrerollMediaUrl.length) {
 			t.media.pause();
 		}
 

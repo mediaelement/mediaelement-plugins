@@ -120,7 +120,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		const t = this;
 
 		// make sure to pause until the ad data is loaded
-		if (t.adsDataIsLoading && !t.media.paused) {
+		if (t.adsDataIsLoading && !t.media.paused && t.options.indexPreroll < t.options.adsPrerollMediaUrl.length) {
 			t.media.pause();
 		}
 
