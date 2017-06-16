@@ -71,7 +71,10 @@ Object.assign(MediaElementPlayer.prototype, {
 				t._initializeCastPlayer();
 			}
 		};
-		mejs.Utils.loadScript('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1');
+
+		if (!window.cast) {
+			mejs.Utils.loadScript('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1');
+		}
 	},
 	clearchromecast: function clearchromecast(player) {
 		player.pause();
