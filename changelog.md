@@ -1,10 +1,9 @@
 ### Version History
 
-*2.2.3 (2017/06/??)*
+*2.3.0 (2017/06/??)*
 
 * Integrated `Facebook Pixel` plugin (https://github.com/mediaelement/mediaelement-plugins/pull/58) @isantolin
 * Cleaned comments on bundles @rafa8626
-* Moved definition of media files to be used on `Chromecast` when checking if Cast it's connected @rafa8626
 * Replaced `childNodes` with `children` to avoid issues with non Node elements inside video/audio tag @rafa8626
 * Integrated `grunt` to simplify tasks and removed elements from `package.json` @rafa8626
 * Integrated [Stylelint](https://stylelint.io/) for CSS quality @rafa8626
