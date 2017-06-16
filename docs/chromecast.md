@@ -12,17 +12,19 @@ The following snippet shows the `data-cast-*` attributes needed to achieve Chrom
 <video id="player1" width="640" height="360" preload="none"
        data-cast-title="[Your title]"
        data-cast-description="[Your optional description]"
-       poster="//example.com/poster.jpg">
-    <source src="//example.com/media.mp4" type="video/mp4">
+       poster="/path/to/poster.jpg">
+    <source src="/path/to/media.mp4" type="video/mp4">
 </video>
 ```
 
 The `poster` attribute is not required as well, but most of the media players use a static image when media is being broadcast in Chromecast, 
 so **it is recommended its use**.
 
+Chromecast **ONLY** accepts **MP4, HLS and M(PEG)-DASH** formats. 
+
 Also, a page can contain **ONLY ONE** sender; otherwise, an error indicating that `cast-button` has been registered will be logged.
 
-To avoid that, [this link](https://jsfiddle.net/Luuwnjfm/13/) shows a way to get away with it if you have to render your player dynamically.
+To avoid that, [this link](https://jsfiddle.net/Luuwnjfm/18/) shows a way to get away with it if you have to render your player dynamically.
 
 ## API
 
