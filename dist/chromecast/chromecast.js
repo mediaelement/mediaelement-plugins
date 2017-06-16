@@ -11,22 +11,416 @@
  */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _player = _dereq_(2);
 
-var CastRenderer = {
-	name: 'chromecast',
-	options: {
-		prefix: 'chromecast'
+var _player2 = _interopRequireDefault(_player);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+mejs.i18n.en['mejs.chromecast-legend'] = 'Casting to:';
+
+Object.assign(mejs.MepDefaults, {
+	castTitle: null,
+
+	castAppID: null,
+
+	castPolicy: 'origin',
+
+	castEnableTracks: false,
+
+	castIsLive: false
+
+});
+
+Object.assign(MediaElementPlayer.prototype, {
+	buildchromecast: function buildchromecast(player, controls, layers, media) {
+
+		var t = this,
+		    button = document.createElement('div'),
+		    castTitle = mejs.Utils.isString(t.options.castTitle) ? t.options.castTitle : 'Chromecast';
+
+		if (!player.isVideo) {
+			return;
+		}
+
+		player.chromecastLayer = document.createElement('div');
+		player.chromecastLayer.className = t.options.classPrefix + 'chromecast-layer ' + t.options.classPrefix + 'layer';
+		player.chromecastLayer.innerHTML = '<div class="' + t.options.classPrefix + 'chromecast-info"></div>';
+		player.chromecastLayer.style.display = 'none';
+
+		layers.insertBefore(player.chromecastLayer, layers.firstChild);
+
+		button.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'chromecast-button';
+		button.innerHTML = '<button type="button" is="google-cast-button" aria-controls="' + t.id + '" title="' + castTitle + '" aria-label="' + castTitle + '" tabindex="0"></button>';
+		button.style.display = 'none';
+
+		t.addControlElement(button, 'chromecast');
+		t.castButton = button;
+
+		player.chromecastLayer.innerHTML = '<div class="' + t.options.classPrefix + 'chromecast-container">' + ('<span class="' + t.options.classPrefix + 'chromecast-icon"></span>') + ('<span class="' + t.options.classPrefix + 'chromecast-info">' + mejs.i18n.t('mejs.chromecast-legend') + ' <span class="device"></span></span>') + '</div>';
+
+		if (media.originalNode.getAttribute('poster')) {
+			player.chromecastLayer.innerHTML += '<img src="' + media.originalNode.getAttribute('poster') + '" width="100%" height="100%">';
+		}
+
+		window.__onGCastApiAvailable = function (isAvailable) {
+			var mediaType = mejs.Utils.getTypeFromFile(media.getSrc()),
+			    canPlay = mediaType && ['application/x-mpegurl', 'vnd.apple.mpegurl', 'application/dash+xml', 'video/mp4'].indexOf(mediaType) > -1;
+
+			if (isAvailable && canPlay) {
+				t._initializeCastPlayer();
+			}
+		};
+		mejs.Utils.loadScript('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1');
 	},
+	clearchromecast: function clearchromecast(player) {
+		player.pause();
 
-	canPlayType: function canPlayType(type) {
-		return ['application/x-mpegurl', 'vnd.apple.mpegurl', 'video/hls', 'application/dash+xml', 'video/mp4'].indexOf(type.toLowerCase()) > -1;
+		if (player.castButton) {
+			player.castButton.remove();
+		}
+
+		if (player.chromecastLayer) {
+			player.chromecastLayer.remove();
+		}
 	},
+	_initializeCastPlayer: function _initializeCastPlayer() {
+		var t = this;
 
-	create: function create(mediaElement, options) {
-		var c = {},
-		    readyState = 4,
-		    getErrorMessage = function getErrorMessage(error) {
+		var origin = void 0;
+
+		switch (this.options.castPolicy) {
+			case 'tab':
+				origin = 'TAB_AND_ORIGIN_SCOPED';
+				break;
+			case 'page':
+				origin = 'PAGE_SCOPED';
+				break;
+			default:
+				origin = 'ORIGIN_SCOPED';
+				break;
+		}
+
+		var context = cast.framework.CastContext.getInstance();
+		context.setOptions({
+			receiverApplicationId: t.options.castAppID || chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+			autoJoinPolicy: chrome.cast.AutoJoinPolicy[origin]
+		});
+
+		context.addEventListener(cast.framework.CastContextEventType.CAST_STATE_CHANGED, t._checkCastButtonStatus.bind(t));
+
+		t.remotePlayer = new cast.framework.RemotePlayer();
+		t.remotePlayerController = new cast.framework.RemotePlayerController(t.remotePlayer);
+		t.remotePlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, t._switchToCastPlayer.bind(this));
+	},
+	_checkCastButtonStatus: function _checkCastButtonStatus(e) {
+		var t = this;
+
+		if (e.castState === cast.framework.CastState.NO_DEVICES_AVAILABLE) {
+			t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = 'none';
+			t.showCast = false;
+		} else {
+			t.chromecastLayer.style.display = e.castState === cast.framework.CastState.CONNECTED ? '' : 'none';
+			t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = '';
+		}
+
+		setTimeout(function () {
+			t.setPlayerSize(t.width, t.height);
+			t.setControlsSize();
+		}, 0);
+	},
+	_switchToCastPlayer: function _switchToCastPlayer() {
+		var t = this;
+
+		t.proxy.pause();
+		if (cast && cast.framework) {
+			var context = cast.framework.CastContext.getInstance();
+			context.addEventListener(cast.framework.CastContextEventType.CAST_STATE_CHANGED, t._checkCastButtonStatus.bind(t));
+			if (t.remotePlayer.isConnected) {
+				t._setupCastPlayer();
+				return;
+			}
+		}
+		t._setDefaultPlayer();
+	},
+	_setupCastPlayer: function _setupCastPlayer() {
+		var t = this,
+		    context = cast.framework.CastContext.getInstance(),
+		    castSession = context.getCurrentSession(),
+		    deviceInfo = t.layers.querySelector('.' + t.options.classPrefix + 'chromecast-info').querySelector('.device');
+
+		t.proxy = new _player2.default(t.remotePlayer, t.remotePlayerController, t.media, t.options);
+
+		deviceInfo.innerText = castSession.getCastDevice().friendlyName;
+		t.chromecastLayer.style.display = '';
+
+		if (t.options.castEnableTracks === true) {
+			(function () {
+				var captions = t.captionsButton !== undefined ? t.captionsButton.querySelectorAll('input[type=radio]') : null;
+
+				if (captions !== null) {
+					var _loop = function _loop(i, total) {
+						captions[i].addEventListener('click', function () {
+							var trackId = parseInt(captions[i].id.replace(/^.*?track_(\d+)_.*$/, "$1")),
+							    setTracks = captions[i].value === 'none' ? [] : [trackId],
+							    tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks);
+
+							castSession.getMediaSession().editTracksInfo(tracksInfo, function () {}, function (e) {
+								console.error(e);
+							});
+						});
+					};
+
+					for (var i = 0, total = captions.length; i < total; i++) {
+						_loop(i, total);
+					}
+				}
+			})();
+		}
+
+		t.media.addEventListener('timeupdate', function () {
+			t.currentMediaTime = t.getCurrentTime();
+		});
+	}
+});
+
+},{"2":2}],2:[function(_dereq_,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ChromecastPlayer = function () {
+	function ChromecastPlayer(player, controller, media, options) {
+		_classCallCheck(this, ChromecastPlayer);
+
+		var t = this;
+		t.player = player;
+		t.controller = controller;
+		t.media = media;
+		t.endedMedia = false;
+		t.enableTracks = options.castEnableTracks;
+		t.isLive = options.castIsLive;
+
+		t.controller.addEventListener(cast.framework.RemotePlayerEventType.IS_PAUSED_CHANGED, function () {
+			if (!t.isLive) {
+				if (t.paused) {
+					t.pause();
+				} else {
+					t.play();
+				}
+			}
+			t.endedMedia = false;
+		});
+		t.controller.addEventListener(cast.framework.RemotePlayerEventType.IS_MUTED_CHANGED, function () {
+			t.setMuted(t.player.isMuted);
+			t.volume = 0;
+		});
+		t.controller.addEventListener(cast.framework.RemotePlayerEventType.IS_MEDIA_LOADED_CHANGED, function () {
+			setTimeout(function () {
+				var event = mejs.Utils.createEvent('loadedmetadata', t.media);
+				t.media.dispatchEvent(event);
+			}, 50);
+		});
+		t.controller.addEventListener(cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED, function () {
+			t.volume = t.player.volumeLevel;
+			var event = mejs.Utils.createEvent('volumechange', t.media);
+			t.media.dispatchEvent(event);
+		});
+		t.controller.addEventListener(cast.framework.RemotePlayerEventType.DURATION_CHANGED, function () {
+			setTimeout(function () {
+				var event = mejs.Utils.createEvent('timeupdate', t.media);
+				t.media.dispatchEvent(event);
+			}, 50);
+		});
+		t.controller.addEventListener(cast.framework.RemotePlayerEventType.CURRENT_TIME_CHANGED, function () {
+			setTimeout(function () {
+				var event = mejs.Utils.createEvent('timeupdate', t.media);
+				t.media.dispatchEvent(event);
+			}, 50);
+
+			if (!t.isLive && t.getCurrentTime() >= t.getDuration()) {
+				t.endedMedia = true;
+				setTimeout(function () {
+					var event = mejs.Utils.createEvent('ended', t.media);
+					t.media.dispatchEvent(event);
+				}, 50);
+			}
+		});
+		t.controller.addEventListener(cast.framework.RemotePlayerEventType.IS_MUTED_CHANGED, function () {
+			t.setMuted(t.player.isMuted);
+		});
+
+		t.load();
+	}
+
+	_createClass(ChromecastPlayer, [{
+		key: 'getSrc',
+		value: function getSrc() {
+			return this.media.originalNode.src;
+		}
+	}, {
+		key: 'setSrc',
+		value: function setSrc(value) {
+			this.media.originalNode.src = typeof value === 'string' ? value : value[0].src;
+			this.load();
+		}
+	}, {
+		key: 'setCurrentTime',
+		value: function setCurrentTime(value) {
+			var _this = this;
+
+			this.player.currentTime = value;
+			this.controller.seek();
+			setTimeout(function () {
+				var event = mejs.Utils.createEvent('timeupdate', _this.media);
+				_this.media.dispatchEvent(event);
+			}, 50);
+		}
+	}, {
+		key: 'getCurrentTime',
+		value: function getCurrentTime() {
+			return this.player.currentTime;
+		}
+	}, {
+		key: 'getDuration',
+		value: function getDuration() {
+			return this.player.duration;
+		}
+	}, {
+		key: 'setVolume',
+		value: function setVolume(value) {
+			var _this2 = this;
+
+			this.player.volumeLevel = value;
+			this.controller.setVolumeLevel();
+			setTimeout(function () {
+				var event = mejs.Utils.createEvent('volumechange', _this2.media);
+				_this2.media.dispatchEvent(event);
+			}, 50);
+		}
+	}, {
+		key: 'getVolume',
+		value: function getVolume() {
+			return this.player.volumeLevel;
+		}
+	}, {
+		key: 'play',
+		value: function play() {
+			if (this.player.isPaused) {
+				this.controller.playOrPause();
+				var event = mejs.Utils.createEvent('play', this.media);
+				this.media.dispatchEvent(event);
+			}
+		}
+	}, {
+		key: 'pause',
+		value: function pause() {
+			if (!this.player.isPaused) {
+				this.controller.playOrPause();
+				var event = mejs.Utils.createEvent('pause', this.media);
+				this.media.dispatchEvent(event);
+			}
+		}
+	}, {
+		key: 'load',
+		value: function load() {
+			var t = this,
+			    url = this.media.originalNode.src,
+			    type = mejs.Utils.getTypeFromFile(url),
+			    mediaInfo = new chrome.cast.media.MediaInfo(url, type),
+			    castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+
+			var event = mejs.Utils.createEvent('pause', t.media);
+			t.media.dispatchEvent(event);
+
+			if (t.enableTracks === true) {
+				var tracks = [],
+				    children = t.media.originalNode.children;
+
+				var counter = 1;
+
+				for (var i = 0, total = children.length; i < total; i++) {
+					var child = children[i],
+					    tag = child.tagName.toLowerCase();
+
+					if (tag === 'track' && (child.getAttribute('kind') === 'subtitles' || child.getAttribute('kind') === 'captions')) {
+						var el = new chrome.cast.media.Track(counter, chrome.cast.media.TrackType.TEXT);
+						el.trackContentId = mejs.Utils.absolutizeUrl(child.getAttribute('src'));
+						el.trackContentType = 'text/vtt';
+						el.subtype = chrome.cast.media.TextTrackType.SUBTITLES;
+						el.name = child.getAttribute('label');
+						el.language = child.getAttribute('srclang');
+						el.customData = null;
+						tracks.push(el);
+						counter++;
+					}
+				}
+				mediaInfo.textTrackStyle = new chrome.cast.media.TextTrackStyle();
+				mediaInfo.tracks = tracks;
+			}
+
+			mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
+			mediaInfo.streamType = t.isLive ? chrome.cast.media.StreamType.LIVE : chrome.cast.media.StreamType.BUFFERED;
+			mediaInfo.customData = null;
+			mediaInfo.duration = null;
+			mediaInfo.currentTime = t.isLive ? Infinity : 0;
+
+			if (t.media.originalNode.getAttribute('data-cast-title')) {
+				mediaInfo.metadata.title = t.media.originalNode.getAttribute('data-cast-title');
+			}
+
+			if (t.media.originalNode.getAttribute('data-cast-description')) {
+				mediaInfo.metadata.subtitle = t.media.originalNode.getAttribute('data-cast-description');
+			}
+
+			if (t.media.originalNode.getAttribute('poster')) {
+				mediaInfo.metadata.images = [{ 'url': mejs.Utils.absolutizeUrl(t.media.originalNode.getAttribute('poster')) }];
+			}
+
+			var request = new chrome.cast.media.LoadRequest(mediaInfo);
+
+			castSession.loadMedia(request).then(function () {
+				var currentTime = t.media.originalNode.currentTime;
+				t.setCurrentTime(currentTime);
+				t.controller.playOrPause();
+
+				setTimeout(function () {
+					var event = mejs.Utils.createEvent('play', t.media);
+					t.media.dispatchEvent(event);
+				}, 50);
+			}, function (error) {
+				t._getErrorMessage(error);
+			});
+		}
+	}, {
+		key: 'setMuted',
+		value: function setMuted(value) {
+			var _this3 = this;
+
+			if (value === true && !this.player.isMuted) {
+				this.controller.muteOrUnmute();
+			} else if (value === false && this.player.isMuted) {
+				this.controller.muteOrUnmute();
+			}
+			setTimeout(function () {
+				var event = mejs.Utils.createEvent('volumechange', _this3.media);
+				_this3.media.dispatchEvent(event);
+			}, 50);
+		}
+	}, {
+		key: 'canPlayType',
+		value: function canPlayType(type) {
+			return ~['application/x-mpegurl', 'vnd.apple.mpegurl', 'application/dash+xml', 'video/mp4'].indexOf(type);
+		}
+	}, {
+		key: '_getErrorMessage',
+		value: function _getErrorMessage(error) {
 
 			var description = error.description ? ' : ' + error.description : '.';
 
@@ -63,452 +457,64 @@ var CastRenderer = {
 			}
 
 			console.error(message);
-		};
-
-		var castPlayer = mediaElement.castPlayer,
-		    castPlayerController = mediaElement.castPlayerController,
-		    volume = 1;
-
-		c.options = options;
-		c.id = mediaElement.id + '_' + options.prefix;
-		c.mediaElement = mediaElement;
-
-		var props = mejs.html5media.properties,
-		    assignGettersSetters = function assignGettersSetters(propName) {
-			var capName = '' + propName.substring(0, 1).toUpperCase() + propName.substring(1);
-
-			c['get' + capName] = function () {
-				if (castPlayer !== null) {
-					var value = null;
-
-					switch (propName) {
-						case 'currentTime':
-							return castPlayer.currentTime;
-						case 'duration':
-							return castPlayer.duration;
-						case 'volume':
-							volume = castPlayer.volumeLevel;
-							return volume;
-						case 'paused':
-							return castPlayer.isPaused;
-						case 'ended':
-							return castPlayer.ended;
-						case 'muted':
-							return castPlayer.isMuted;
-						case 'src':
-							return mediaElement.originalNode.getAttribute('src');
-						case 'readyState':
-							return readyState;
-					}
-
-					return value;
-				} else {
-					return null;
-				}
-			};
-
-			c['set' + capName] = function (value) {
-				if (castPlayer !== null) {
-					switch (propName) {
-						case 'src':
-							var url = typeof value === 'string' ? value : value[0].src;
-							mediaElement.originalNode.setAttribute('src', url);
-							break;
-						case 'currentTime':
-							castPlayer.currentTime = value;
-							castPlayerController.seek();
-							setTimeout(function () {
-								var event = mejs.Utils.createEvent('timeupdate', c);
-								mediaElement.dispatchEvent(event);
-							}, 50);
-							break;
-						case 'muted':
-							if (value === true && !castPlayer.isMuted) {
-								castPlayerController.muteOrUnmute();
-							} else if (value === false && castPlayer.isMuted) {
-								castPlayerController.muteOrUnmute();
-							}
-							setTimeout(function () {
-								var event = mejs.Utils.createEvent('volumechange', c);
-								mediaElement.dispatchEvent(event);
-							}, 50);
-							break;
-						case 'volume':
-							volume = value;
-							castPlayer.volumeLevel = value;
-							castPlayerController.setVolumeLevel();
-							setTimeout(function () {
-								var event = mejs.Utils.createEvent('volumechange', c);
-								mediaElement.dispatchEvent(event);
-							}, 50);
-							break;
-						case 'readyState':
-							var event = mejs.Utils.createEvent('canplay', c);
-							mediaElement.dispatchEvent(event);
-							break;
-						case 'playbackRate':
-							mediaElement.originalNode.playbackRate = value;
-							break;
-						default:
-							console.log('Chromecast ' + c.id, propName, 'UNSUPPORTED property');
-							break;
-					}
-				}
-			};
-		};
-
-		for (var i = 0, total = props.length; i < total; i++) {
-			assignGettersSetters(props[i]);
 		}
-
-		var methods = mejs.html5media.methods,
-		    assignMethods = function assignMethods(methodName) {
-			c[methodName] = function () {
-				if (castPlayer !== null) {
-					switch (methodName) {
-						case 'play':
-							if (castPlayer.isPaused) {
-								castPlayerController.playOrPause();
-								setTimeout(function () {
-									var event = mejs.Utils.createEvent('play', c);
-									mediaElement.dispatchEvent(event);
-								}, 50);
-							}
-							break;
-						case 'pause':
-							if (!castPlayer.isPaused) {
-								castPlayerController.playOrPause();
-								setTimeout(function () {
-									var event = mejs.Utils.createEvent('pause', c);
-									mediaElement.dispatchEvent(event);
-								}, 50);
-							}
-							break;
-						case 'load':
-							var url = mediaElement.originalNode.getAttribute('src'),
-							    type = mejs.Utils.getTypeFromFile(url),
-							    mediaInfo = new chrome.cast.media.MediaInfo(url, type),
-							    castSession = cast.framework.CastContext.getInstance().getCurrentSession();
-
-							if (options.castEnableTracks === true) {
-								var tracks = [],
-								    children = mediaElement.originalNode.children;
-
-								var counter = 1;
-
-								for (var _i = 0, _total = children.length; _i < _total; _i++) {
-									var child = children[_i],
-									    tag = child.tagName.toLowerCase();
-
-									if (tag === 'track' && (child.getAttribute('kind') === 'subtitles' || child.getAttribute('kind') === 'captions')) {
-										var el = new chrome.cast.media.Track(counter, chrome.cast.media.TrackType.TEXT);
-										el.trackContentId = mejs.Utils.absolutizeUrl(child.getAttribute('src'));
-										el.trackContentType = 'text/vtt';
-										el.subtype = chrome.cast.media.TextTrackType.SUBTITLES;
-										el.name = child.getAttribute('label');
-										el.language = child.getAttribute('srclang');
-										el.customData = null;
-										tracks.push(el);
-										counter++;
-									}
-								}
-								mediaInfo.textTrackStyle = new chrome.cast.media.TextTrackStyle();
-								mediaInfo.tracks = tracks;
-							}
-
-							mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
-							mediaInfo.streamType = chrome.cast.media.StreamType.BUFFERED;
-							mediaInfo.customData = null;
-							mediaInfo.duration = null;
-
-							if (mediaElement.originalNode.getAttribute('data-cast-title')) {
-								mediaInfo.metadata.title = mediaElement.originalNode.getAttribute('data-cast-title');
-							}
-
-							if (mediaElement.originalNode.getAttribute('data-cast-description')) {
-								mediaInfo.metadata.subtitle = mediaElement.originalNode.getAttribute('data-cast-description');
-							}
-
-							if (mediaElement.originalNode.getAttribute('poster')) {
-								mediaInfo.metadata.images = [{ 'url': mejs.Utils.absolutizeUrl(mediaElement.originalNode.getAttribute('poster')) }];
-							}
-
-							var request = new chrome.cast.media.LoadRequest(mediaInfo);
-
-							castSession.loadMedia(request).then(function () {
-								var currentTime = mediaElement.originalNode.getCurrentTime();
-								c.setCurrentTime(currentTime);
-								castPlayerController.playOrPause();
-
-								setTimeout(function () {
-									var event = mejs.Utils.createEvent('play', c);
-									mediaElement.dispatchEvent(event);
-								}, 50);
-							}, function (error) {
-								getErrorMessage(error);
-							});
-							break;
-					}
-				}
-			};
-		};
-
-		for (var _i2 = 0, _total2 = methods.length; _i2 < _total2; _i2++) {
-			assignMethods(methods[_i2]);
+	}, {
+		key: 'paused',
+		get: function get() {
+			return this.player.isPaused;
 		}
-
-		window['__ready__' + c.id] = function () {
-			castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_PAUSED_CHANGED, function () {
-				if (castPlayer.isPaused) {
-					c.pause();
-				} else {
-					c.play();
-				}
-			});
-			castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_MUTED_CHANGED, function () {
-				return c.setMuted(castPlayer.isMuted);
-			});
-			castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_MEDIA_LOADED_CHANGED, function () {
-				setTimeout(function () {
-					var event = mejs.Utils.createEvent('loadedmetadata', c);
-					mediaElement.dispatchEvent(event);
-				}, 50);
-			});
-			castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED, function () {
-				var event = mejs.Utils.createEvent('volumechange', c);
-				mediaElement.dispatchEvent(event);
-			});
-			castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.DURATION_CHANGED, function () {
-				setTimeout(function () {
-					var event = mejs.Utils.createEvent('timeupdate', c);
-					mediaElement.dispatchEvent(event);
-				}, 50);
-			});
-			castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.CURRENT_TIME_CHANGED, function () {
-				setTimeout(function () {
-					var event = mejs.Utils.createEvent('timeupdate', c);
-					mediaElement.dispatchEvent(event);
-				}, 50);
-
-				if (mediaElement.castPlayer.currentTime >= mediaElement.castPlayer.duration) {
-					setTimeout(function () {
-						var event = mejs.Utils.createEvent('ended', c);
-						mediaElement.dispatchEvent(event);
-					}, 50);
-				}
-			});
-
-			castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_MUTED_CHANGED, function () {
-				return c.setMuted(castPlayer.isMuted);
-			});
-
-			c.load();
-		};
-
-		mediaElement.autoplay = false;
-
-		window['__ready__' + c.id]();
-
-		c.setSize = function () {};
-
-		c.hide = function () {};
-
-		c.show = function () {};
-
-		c.destroy = function () {
-			if (castPlayer !== null) {
-				castPlayerController.stop();
-			}
-
-			mediaElement.style.display = '';
-		};
-
-		return c;
-	}
-};
-
-mejs.i18n.en['mejs.chromecast-legend'] = 'Casting to:';
-
-Object.assign(mejs.MepDefaults, {
-	castTitle: null,
-
-	castAppID: null,
-
-	castPolicy: 'origin',
-
-	castEnableTracks: false
-
-});
-
-Object.assign(MediaElementPlayer.prototype, {
-	buildchromecast: function buildchromecast(player, controls, layers, media) {
-
-		var t = this,
-		    button = document.createElement('div'),
-		    castTitle = mejs.Utils.isString(t.options.castTitle) ? t.options.castTitle : 'Chromecast';
-
-		if (!player.isVideo) {
-			return;
+	}, {
+		key: 'muted',
+		set: function set(value) {
+			this.setMuted(value);
+		},
+		get: function get() {
+			return this.player.isMuted;
 		}
-
-		player.chromecastLayer = document.createElement('div');
-		player.chromecastLayer.className = t.options.classPrefix + 'chromecast-layer ' + t.options.classPrefix + 'layer';
-		player.chromecastLayer.innerHTML = '<div class="' + t.options.classPrefix + 'chromecast-info"></div>';
-		player.chromecastLayer.style.display = 'none';
-
-		layers.insertBefore(player.chromecastLayer, layers.firstChild);
-
-		button.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'chromecast-button';
-		button.innerHTML = '<button type="button" is="google-cast-button" aria-controls="' + t.id + '" title="' + castTitle + '" aria-label="' + castTitle + '" tabindex="0"></button>';
-
-		t.addControlElement(button, 'chromecast');
-		t.castButton = button;
-
-		player.chromecastLayer.innerHTML = '<div class="' + t.options.classPrefix + 'chromecast-container">' + ('<span class="' + t.options.classPrefix + 'chromecast-icon"></span>') + ('<span class="' + t.options.classPrefix + 'chromecast-info">' + mejs.i18n.t('mejs.chromecast-legend') + ' <span class="device"></span></span>') + '</div>';
-
-		if (media.originalNode.getAttribute('poster')) {
-			player.chromecastLayer.innerHTML += '<img src="' + media.originalNode.getAttribute('poster') + '" width="100%" height="100%">';
+	}, {
+		key: 'ended',
+		get: function get() {
+			return this.endedMedia;
 		}
-
-		window.__onGCastApiAvailable = function (isAvailable) {
-			if (isAvailable) {
-				mejs.Renderers.add(CastRenderer);
-
-				button.style.width = '20px';
-
-				setTimeout(function () {
-					t.setPlayerSize(t.width, t.height);
-					t.setControlsSize();
-				}, 0);
-
-				var origin = void 0;
-
-				switch (t.options.castPolicy) {
-					case 'tab':
-						origin = 'TAB_AND_ORIGIN_SCOPED';
-						break;
-					case 'page':
-						origin = 'PAGE_SCOPED';
-						break;
-					default:
-						origin = 'ORIGIN_SCOPED';
-						break;
-				}
-
-				cast.framework.CastContext.getInstance().setOptions({
-					receiverApplicationId: t.options.castAppID || chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
-					autoJoinPolicy: chrome.cast.AutoJoinPolicy[origin]
-				});
-
-				media.castPlayer = new cast.framework.RemotePlayer();
-				media.castPlayerController = new cast.framework.RemotePlayerController(media.castPlayer);
-
-				var currentTime = 0;
-
-				media.castPlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, function () {
-					if (cast && cast.framework) {
-						if (media.castPlayer.isConnected) {
-							var _ret = function () {
-								var url = media.getSrc(),
-								    mediaFiles = [{ src: url, type: mejs.Utils.getTypeFromFile(url) }];
-
-								var renderInfo = mejs.Renderers.select(mediaFiles, ['chromecast']);
-								media.changeRenderer(renderInfo.rendererName, mediaFiles);
-
-								var castSession = cast.framework.CastContext.getInstance().getCurrentSession(),
-								    deviceInfo = layers.querySelector('.' + t.options.classPrefix + 'chromecast-info').querySelector('.device');
-
-								deviceInfo.innerText = castSession.getCastDevice().friendlyName;
-								player.chromecastLayer.style.display = 'block';
-
-								if (t.options.castEnableTracks === true) {
-									(function () {
-										var captions = player.captionsButton !== undefined ? player.captionsButton.querySelectorAll('input[type=radio]') : null;
-
-										if (captions !== null) {
-											var _loop = function _loop(i, total) {
-												captions[i].addEventListener('click', function () {
-													var trackId = parseInt(captions[i].id.replace(/^.*?track_(\d+)_.*$/, "$1")),
-													    setTracks = captions[i].value === 'none' ? [] : [trackId],
-													    tracksInfo = new chrome.cast.media.EditTracksInfoRequest(setTracks);
-
-													castSession.getMediaSession().editTracksInfo(tracksInfo, function () {}, function (e) {
-														console.error(e);
-													});
-												});
-											};
-
-											for (var i = 0, total = captions.length; i < total; i++) {
-												_loop(i, total);
-											}
-										}
-									})();
-								}
-
-								media.addEventListener('timeupdate', function () {
-									currentTime = media.getCurrentTime();
-								});
-
-								return {
-									v: void 0
-								};
-							}();
-
-							if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
-						}
-					}
-
-					player.chromecastLayer.style.display = 'none';
-					media.style.display = '';
-
-					var mediaFiles = [];
-					if (t.mediaFiles) {
-						mediaFiles = t.mediaFiles;
-					} else if (media.originalNode.hasChildNodes()) {
-						var children = media.originalNode.children();
-						for (var i = 0, total = children.length; i < total; i++) {
-							var childNode = children[i];
-							if (childNode.tagName.toLowerCase() === 'source') {
-								(function () {
-									var elements = {};
-									Array.prototype.slice.call(childNode.attributes).forEach(function (item) {
-										elements[item.name] = item.value;
-									});
-									elements.type = formatType(elements.src, elements.type);
-									mediaFiles.push(elements);
-								})();
-							}
-						}
-					} else {
-						var url = media.originalNode.getAttribute('src');
-						mediaFiles = [{ src: url, type: mejs.Utils.getTypeFromFile(url) }];
-					}
-
-					var renderInfo = mejs.Renderers.select(mediaFiles, media.renderers);
-					media.changeRenderer(renderInfo.rendererName, mediaFiles);
-					media.setCurrentTime(currentTime);
-
-					if (currentTime > 0 && !mejs.Features.IS_IOS && !mejs.Features.IS_ANDROID) {
-						media.play();
-					}
-				});
-			}
-		};
-
-		mejs.Utils.loadScript('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1');
-	},
-	clearchromecast: function clearchromecast(player) {
-
-		player.castPlayerController.stop();
-
-		if (player.castButton) {
-			player.castButton.remove();
+	}, {
+		key: 'readyState',
+		get: function get() {
+			return this.media.originalNode.readyState;
 		}
-
-		if (player.chromecastLayer) {
-			player.chromecastLayer.remove();
+	}, {
+		key: 'currentTime',
+		set: function set(value) {
+			this.setCurrentTime(value);
+		},
+		get: function get() {
+			return this.getCurrentTime();
 		}
-	}
-});
+	}, {
+		key: 'duration',
+		get: function get() {
+			return this.getDuration();
+		}
+	}, {
+		key: 'volume',
+		set: function set(value) {
+			this.setVolume(value);
+		},
+		get: function get() {
+			return this.getVolume();
+		}
+	}, {
+		key: 'src',
+		set: function set(src) {
+			this.setSrc(src);
+		},
+		get: function get() {
+			return this.getSrc();
+		}
+	}]);
 
-},{}]},{},[1]);
+	return ChromecastPlayer;
+}();
+
+exports.default = ChromecastPlayer;
+
+},{}]},{},[1,2]);

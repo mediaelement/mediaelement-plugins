@@ -31,4 +31,5 @@ Parameter | Type | Default | Description
 castTitle | string | `null` | Chromecast button title for ARIA purposes 
 castAppId | string | `null` |  Chromecast Application ID; if `null` is provided, it will default to `chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID`
 castPolicy | string | `origin` | Chromecast default policy: `origin` (by default, auto connect from same appId and page origin), `tab` (auto connect from same appId, page origin, and tab) and `page` (no auto connect)
-castEnableTracks | boolean | `false` | Whether to load tracks or not through Chromecast. In order to process tracks correctly, `tracks` feature must be enable on the player configuration and CORS **MUST** be setup correctly. Read [this link](https://developers.google.com/cast/docs/player) for more information.
+castEnableTracks | boolean | `false` | Whether to load tracks or not through Chromecast. In order to process tracks correctly, `tracks` feature must be enable on the player configuration and CORS **MUST** be setup correctly. Read [this link](https://developers.google.com/cast/docs/player) for more information
+castIsLive | boolean | `false` | Whether the current media is a live stream or not
