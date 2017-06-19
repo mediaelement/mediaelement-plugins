@@ -73,14 +73,14 @@ Object.assign(MediaElementPlayer.prototype, {
 		};
 
 		if (window.cast) {
+			t.chromecastLayer.style.display = '';
+			t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = '';
 			t._initializeCastPlayer();
 			return;
 		}
 		mejs.Utils.loadScript('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1');
 	},
 	clearchromecast: function clearchromecast(player) {
-		player.pause();
-
 		if (player.castButton) {
 			player.castButton.remove();
 		}
@@ -119,8 +119,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.remotePlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, t._switchToCastPlayer.bind(this));
 
 		if (session) {
-			t.chromecastLayer.style.display = '';
-			t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = '';
 			t._switchToCastPlayer();
 		}
 	},
@@ -472,7 +470,7 @@ var ChromecastPlayer = function () {
 					message = 'The operation timed out' + description;
 					break;
 				default:
-					message = 'Unknown error: ' + error.code;
+					message = 'Unknown error: ' + error;
 					break;
 			}
 

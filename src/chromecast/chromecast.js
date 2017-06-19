@@ -113,6 +113,8 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// Load once per page request
 		if (window.cast) {
+			t.chromecastLayer.style.display = '';
+			t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = '';
 			t._initializeCastPlayer();
 			return;
 		}
@@ -120,8 +122,6 @@ Object.assign(MediaElementPlayer.prototype, {
 	},
 
 	clearchromecast (player) {
-		player.pause();
-
 		if (player.castButton) {
 			player.castButton.remove();
 		}
@@ -167,8 +167,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.remotePlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, t._switchToCastPlayer.bind(this));
 
 		if (session) {
-			t.chromecastLayer.style.display = '';
-			t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = '';
 			t._switchToCastPlayer();
 		}
 	},

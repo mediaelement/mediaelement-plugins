@@ -302,7 +302,7 @@ export default class ChromecastPlayer {
 				message = `The operation timed out${description}`;
 				break;
 			default:
-				message = `Unknown error: ${error.code}`;
+				message = `Unknown error: ${error}`;
 				break;
 		}
 
