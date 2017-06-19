@@ -64,7 +64,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		window.__onGCastApiAvailable = function (isAvailable) {
-			var mediaType = mejs.Utils.getTypeFromFile(media.getSrc()),
+			var mediaType = mejs.Utils.getTypeFromFile(media.originalNode.src).toLowerCase(),
 			    canPlay = mediaType && ['application/x-mpegurl', 'vnd.apple.mpegurl', 'application/dash+xml', 'video/mp4'].indexOf(mediaType) > -1;
 
 			if (isAvailable && canPlay) {
@@ -72,9 +72,11 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		};
 
-		if (!window.cast) {
-			mejs.Utils.loadScript('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1');
+		if (window.cast) {
+			t._initializeCastPlayer();
+			return;
 		}
+		mejs.Utils.loadScript('https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1');
 	},
 	clearchromecast: function clearchromecast(player) {
 		player.pause();
@@ -104,24 +106,29 @@ Object.assign(MediaElementPlayer.prototype, {
 				break;
 		}
 
-		var context = cast.framework.CastContext.getInstance();
+		var context = cast.framework.CastContext.getInstance(),
+		    session = context.getCurrentSession();
 		context.setOptions({
 			receiverApplicationId: t.options.castAppID || chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
 			autoJoinPolicy: chrome.cast.AutoJoinPolicy[origin]
 		});
-
 		context.addEventListener(cast.framework.CastContextEventType.CAST_STATE_CHANGED, t._checkCastButtonStatus.bind(t));
 
 		t.remotePlayer = new cast.framework.RemotePlayer();
 		t.remotePlayerController = new cast.framework.RemotePlayerController(t.remotePlayer);
 		t.remotePlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, t._switchToCastPlayer.bind(this));
+
+		if (session) {
+			t.chromecastLayer.style.display = '';
+			t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = '';
+			t._switchToCastPlayer();
+		}
 	},
 	_checkCastButtonStatus: function _checkCastButtonStatus(e) {
 		var t = this;
 
 		if (e.castState === cast.framework.CastState.NO_DEVICES_AVAILABLE) {
 			t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = 'none';
-			t.showCast = false;
 		} else {
 			t.chromecastLayer.style.display = e.castState === cast.framework.CastState.CONNECTED ? '' : 'none';
 			t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = '';
@@ -135,7 +142,9 @@ Object.assign(MediaElementPlayer.prototype, {
 	_switchToCastPlayer: function _switchToCastPlayer() {
 		var t = this;
 
-		t.proxy.pause();
+		if (t.proxy) {
+			t.proxy.pause();
+		}
 		if (cast && cast.framework) {
 			var context = cast.framework.CastContext.getInstance();
 			context.addEventListener(cast.framework.CastContextEventType.CAST_STATE_CHANGED, t._checkCastButtonStatus.bind(t));
@@ -180,6 +189,13 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 			})();
 		}
+
+		t.media.addEventListener('loadedmetadata', function () {
+			if (t.proxy instanceof DefaultPlayer) {
+				t.proxy.pause();
+				t.proxy = new _player2.default(t.remotePlayer, t.remotePlayerController, t.media, t.options);
+			}
+		});
 
 		t.media.addEventListener('timeupdate', function () {
 			t.currentMediaTime = t.getCurrentTime();
@@ -339,8 +355,9 @@ var ChromecastPlayer = function () {
 			    mediaInfo = new chrome.cast.media.MediaInfo(url, type),
 			    castSession = cast.framework.CastContext.getInstance().getCurrentSession();
 
-			var event = mejs.Utils.createEvent('pause', t.media);
-			t.media.dispatchEvent(event);
+			if (url === window.location.href) {
+				return;
+			}
 
 			if (t.enableTracks === true) {
 				var tracks = [],
@@ -519,5 +536,8 @@ var ChromecastPlayer = function () {
 }();
 
 exports.default = ChromecastPlayer;
+
+
+window.ChromecastPlayer = ChromecastPlayer;
 
 },{}]},{},[1,2]);

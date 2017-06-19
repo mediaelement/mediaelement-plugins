@@ -183,8 +183,9 @@ export default class ChromecastPlayer {
 			castSession = cast.framework.CastContext.getInstance().getCurrentSession()
 		;
 
-		const event = mejs.Utils.createEvent('pause', t.media);
-		t.media.dispatchEvent(event);
+		if (url === window.location.href) {
+			return;
+		}
 
 		// Find captions/audioTracks
 		if (t.enableTracks === true) {
@@ -308,3 +309,5 @@ export default class ChromecastPlayer {
 		console.error(message);
 	}
 }
+
+window.ChromecastPlayer = ChromecastPlayer;
