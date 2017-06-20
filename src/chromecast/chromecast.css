@@ -1,10 +1,8 @@
-.mejs__chromecast-button,
-.mejs-chromecast-button {
-    width: auto;
-}
 .mejs__chromecast-button > button,
 .mejs-chromecast-button > button {
+    --disconnected-color: #fff;
     background: none;
+    display: inline-block;
 }
 .mejs__chromecast-container,
 .mejs-chromecast-container {

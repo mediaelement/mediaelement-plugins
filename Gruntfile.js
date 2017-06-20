@@ -43,7 +43,7 @@ module.exports = function (grunt) {
 					'dist/ads/ads.js': 'src/ads/ads.js',
 					'dist/ads-vast-vpaid/ads-vast-vpaid.js': 'src/ads-vast-vpaid/ads-vast-vpaid.js',
 					'dist/airplay/airplay.js': 'src/airplay/airplay.js',
-					'dist/chromecast/chromecast.js': 'src/chromecast/chromecast.js',
+					'dist/chromecast/chromecast.js': ['src/chromecast/chromecast.js', 'src/chromecast/player.js'],
 					'dist/context-menu/context-menu.js': 'src/context-menu/context-menu.js',
 					'dist/facebook-pixel/facebook-pixel.js': 'src/facebook-pixel/facebook-pixel.js',
 					'dist/google-analytics/google-analytics.js': 'src/google-analytics/google-analytics.js',
@@ -127,7 +127,7 @@ module.exports = function (grunt) {
 					processors: [
 						// Add vendor prefixes.
 						require('autoprefixer')({
-							browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'
+							browsers: 'last 5 versions, ie > 10, ios > 7, android > 3'
 						}),
 						// Minify the result.
 						require('cssnano')()
