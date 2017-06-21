@@ -14,7 +14,9 @@
 mejs.i18n.en["mejs.source-chooser"] = "Source Chooser";
 
 Object.assign(mejs.MepDefaults, {
-	sourcechooserText: null
+	sourcechooserText: null,
+  startingSource: "",
+  displayType: true
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -22,20 +24,9 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		var t = this,
 		    sourceTitle = mejs.Utils.isString(t.options.sourcechooserText) ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
-		    sources = [],
-		    children = t.mediaFiles ? t.mediaFiles : t.node.children;
+		    sources = player.getVideoDOMSources();
 
 		var hoverTimeout = void 0;
-
-		for (var i = 0, total = children.length; i < total; i++) {
-			var s = children[i];
-
-			if (t.mediaFiles) {
-				sources.push(s);
-			} else if (s.nodeName === 'SOURCE') {
-				sources.push(s);
-			}
-		}
 
 		if (sources.length <= 1) {
 			return;
@@ -50,8 +41,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		for (var _i = 0, _total = sources.length; _i < _total; _i++) {
 			var src = sources[_i];
 			if (src.type !== undefined && typeof media.canPlayType === 'function') {
-				player.addSourceButton(src.src, src.title, src.type, media.src === src.src);
-			}
+				player.addSourceButton(src.src, src.title, src.type,
+        (t.options.startingSource === "") ? media.src === src.src : t.options.startingSource === src.src);
+      }
 		}
 
 		player.sourcechooserButton.addEventListener('mouseover', function () {
@@ -105,7 +97,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		var radios = player.sourcechooserButton.querySelectorAll('input[type=radio]');
 
 		for (var _i2 = 0, _total2 = radios.length; _i2 < _total2; _i2++) {
+
 			radios[_i2].addEventListener('click', function () {
+
 				this.setAttribute('aria-selected', true);
 				this.checked = true;
 
@@ -122,26 +116,54 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				if (media.getSrc() !== src) {
 					var currentTime = media.currentTime;
+					var paused = media.paused;
+          var isHls = false;
 
-					var paused = media.paused,
-					    canPlayAfterSourceSwitchHandler = function canPlayAfterSourceSwitchHandler() {
+          var canPlayAfterSourceSwitchHandler = function canPlayAfterSourceSwitchHandler() {
 						if (!paused) {
 							media.setCurrentTime(currentTime);
-							media.play();
+							if(!isHls){
+                media.play();
+              }
 						}
 						media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
 					};
 
-					media.pause();
+          var canPlayHLSAfterSourceSwitchHandler = function canPlayHLSAfterSourceSwitchHandler(){
+              if(!paused) {
+                media.play();
+              }
+              media.removeEventListener(Hls.Events.MANIFEST_PARSED, canPlayHLSAfterSourceSwitchHandler);
+            };
+
+          media.pause();
 					media.setSrc(src);
 					media.load();
-					media.addEventListener('canplay', canPlayAfterSourceSwitchHandler);
+
+          //Get the type of video that's about to be played
+					var type =  "";
+					for(var j2 = 0, videoSources = t.getVideoDOMSources(); j2 < videoSources.length; j2++){
+					  if(videoSources[j2].src === src){
+					    type = videoSources[j2].type;
+					    break;
+            }
+          }
+
+          //if it's hls play after manifest is parsed and ensure we set start time in can play
+					if(type === "application/x-mpegURL" || type === "vnd.apple.mpegURL"){
+					  isHls = true;
+            media.addEventListener('canplay', canPlayAfterSourceSwitchHandler);
+            media.addEventListener(Hls.Events.MANIFEST_PARSED, canPlayHLSAfterSourceSwitchHandler);
+          }else{
+					  isHls = false;
+            media.addEventListener('canplay', canPlayAfterSourceSwitchHandler);
+          }
 				}
 			});
 		}
 
 		player.sourcechooserButton.querySelector('button').addEventListener('click', function () {
-			if (mejs.Utils.hasClass(mejs.Utils.siblings(this, "." + t.options.classPrefix + "sourcechooser-selector"), t.options.classPrefix + "offscreen")) {
+      if (mejs.Utils.hasClass(mejs.Utils.siblings(this, function(el) { return el === controls.querySelector("." + t.options.classPrefix + "sourcechooser-selector") })[0], t.options.classPrefix + "offscreen")) {
 				player.showSourcechooserSelector();
 				player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
 			} else {
@@ -156,7 +178,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 		type = type.split('/')[1];
 
-		t.sourcechooserButton.querySelector('ul').innerHTML += "<li>" + ("<input type=\"radio\" name=\"" + t.id + "_sourcechooser\" id=\"" + t.id + "_sourcechooser_" + label + type + "\" ") + ("role=\"menuitemradio\" value=\"" + src + "\" " + (isCurrent ? 'checked="checked"' : '') + " aria-selected=\"" + isCurrent + "\"/>") + ("<label for=\"" + t.id + "_sourcechooser_" + label + type + "\" aria-hidden=\"true\">" + label + " (" + type + ")</label>") + "</li>";
+		t.sourcechooserButton.querySelector('ul').innerHTML += "<li>" + ("<input type=\"radio\" name=\"" + t.id + "_sourcechooser\" id=\"" + t.id + "_sourcechooser_" + label + type + "\" ") + ("role=\"menuitemradio\" value=\"" + src + "\" " + (isCurrent ? 'checked="checked"' : '') + " aria-selected=\"" + isCurrent + "\"/>") + ("<label for=\"" + t.id + "_sourcechooser_" + label + type + "\" aria-hidden=\"true\">" + label + (t.options.displayType ? " (" + type + ")" : "") + "</label>") + "</li>";
 
 		t.adjustSourcechooserBox();
 	},
@@ -200,7 +222,25 @@ Object.assign(MediaElementPlayer.prototype, {
 		for (var i = 0, total = radios.length; i < total; i++) {
 			radios[i].setAttribute('tabindex', '0');
 		}
-	}
+	},
+
+	getVideoDOMSources: function getVideoDOMSources(){
+    var t = this;
+    var sources = [];
+    var children = t.mediaFiles ? t.mediaFiles : t.node.children;
+
+    for (var i = 0, total = children.length; i < total; i++) {
+      var s = children[i];
+
+      if (t.mediaFiles) {
+        sources.push(s);
+      } else if (s.nodeName === 'SOURCE') {
+        sources.push(s);
+      }
+    }
+    return sources;
+  }
+
 });
 
 },{}]},{},[1]);
