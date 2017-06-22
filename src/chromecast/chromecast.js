@@ -97,6 +97,23 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		if (media.originalNode.getAttribute('poster')) {
 			player.chromecastLayer.innerHTML += `<img src="${media.originalNode.getAttribute('poster')}" width="100%" height="100%">`;
+			player.chromecastLayer.querySelector('img').addEventListener('click', () => {
+				if (player.options.clickToPlayPause) {
+					const
+						button = t.container.querySelector('.' + t.options.classPrefix + 'overlay-button'),
+						pressed = button.getAttribute('aria-pressed')
+					;
+
+					if (player.paused) {
+						player.play();
+					} else {
+						player.pause();
+					}
+
+					button.setAttribute('aria-pressed', !!pressed);
+					player.container.focus();
+				}
+			});
 		}
 
 		// Start SDK
@@ -113,8 +130,9 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// Load once per page request
 		if (window.cast) {
-			t.chromecastLayer.style.display = '';
-			t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = '';
+			if (t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button>button').style.display !== 'none') {
+				t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = '';
+			}
 			t._initializeCastPlayer();
 			return;
 		}
@@ -167,6 +185,14 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.remotePlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, t._switchToCastPlayer.bind(this));
 
 		if (session) {
+			const state = context.getCastState();
+
+			if (state === cast.framework.CastState.NO_DEVICES_AVAILABLE) {
+				t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = 'none';
+			} else {
+				t.chromecastLayer.style.display = state === cast.framework.CastState.CONNECTED ? '' : 'none';
+				t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = '';
+			}
 			t._switchToCastPlayer();
 		}
 	},

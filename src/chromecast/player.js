@@ -20,12 +20,10 @@ export default class ChromecastPlayer {
 
 		// Add event listeners for player changes which may occur outside sender app
 		t.controller.addEventListener(cast.framework.RemotePlayerEventType.IS_PAUSED_CHANGED, () => {
-			if (!t.isLive) {
-				if (t.paused) {
-					t.pause();
-				} else {
-					t.play();
-				}
+			if (t.paused) {
+				t.pause();
+			} else {
+				t.play();
 			}
 			t.endedMedia = false;
 		});
@@ -183,7 +181,7 @@ export default class ChromecastPlayer {
 			castSession = cast.framework.CastContext.getInstance().getCurrentSession()
 		;
 
-		if (url === window.location.href) {
+		if (url === window.location.href || !castSession) {
 			return;
 		}
 

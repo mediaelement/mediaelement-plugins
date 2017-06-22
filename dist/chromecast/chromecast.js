@@ -61,6 +61,21 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		if (media.originalNode.getAttribute('poster')) {
 			player.chromecastLayer.innerHTML += '<img src="' + media.originalNode.getAttribute('poster') + '" width="100%" height="100%">';
+			player.chromecastLayer.querySelector('img').addEventListener('click', function () {
+				if (player.options.clickToPlayPause) {
+					var _button = t.container.querySelector('.' + t.options.classPrefix + 'overlay-button'),
+					    pressed = _button.getAttribute('aria-pressed');
+
+					if (player.paused) {
+						player.play();
+					} else {
+						player.pause();
+					}
+
+					_button.setAttribute('aria-pressed', !!pressed);
+					player.container.focus();
+				}
+			});
 		}
 
 		window.__onGCastApiAvailable = function (isAvailable) {
@@ -73,8 +88,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		};
 
 		if (window.cast) {
-			t.chromecastLayer.style.display = '';
-			t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = '';
+			if (t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button>button').style.display !== 'none') {
+				t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = '';
+			}
 			t._initializeCastPlayer();
 			return;
 		}
@@ -119,6 +135,14 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.remotePlayerController.addEventListener(cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED, t._switchToCastPlayer.bind(this));
 
 		if (session) {
+			var state = context.getCastState();
+
+			if (state === cast.framework.CastState.NO_DEVICES_AVAILABLE) {
+				t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = 'none';
+			} else {
+				t.chromecastLayer.style.display = state === cast.framework.CastState.CONNECTED ? '' : 'none';
+				t.controls.querySelector('.' + t.options.classPrefix + 'chromecast-button').style.display = '';
+			}
 			t._switchToCastPlayer();
 		}
 	},
@@ -225,12 +249,10 @@ var ChromecastPlayer = function () {
 		t.isLive = options.castIsLive;
 
 		t.controller.addEventListener(cast.framework.RemotePlayerEventType.IS_PAUSED_CHANGED, function () {
-			if (!t.isLive) {
-				if (t.paused) {
-					t.pause();
-				} else {
-					t.play();
-				}
+			if (t.paused) {
+				t.pause();
+			} else {
+				t.play();
 			}
 			t.endedMedia = false;
 		});
@@ -353,7 +375,7 @@ var ChromecastPlayer = function () {
 			    mediaInfo = new chrome.cast.media.MediaInfo(url, type),
 			    castSession = cast.framework.CastContext.getInstance().getCurrentSession();
 
-			if (url === window.location.href) {
+			if (url === window.location.href || !castSession) {
 				return;
 			}
 
