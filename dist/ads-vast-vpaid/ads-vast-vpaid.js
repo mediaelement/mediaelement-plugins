@@ -221,6 +221,10 @@ Object.assign(MediaElementPlayer.prototype, {
 		var t = this,
 		    ads = data.getElementsByTagName('Ad');
 
+		if (!ads.length) {
+			return;
+		}
+
 		t.vastAdTags = [];
 		t.options.indexPreroll = 0;
 
@@ -297,6 +301,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.vpaidAdTags = [];
 		t.options.indexPreroll = 0;
+
+		if (typeof ads[0] === 'undefined') {
+			return;
+		}
 
 		var adData = JSON.parse(ads[0].textContent.trim()),
 		    duration = data.getElementsByTagName('Duration'),

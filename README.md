@@ -22,6 +22,12 @@ This repository contains plugins built for MediaElementJS.
     * [A word on `ES6` for Features](#es6)
 * [Available plugins](#plugins)
 
+## * IMPORTANT CHANGES on `2.3.0` version
+
+As part of the continuous improvements the player, we have decided to drop completely support for IE9 and IE10, since market share of those browsers together is 0.4%, according to http://caniuse.com/usage-table.
+ 
+This change is for `MediaElement` and `MediaElement Plugins` repositories. 
+
 <a id="installation"></a>
 # Installation
 

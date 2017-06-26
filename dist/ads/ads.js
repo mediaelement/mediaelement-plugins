@@ -82,8 +82,8 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		var t = this;
 
-		if (t.adsDataIsLoading && !t.media.paused) {
-			t.media.pause();
+		if (t.adsDataIsLoading && !t.paused && t.options.indexPreroll < t.options.adsPrerollMediaUrl.length) {
+			t.pause();
 		}
 
 		t.adsPlayerHasStarted = true;
@@ -99,18 +99,18 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.media.addEventListener('volumechange', t.adsPrerollVolumeProxy);
 
 		if (t.options.indexPreroll === 0) {
-			t.adsCurrentMediaUrl = t.media.originalNode.getAttribute('src');
-			t.adsCurrentMediaDuration = t.media.duration;
+			t.adsCurrentMediaUrl = t.media.getSrc();
+			t.adsCurrentMediaDuration = t.duration;
 		}
 
-		t.media.setSrc(t.options.adsPrerollMediaUrl[t.options.indexPreroll]);
-		t.media.load();
+		t.setSrc(t.options.adsPrerollMediaUrl[t.options.indexPreroll]);
+		t.load();
 
 		var controlElements = t.container.querySelector("." + t.options.classPrefix + "controls").children;
 		for (var i = 0, total = controlElements.length; i < total; i++) {
 			var target = controlElements[i],
 			    button = target.querySelector('button');
-			if (button && !mejs.Utils.hasClass(target, t.options.classPrefix + "playpause-button")) {
+			if (button && !mejs.Utils.hasClass(target, t.options.classPrefix + "playpause-button") && !mejs.Utils.hasClass(target, t.options.classPrefix + "chromecast-button")) {
 				button.disabled = true;
 				target.style.pointerEvents = 'none';
 			} else if (target.querySelector("." + t.options.classPrefix + "time-slider")) {
@@ -120,7 +120,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		if (t.adsPlayerHasStarted) {
 			setTimeout(function () {
-				t.media.play();
+				t.play();
 			}, 100);
 		}
 	},
@@ -180,17 +180,17 @@ Object.assign(MediaElementPlayer.prototype, {
 		var t = this;
 
 		if (t.options.adsPrerollAdEnableSkip && t.options.adsPrerollAdSkipSeconds > 0) {
-			if (t.media.currentTime > t.options.adsPrerollAdSkipSeconds) {
+			if (t.currentTime > t.options.adsPrerollAdSkipSeconds) {
 				t.adsSkipButton.style.display = 'block';
 				t.adsSkipMessage.style.display = 'none';
 			} else {
-				t.adsSkipMessage.innerHTML = mejs.i18n.t('mejs.ad-skip-info', Math.round(t.options.adsPrerollAdSkipSeconds - t.media.currentTime));
+				t.adsSkipMessage.innerHTML = mejs.i18n.t('mejs.ad-skip-info', Math.round(t.options.adsPrerollAdSkipSeconds - t.currentTime));
 			}
 		}
 
 		var event = mejs.Utils.createEvent('mejsprerolltimeupdate', t.container);
-		event.detail.duration = t.media.duration;
-		event.detail.currentTime = t.media.currentTime;
+		event.detail.duration = t.duration;
+		event.detail.currentTime = t.currentTime;
 		t.container.dispatchEvent(event);
 	},
 	adsPrerollVolume: function adsPrerollVolume() {
@@ -205,7 +205,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.media.removeEventListener('ended', t.adsPrerollEndedProxy);
 
 		setTimeout(function () {
-
 			t.options.indexPreroll++;
 			if (t.options.indexPreroll < t.options.adsPrerollMediaUrl.length) {
 				t.adsStartPreroll();
@@ -220,10 +219,10 @@ Object.assign(MediaElementPlayer.prototype, {
 	adRestoreMainMedia: function adRestoreMainMedia() {
 		var t = this;
 
-		t.media.setSrc(t.adsCurrentMediaUrl);
+		t.setSrc(t.adsCurrentMediaUrl);
 		setTimeout(function () {
-			t.media.load();
-			t.media.play();
+			t.load();
+			t.play();
 		}, 10);
 
 		var controlElements = t.container.querySelector("." + t.options.classPrefix + "controls").children;
@@ -254,10 +253,10 @@ Object.assign(MediaElementPlayer.prototype, {
 	adsAdClick: function adsAdClick() {
 		var t = this;
 
-		if (t.media.paused) {
-			t.media.play();
+		if (t.paused) {
+			t.play();
 		} else {
-			t.media.pause();
+			t.pause();
 		}
 
 		var event = mejs.Utils.createEvent('mejsprerolladsclicked', t.container);
