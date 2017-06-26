@@ -32,10 +32,8 @@ export default class ChromecastPlayer {
 			t.volume = 0;
 		});
 		t.controller.addEventListener(cast.framework.RemotePlayerEventType.IS_MEDIA_LOADED_CHANGED, () => {
-			setTimeout(() => {
-				const event = mejs.Utils.createEvent('loadedmetadata', t.media);
-				t.media.dispatchEvent(event);
-			}, 50);
+			const event = mejs.Utils.createEvent('loadedmetadata', t.media);
+			t.media.dispatchEvent(event);
 		});
 		t.controller.addEventListener(cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED, () => {
 			t.volume = t.player.volumeLevel;
@@ -43,16 +41,12 @@ export default class ChromecastPlayer {
 			t.media.dispatchEvent(event);
 		});
 		t.controller.addEventListener(cast.framework.RemotePlayerEventType.DURATION_CHANGED, () => {
-			setTimeout(() => {
-				const event = mejs.Utils.createEvent('timeupdate', t.media);
-				t.media.dispatchEvent(event);
-			}, 50);
+			const event = mejs.Utils.createEvent('timeupdate', t.media);
+			t.media.dispatchEvent(event);
 		});
 		t.controller.addEventListener(cast.framework.RemotePlayerEventType.CURRENT_TIME_CHANGED, () => {
-			setTimeout(() => {
-				const event = mejs.Utils.createEvent('timeupdate', t.media);
-				t.media.dispatchEvent(event);
-			}, 50);
+			const event = mejs.Utils.createEvent('timeupdate', t.media);
+			t.media.dispatchEvent(event);
 
 			if (!t.isLive && t.getCurrentTime() >= t.getDuration()) {
 				t.endedMedia = true;
@@ -67,6 +61,7 @@ export default class ChromecastPlayer {
 		});
 
 		t.load();
+		return t;
 	}
 
 	get paused() {
@@ -129,10 +124,8 @@ export default class ChromecastPlayer {
 	setCurrentTime (value) {
 		this.player.currentTime = value;
 		this.controller.seek();
-		setTimeout(() => {
-			const event = mejs.Utils.createEvent('timeupdate', this.media);
-			this.media.dispatchEvent(event);
-		}, 50);
+		const event = mejs.Utils.createEvent('timeupdate', this.media);
+		this.media.dispatchEvent(event);
 	}
 
 	getCurrentTime () {
@@ -146,10 +139,8 @@ export default class ChromecastPlayer {
 	setVolume (value) {
 		this.player.volumeLevel = value;
 		this.controller.setVolumeLevel();
-		setTimeout(() => {
-			const event = mejs.Utils.createEvent('volumechange', this.media);
-			this.media.dispatchEvent(event);
-		}, 50);
+		const event = mejs.Utils.createEvent('volumechange', this.media);
+		this.media.dispatchEvent(event);
 	}
 
 	getVolume () {
@@ -241,12 +232,10 @@ export default class ChromecastPlayer {
 			// Autoplay media in the current position
 			const currentTime = t.media.originalNode.currentTime;
 			t.setCurrentTime(currentTime);
-			t.controller.playOrPause();
+			t.play();
 
-			setTimeout(() => {
-				const event = mejs.Utils.createEvent('play', t.media);
-				t.media.dispatchEvent(event);
-			}, 50);
+			const event = mejs.Utils.createEvent('play', t.media);
+			t.media.dispatchEvent(event);
 		}, (error) => {
 			t._getErrorMessage(error);
 		});

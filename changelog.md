@@ -1,6 +1,6 @@
 ### Version History
 
-*2.3.0 (2017/06/??)*
+*2.3.0 (2017/06/26)*
 
 * Integrated `Facebook Pixel` plugin (https://github.com/mediaelement/mediaelement-plugins/pull/58) @isantolin
 * Cleaned comments on bundles @rafa8626

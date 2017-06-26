@@ -277,9 +277,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		}
 
-		// If no Cast was setup correctly, make sure
-		t.media.addEventListener('loadedmetadata', function () {
-			if (t.proxy instanceof DefaultPlayer) {
+		// If no Cast was setup correctly, make sure it is
+		t.media.addEventListener('loadedmetadata', () => {
+			if (['SESSION_ENDING', 'SESSION_ENDED', 'NO_SESSION'].indexOf(castSession.getSessionState()) === -1 &&
+				t.proxy instanceof DefaultPlayer) {
 				t.proxy.pause();
 				t.proxy = new ChromecastPlayer(t.remotePlayer, t.remotePlayerController, t.media, t.options);
 			}

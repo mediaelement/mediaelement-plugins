@@ -213,7 +213,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		t.media.addEventListener('loadedmetadata', function () {
-			if (t.proxy instanceof DefaultPlayer) {
+			if (['SESSION_ENDING', 'SESSION_ENDED', 'NO_SESSION'].indexOf(castSession.getSessionState()) === -1 && t.proxy instanceof DefaultPlayer) {
 				t.proxy.pause();
 				t.proxy = new _player2.default(t.remotePlayer, t.remotePlayerController, t.media, t.options);
 			}
@@ -261,10 +261,8 @@ var ChromecastPlayer = function () {
 			t.volume = 0;
 		});
 		t.controller.addEventListener(cast.framework.RemotePlayerEventType.IS_MEDIA_LOADED_CHANGED, function () {
-			setTimeout(function () {
-				var event = mejs.Utils.createEvent('loadedmetadata', t.media);
-				t.media.dispatchEvent(event);
-			}, 50);
+			var event = mejs.Utils.createEvent('loadedmetadata', t.media);
+			t.media.dispatchEvent(event);
 		});
 		t.controller.addEventListener(cast.framework.RemotePlayerEventType.VOLUME_LEVEL_CHANGED, function () {
 			t.volume = t.player.volumeLevel;
@@ -272,16 +270,12 @@ var ChromecastPlayer = function () {
 			t.media.dispatchEvent(event);
 		});
 		t.controller.addEventListener(cast.framework.RemotePlayerEventType.DURATION_CHANGED, function () {
-			setTimeout(function () {
-				var event = mejs.Utils.createEvent('timeupdate', t.media);
-				t.media.dispatchEvent(event);
-			}, 50);
+			var event = mejs.Utils.createEvent('timeupdate', t.media);
+			t.media.dispatchEvent(event);
 		});
 		t.controller.addEventListener(cast.framework.RemotePlayerEventType.CURRENT_TIME_CHANGED, function () {
-			setTimeout(function () {
-				var event = mejs.Utils.createEvent('timeupdate', t.media);
-				t.media.dispatchEvent(event);
-			}, 50);
+			var event = mejs.Utils.createEvent('timeupdate', t.media);
+			t.media.dispatchEvent(event);
 
 			if (!t.isLive && t.getCurrentTime() >= t.getDuration()) {
 				t.endedMedia = true;
@@ -296,6 +290,7 @@ var ChromecastPlayer = function () {
 		});
 
 		t.load();
+		return t;
 	}
 
 	_createClass(ChromecastPlayer, [{
@@ -312,14 +307,10 @@ var ChromecastPlayer = function () {
 	}, {
 		key: 'setCurrentTime',
 		value: function setCurrentTime(value) {
-			var _this = this;
-
 			this.player.currentTime = value;
 			this.controller.seek();
-			setTimeout(function () {
-				var event = mejs.Utils.createEvent('timeupdate', _this.media);
-				_this.media.dispatchEvent(event);
-			}, 50);
+			var event = mejs.Utils.createEvent('timeupdate', this.media);
+			this.media.dispatchEvent(event);
 		}
 	}, {
 		key: 'getCurrentTime',
@@ -334,14 +325,10 @@ var ChromecastPlayer = function () {
 	}, {
 		key: 'setVolume',
 		value: function setVolume(value) {
-			var _this2 = this;
-
 			this.player.volumeLevel = value;
 			this.controller.setVolumeLevel();
-			setTimeout(function () {
-				var event = mejs.Utils.createEvent('volumechange', _this2.media);
-				_this2.media.dispatchEvent(event);
-			}, 50);
+			var event = mejs.Utils.createEvent('volumechange', this.media);
+			this.media.dispatchEvent(event);
 		}
 	}, {
 		key: 'getVolume',
@@ -428,12 +415,10 @@ var ChromecastPlayer = function () {
 			castSession.loadMedia(request).then(function () {
 				var currentTime = t.media.originalNode.currentTime;
 				t.setCurrentTime(currentTime);
-				t.controller.playOrPause();
+				t.play();
 
-				setTimeout(function () {
-					var event = mejs.Utils.createEvent('play', t.media);
-					t.media.dispatchEvent(event);
-				}, 50);
+				var event = mejs.Utils.createEvent('play', t.media);
+				t.media.dispatchEvent(event);
 			}, function (error) {
 				t._getErrorMessage(error);
 			});
@@ -441,7 +426,7 @@ var ChromecastPlayer = function () {
 	}, {
 		key: 'setMuted',
 		value: function setMuted(value) {
-			var _this3 = this;
+			var _this = this;
 
 			if (value === true && !this.player.isMuted) {
 				this.controller.muteOrUnmute();
@@ -449,8 +434,8 @@ var ChromecastPlayer = function () {
 				this.controller.muteOrUnmute();
 			}
 			setTimeout(function () {
-				var event = mejs.Utils.createEvent('volumechange', _this3.media);
-				_this3.media.dispatchEvent(event);
+				var event = mejs.Utils.createEvent('volumechange', _this.media);
+				_this.media.dispatchEvent(event);
 			}, 50);
 		}
 	}, {
