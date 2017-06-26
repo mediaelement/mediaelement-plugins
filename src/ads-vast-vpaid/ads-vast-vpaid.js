@@ -294,6 +294,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			ads = data.getElementsByTagName('Ad')
 		;
 
+		if (!ads.length) {
+			return;
+		}
+
 		// clear out data
 		t.vastAdTags = [];
 		t.options.indexPreroll = 0;
@@ -396,6 +400,10 @@ Object.assign(MediaElementPlayer.prototype, {
 		// clear out data
 		t.vpaidAdTags = [];
 		t.options.indexPreroll = 0;
+
+		if (typeof ads[0] === 'undefined') {
+			return;
+		}
 
 		const
 			adData = JSON.parse(ads[0].textContent.trim()),
