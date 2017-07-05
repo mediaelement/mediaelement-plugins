@@ -1,5 +1,9 @@
 ### Version History
 
+*2.3.1 (2017/??/??)*
+
+* Added missing workflow to avoid loading multiple times same source on `Chromecast` plugin and added code to end session correctly @rafa8626
+
 *2.3.0 (2017/06/26)*
 
 * Integrated `Facebook Pixel` plugin (https://github.com/mediaelement/mediaelement-plugins/pull/58) @isantolin
