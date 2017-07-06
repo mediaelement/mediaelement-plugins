@@ -70,6 +70,13 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.adsPrerollVolumeProxy = t.adsPrerollVolume.bind(t);
 		t.adsPrerollEndedProxy = t.adsPrerollEnded.bind(t);
 
+		t.media.addEventListener('rendererready', function () {
+			var iframe = t.media.querySelector('iframe');
+			if (iframe) {
+				iframe.style.display = 'none';
+			}
+		});
+
 		t.media.addEventListener('play', t.adsMediaTryingToStartProxy);
 		t.media.addEventListener('playing', t.adsMediaTryingToStartProxy);
 		t.media.addEventListener('canplay', t.adsMediaTryingToStartProxy);
@@ -100,7 +107,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.media.addEventListener('volumechange', t.adsPrerollVolumeProxy);
 
 		if (t.options.indexPreroll === 0) {
-			t.adsCurrentMediaUrl = t.media.getSrc();
+			t.adsCurrentMediaUrl = t.media.originalNode.src;
 			t.adsCurrentMediaDuration = t.duration;
 		}
 
@@ -218,7 +225,12 @@ Object.assign(MediaElementPlayer.prototype, {
 		}, 0);
 	},
 	adRestoreMainMedia: function adRestoreMainMedia() {
-		var t = this;
+		var t = this,
+		    iframe = t.media.querySelector('iframe');
+
+		if (iframe) {
+			iframe.style.display = '';
+		}
 
 		t.setSrc(t.adsCurrentMediaUrl);
 		setTimeout(function () {
