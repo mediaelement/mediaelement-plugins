@@ -75,6 +75,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 	buildcontextmenu (player) {
 
+		if (!player.isVideo) {
+			return;
+		}
+
 		// create context menu
 		if (!document.querySelector(`.${player.options.classPrefix}contextmenu`)) {
 			player.contextMenu = document.createElement('div');
