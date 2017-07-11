@@ -1,0 +1,141 @@
+.mejs__playlist-button,
+.mejs-playlist-button {
+    position: relative;
+}
+.mejs__playlist-button > button,
+.mejs-playlist-button > button,
+.mejs__next-button > button,
+.mejs-next-button > button,
+.mejs__prev-button > button,
+.mejs-prev-button > button {
+    background: url('playlist-controls.svg') transparent no-repeat;
+}
+.mejs__playlist-button > button,
+.mejs-playlist-button > button {
+    background-position: -80px -1px;
+}
+.mejs__next-button > button,
+.mejs-next-button > button {
+    background-position: 0 -1px;
+}
+.mejs__prev-button > button,
+.mejs-prev-button > button {
+    background-position: -20px -1px;
+}
+.mejs__playlist-button > .mejs__playlist-selector,
+.mejs-playlist-button > .mejs-playlist-selector {
+    background: rgba(50, 50, 50, 0.7);
+    border: solid 1px transparent;
+    border-radius: 0;
+    bottom: 100%;
+    margin-right: -43px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    right: 50%;
+    visibility: visible;
+    width: 86px;
+}
+
+.mejs__playlist-selector-list,
+.mejs-playlist-selector-list {
+    height: 100%;
+    list-style-type: none !important;
+    margin: 0;
+    overflow-y: auto;
+    padding: 0;
+}
+
+.mejs__playlist-selector-list-item,
+.mejs-playlist-selector-list-item {
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    list-style-type: none !important;
+    max-height: 50px;
+    overflow: hidden;
+    padding: 0 10px 10px;
+}
+
+.mejs__playlist-selector-list-item:hover,
+.mejs-playlist-selector-list-item:hover {
+    background-color: rgb(200, 200, 200) !important;
+    background-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.mejs__playlist-selector-list-item:focus,
+.mejs-playlist-selector-list-item:focus {
+    outline: none;
+}
+
+.mejs__playlist-selector-input,
+.mejs-playlist-selector-input {
+    clear: both;
+    float: left;
+    left: -1000px;
+    margin: 3px 3px 0 5px;
+    position: absolute;
+}
+
+.mejs__playlist-selector-label,
+.mejs-playlist-selector-label {
+    cursor: pointer;
+    float: left;
+    font-size: 10px;
+    line-height: 15px;
+    padding: 4px 0 0;
+}
+
+.mejs__playlist-selected,
+.mejs-playlist-selected {
+    background-color: rgba(35, 35, 35, 0.8);
+}
+
+.mejs__playlist-layer,
+.mejs-playlist-layer {
+    background: rgba(50, 50, 50, 0.7);
+    bottom: 40px;
+    color: #fff;
+    font-size: 12px;
+    height: calc(100% - 40px) !important;
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    width: 33.33333% !important;
+    z-index: 2;
+}
+
+.mejs__playlist-hidden,
+.mejs-playlist-hidden {
+    right: -33.33333%;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+}
+
+.mejs__playlist-content,
+.mejs-playlist-content {
+    display: inline-block;
+    max-height: 50px;
+    width: 100%;
+}
+
+.mejs__playlist-content > img,
+.mejs-playlist-content > img {
+    float: left;
+    outline: none;
+    width: 30%;
+}
+.mejs__playlist-content > p,
+.mejs-playlist-content > p {
+    float: left;
+    margin: 0;
+    outline: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 70%;
+}
