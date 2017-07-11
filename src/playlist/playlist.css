@@ -1,3 +1,7 @@
+.mejs__container.mejs__video,
+.mejs-container.mejs-video {
+    overflow-x: hidden;
+}
 .mejs__playlist-button,
 .mejs-playlist-button {
     position: relative;

@@ -79,6 +79,16 @@
                 <track srclang="en" kind="subtitles" src="mediaelement.vtt" label="English">
             </video>
         </div>
+
+        <h3>Audio Player</h3>
+
+        <div class="media-wrapper">
+            <audio id="player2" preload="none" controls style="max-width:100%;">
+                <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3" title="1">
+                <source src="https://api.soundcloud.com/tracks/323195515/stream?client_id=95f22ed54a5c297b1c41f72d713623ef" type="audio/mp3" title="2">
+                <source src="rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st/mp3:fake_empire-cbr" type="rtmp/video" title="3">
+            </audio>
+        </div>
         <h4>Code snippet</h4>
         <pre data-lang="Javascript"><code></code></pre>
     </div>
@@ -95,23 +105,27 @@
 <script src="../dist/context-menu/context-menu.js"></script>
 <script src="../dist/playlist/playlist.js"></script>
 <script id="mejs-code">
-	new MediaElementPlayer('player1', {
-		// This is needed to make Jump Forward to work correctly
-		autoRewind: false,
-		features: ['prevtrack', 'playpause', 'nexttrack', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'tracks',
-			'markers', 'volume', 'playlist'],
-		// Markers plugin configuration
-		markers: [5, 10, 25, 40],
-		markerWidth: 5,
-		markerCallback: function (media, currentTime) {
-			console.log('Reached ' + currentTime + ' secs');
-		},
-		// Ads/Vast/VPAID configuration
-		vastAdTagUrl: 'vast_sample.xml',
-		vastAdsType: 'vast',
-		adsPrerollAdEnableSkip: true,
-		adsPrerollAdSkipSeconds: 5
-	});
+	var mediaElements = document.querySelectorAll('video, audio');
+
+	for (var i = 0, total = mediaElements.length; i < total; i++) {
+	    new MediaElementPlayer(mediaElements[i], {
+		    // This is needed to make Jump Forward to work correctly
+		    autoRewind: false,
+		    features: ['prevtrack', 'playpause', 'nexttrack', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'tracks',
+			    'markers', 'volume', 'playlist', 'contextmenu'],
+		    // Markers plugin configuration
+		    markers: [5, 10, 25, 40],
+		    markerWidth: 5,
+		    markerCallback: function (media, currentTime) {
+			    console.log('Reached ' + currentTime + ' secs');
+		    },
+		    // Ads/Vast/VPAID configuration
+		    vastAdTagUrl: 'vast_sample.xml',
+		    vastAdsType: 'vast',
+		    adsPrerollAdEnableSkip: true,
+		    adsPrerollAdSkipSeconds: 5
+	    });
+    }
 </script>
 <script>
 	document.body.querySelector('code').innerText = document.getElementById('mejs-code').innerText;
