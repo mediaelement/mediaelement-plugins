@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="../dist/chromecast/chromecast.css">
     <link rel="stylesheet" href="../dist/ads/ads.css">
     <link rel="stylesheet" href="../dist/context-menu/context-menu.css">
+    <link rel="stylesheet" href="../dist/playlist/playlist.css">
 
     <style>
         #container {
@@ -72,7 +73,9 @@
                    data-cast-title="Big Buck Bunny"
                    data-cast-description="Big Buck Bunny is now even more a world standard for video standards"
                    poster="http://sandbox.thewikies.com/vfe-generator/images/big-buck-bunny_poster.jpg">
-                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/BigBuckBunny.mp4" type="video/mp4">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/BigBuckBunny.mp4" title="1" type="video/mp4">
+                <source src="http://www.streambox.fr/playlists/test_001/stream.m3u8" type="application/x-mpegURL"  title="2">
+                <source src="http://la2.indexcom.com/me/flv/guqin.flv" title="3" type="video/flv">
                 <track srclang="en" kind="subtitles" src="mediaelement.vtt" label="English">
             </video>
         </div>
@@ -90,12 +93,13 @@
 <script src="../dist/ads/ads.js"></script>
 <script src="../dist/ads-vast-vpaid/ads-vast-vpaid.js"></script>
 <script src="../dist/context-menu/context-menu.js"></script>
+<script src="../dist/playlist/playlist.js"></script>
 <script id="mejs-code">
 	new MediaElementPlayer('player1', {
 		// This is needed to make Jump Forward to work correctly
 		autoRewind: false,
-		features: ['playpause', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'tracks',
-			'markers', 'volume', 'chromecast', 'ads', 'vast', 'contextmenu'],
+		features: ['prevtrack', 'playpause', 'nexttrack', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'tracks',
+			'markers', 'volume', 'playlist'],
 		// Markers plugin configuration
 		markers: [5, 10, 25, 40],
 		markerWidth: 5,

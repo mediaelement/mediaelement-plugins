@@ -3,17 +3,24 @@
     position: relative;
 }
 .mejs__playlist-button > button,
+.mejs-playlist-button > button,
+.mejs__next-button > button,
+.mejs-next-button > button,
+.mejs__prev-button > button,
+.mejs-prev-button > button {
+    background: url('playlist-controls.svg') transparent no-repeat;
+}
+.mejs__playlist-button > button,
 .mejs-playlist-button > button {
-    background: url('playlist.svg') no-repeat transparent;
+    background-position: -80px -1px;
+}
+.mejs__next-button > button,
+.mejs-next-button > button {
+    background-position: 0 -1px;
 }
 .mejs__prev-button > button,
 .mejs-prev-button > button {
-    background: url('prev.svg') no-repeat transparent;
-}
-
-.mejs__next-button > button,
-.mejs-next-button > button {
-    background: url('next.svg') no-repeat transparent;
+    background-position: -20px -1px;
 }
 .mejs__playlist-button > .mejs__playlist-selector,
 .mejs-playlist-button > .mejs-playlist-selector {
@@ -32,9 +39,10 @@
 
 .mejs__playlist-selector-list,
 .mejs-playlist-selector-list {
+    height: 100%;
     list-style-type: none !important;
     margin: 0;
-    overflow: hidden;
+    overflow-y: auto;
     padding: 0;
 }
 
@@ -44,8 +52,9 @@
     cursor: pointer;
     display: block;
     list-style-type: none !important;
+    max-height: 50px;
     overflow: hidden;
-    padding: 0 5px;
+    padding: 0 10px 10px;
 }
 
 .mejs__playlist-selector-list-item:hover,
@@ -54,9 +63,9 @@
     background-color: rgba(255, 255, 255, 0.4) !important;
 }
 
-.mejs__playlist-selector-list-item > img,
-.mejs-playlist-selector-list-item > img {
-    max-width: 100%;
+.mejs__playlist-selector-list-item:focus,
+.mejs-playlist-selector-list-item:focus {
+    outline: none;
 }
 
 .mejs__playlist-selector-input,
@@ -79,20 +88,54 @@
 
 .mejs__playlist-selected,
 .mejs-playlist-selected {
-    color: rgba(33, 248, 248, 1);
+    background-color: rgba(35, 35, 35, 0.8);
 }
 
-.mejs__playlist-translations {
-    font-size: 10px;
-    margin: 0 0 5px;
-}
-
-.mejs__playlist-layer {
-    bottom: 0;
+.mejs__playlist-layer,
+.mejs-playlist-layer {
+    background: rgba(50, 50, 50, 0.7);
+    bottom: 40px;
     color: #fff;
-    font-size: 16px;
-    left: 0;
-    line-height: 20px;
+    font-size: 12px;
+    height: calc(100% - 40px) !important;
+    overflow: hidden;
     position: absolute;
+    right: 0;
     text-align: center;
+    top: 0;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    width: 33.33333% !important;
+    z-index: 2;
+}
+
+.mejs__playlist-hidden,
+.mejs-playlist-hidden {
+    right: -33.33333%;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+}
+
+.mejs__playlist-content,
+.mejs-playlist-content {
+    display: inline-block;
+    max-height: 50px;
+    width: 100%;
+}
+
+.mejs__playlist-content > img,
+.mejs-playlist-content > img {
+    float: left;
+    outline: none;
+    width: 30%;
+}
+.mejs__playlist-content > p,
+.mejs-playlist-content > p {
+    float: left;
+    margin: 0;
+    outline: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 70%;
 }

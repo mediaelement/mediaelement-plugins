@@ -7,7 +7,7 @@
  */
 
 // Translations (English required)
-mejs.i18n.en['mejs.playlist'] = 'Playlist';
+mejs.i18n.en['mejs.playlist'] = 'Toggle Playlist';
 mejs.i18n.en['mejs.playlist-prev'] = 'Previous';
 mejs.i18n.en['mejs.playlist-next'] = 'Next';
 
@@ -54,35 +54,26 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		player.currentPlaylistItem = 0;
+		player.originalControlsIndex = controls.style.zIndex;
+		controls.style.zIndex = 5;
 
 		player.playlistButton = document.createElement('div');
 		player.playlistButton.className = `${player.options.classPrefix}button ${player.options.classPrefix}playlist-button`;
 		player.playlistButton.innerHTML = `<button type="button" aria-controls="${player.id}" title="${playlistTitle}" aria-label="${playlistTitle}" tabindex="0"></button>`;
 
-		if (player.isVideo) {
-			player.playlistButton.innerHTML += `<div class="${player.options.classPrefix}playlist-selector ${player.options.classPrefix}offscreen">` +
-				`<ul class="${player.options.classPrefix}playlist-selector-list"></ul>` +
-				`</div>`;
-		} else {
-			player.playlistLayer = document.createElement('div');
-			player.playlistLayer.className = `${player.options.classPrefix}playlist-layer ${player.options.classPrefix}layer`;
-			player.playlistLayer.innerHTML = `<ul></ul>`;
-			layers.insertBefore(player.playlistLayer, layers.firstChild);
-		}
+		player.playlistLayer = document.createElement('div');
+		player.playlistLayer.className = `${player.options.classPrefix}playlist-layer  ${player.options.classPrefix}layer ${player.options.classPrefix}playlist-hidden ${player.options.classPrefix}playlist-selector`;
+		player.playlistLayer.innerHTML = `<ul class="${player.options.classPrefix}playlist-selector-list"></ul>`;
+		layers.insertBefore(player.playlistLayer, layers.firstChild);
 
 		for (let i = 0, total = player.listItems.length; i < total; i++) {
-			if (player.isVideo) {
-				player.playlistButton.querySelector(`.${player.options.classPrefix}playlist-selector-list`).innerHTML += player.listItems[i];
-			} else {
-				player.playlistLayer.querySelector(`ul`).innerHTML += player.listItems[i];
-			}
+			player.playlistLayer.querySelector('ul').innerHTML += player.listItems[i];
 		}
 
 		player.addControlElement(player.playlistButton, 'playlist');
-
 		player.endedCallback = () => {
 			if (player.currentPlaylistItem < player.totalItems) {
-				player.setSrc(player.options.playlist[++player.currentPlaylistItem]);
+				player.setSrc(player.playlist[++player.currentPlaylistItem]);
 				player.load();
 				player.play();
 			} else {
@@ -90,34 +81,48 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		};
 
+		player.keydownCallback = function (e) {
+			const event = mejs.Utils.createEvent('click', e.target);
+			e.target.dispatchEvent(event);
+			return false;
+		};
+
 		// Once current element has ended, proceed to play next one
 		media.addEventListener('ended', player.endedCallback);
 
+		player.playlistButton.addEventListener('click', function () {
+			mejs.Utils.toggleClass(player.playlistLayer, `${player.options.classPrefix}playlist-hidden`);
+		});
+
 		const
-			inEvents = ['mouseenter', 'focusin'],
-			outEvents = ['mouseleave', 'focusout'],
-			items = player.playlistButton.querySelectorAll(`.${player.options.classPrefix}playlist-selector-list-item`),
-			inputs = player.playlistButton.querySelectorAll('input[type=radio]')
+			items = player.playlistLayer.querySelectorAll(`.${player.options.classPrefix}playlist-selector-list-item`),
+			inputs = player.playlistLayer.querySelectorAll('input[type=radio]')
 		;
 
-		for (let i = 0, total = inEvents.length; i < total; i++) {
-			player.playlistButton.addEventListener(inEvents[i], function () {
-				mejs.Utils.removeClass(this.querySelector(`.${player.options.classPrefix}playlist-selector`), `${player.options.classPrefix}offscreen`);
-			});
-		}
-
-		for (let i = 0, total = outEvents.length; i < total; i++) {
-			player.playlistButton.addEventListener(outEvents[i], function () {
-				mejs.Utils.addClass(this.querySelector(`.${player.options.classPrefix}playlist-selector`), `${player.options.classPrefix}offscreen`);
-			});
-		}
-
 		for (let i = 0, total = inputs.length; i < total; i++) {
-			inputs[i].addEventListener('click',  function () {
+			inputs[i].addEventListener('click', function () {
+				const
+					radios = player.playlistLayer.querySelectorAll('input[type="radio"]'),
+					selected = player.playlistLayer.querySelectorAll(`.${player.options.classPrefix}playlist-selected`)
+				;
+
+				for (let j = 0, total2 = radios.length; j < total2; j++) {
+					radios[j].checked = false;
+				}
+				for (let j = 0, total2 = selected.length; j < total2; j++) {
+					mejs.Utils.removeClass(selected[j], `${player.options.classPrefix}playlist-selected`);
+				}
+
+				this.checked = true;
+				mejs.Utils.addClass(this.parentNode, `${player.options.classPrefix}playlist-selected`);
 				player.currentPlaylistItem = this.getAttribute('data-index');
 				player.setSrc(this.value);
 				player.load();
 				player.play();
+
+				if (player.isVideo) {
+					mejs.Utils.toggleClass(player.playlistLayer, `${player.options.classPrefix}playlist-hidden`);
+				}
 			});
 		}
 
@@ -132,8 +137,11 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		//Allow up/down arrow to change the selected radio without changing the volume.
-		player.playlistButton.addEventListener('keydown', (e) => {
-			e.stopPropagation();
+		player.playlistLayer.addEventListener('keydown', function (e) {
+			const keyCode = e.which || e.keyCode || 0;
+			if (~[13, 32, 38, 40].indexOf(keyCode)) {
+				player.keydownCallback(e);
+			}
 		});
 	},
 	cleanplaylist (player, controls, layers, media) {
@@ -229,11 +237,13 @@ Object.assign(MediaElementPlayer.prototype, {
 				thumbnail = element['data-thumbnail'] ? `<img tabindex="-1" src="${element['data-thumbnail']}">` : '',
 				description = element['data-description'] ? `<p role="link" tabindex="-1">${element['data-description']}</p>` : ''
 			;
+			item.tabIndex = 0;
 			item.classList = `${t.options.classPrefix}playlist-selector-list-item`;
 			item.innerHTML = `<input type="radio" class="${t.options.classPrefix}playlist-selector-input" ` +
 				`name="${t.id}_playlist" id="${id}" data-index="${i}" value="${element.src}" disabled>` +
-				`<label class="${t.options.classPrefix}playlist-selector-label"` +
-				`for="${id}">${(element.title || i)}</label>${thumbnail}${description}`;
+				`<label class="${t.options.classPrefix}playlist-selector-label" ` +
+				`for="${id}">${(element.title || i)}</label>` +
+				`<div class="${t.options.classPrefix}playlist-content">${thumbnail}${description}</div>`;
 
 			t.listItems.push(item.outerHTML);
 		}
