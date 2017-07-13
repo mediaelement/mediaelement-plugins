@@ -41,12 +41,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.originalControlsIndex = controls.style.zIndex;
 		controls.style.zIndex = 5;
 
-		player.playlistButton = document.createElement('div');
-		player.playlistButton.className = player.options.classPrefix + 'button ' + player.options.classPrefix + 'playlist-button';
-		player.playlistButton.innerHTML = '<button type="button" aria-controls="' + player.id + '" title="' + playlistTitle + '" aria-label="' + playlistTitle + '" tabindex="0"></button>';
-
 		player.playlistLayer = document.createElement('div');
-		player.playlistLayer.className = player.options.classPrefix + 'playlist-layer  ' + player.options.classPrefix + 'layer ' + player.options.classPrefix + 'playlist-hidden ' + player.options.classPrefix + 'playlist-selector';
+		player.playlistLayer.className = player.options.classPrefix + 'playlist-layer  ' + player.options.classPrefix + 'layer ' + (player.isVideo ? player.options.classPrefix + 'playlist-hidden' : '') + ' ' + player.options.classPrefix + 'playlist-selector';
 		player.playlistLayer.innerHTML = '<ul class="' + player.options.classPrefix + 'playlist-selector-list"></ul>';
 		layers.insertBefore(player.playlistLayer, layers.firstChild);
 
@@ -54,7 +50,26 @@ Object.assign(MediaElementPlayer.prototype, {
 			player.playlistLayer.querySelector('ul').innerHTML += player.listItems[i];
 		}
 
-		player.addControlElement(player.playlistButton, 'playlist');
+		if (player.isVideo) {
+			player.playlistButton = document.createElement('div');
+			player.playlistButton.className = player.options.classPrefix + 'button ' + player.options.classPrefix + 'playlist-button';
+			player.playlistButton.innerHTML = '<button type="button" aria-controls="' + player.id + '" title="' + playlistTitle + '" aria-label="' + playlistTitle + '" tabindex="0"></button>';
+			player.playlistButton.addEventListener('click', function () {
+				mejs.Utils.toggleClass(player.playlistLayer, player.options.classPrefix + 'playlist-hidden');
+			});
+			player.addControlElement(player.playlistButton, 'playlist');
+		} else {
+			var _items = player.playlistLayer.querySelectorAll('li');
+
+			if (_items.length <= 10) {
+				var height = 0;
+				for (var _i = 0, _total = _items.length; _i < _total; _i++) {
+					height += _items[_i].offsetHeight;
+				}
+				player.container.style.height = height + 'px';
+			}
+		}
+
 		player.endedCallback = function () {
 			if (player.currentPlaylistItem < player.totalItems) {
 				player.setSrc(player.playlist[++player.currentPlaylistItem]);
@@ -73,28 +88,24 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		media.addEventListener('ended', player.endedCallback);
 
-		player.playlistButton.addEventListener('click', function () {
-			mejs.Utils.toggleClass(player.playlistLayer, player.options.classPrefix + 'playlist-hidden');
-		});
-
 		var items = player.playlistLayer.querySelectorAll('.' + player.options.classPrefix + 'playlist-selector-list-item'),
 		    inputs = player.playlistLayer.querySelectorAll('input[type=radio]');
 
-		for (var _i = 0, _total = inputs.length; _i < _total; _i++) {
-			inputs[_i].addEventListener('click', function () {
+		for (var _i2 = 0, _total2 = inputs.length; _i2 < _total2; _i2++) {
+			inputs[_i2].addEventListener('click', function () {
 				var radios = player.playlistLayer.querySelectorAll('input[type="radio"]'),
 				    selected = player.playlistLayer.querySelectorAll('.' + player.options.classPrefix + 'playlist-selected');
 
 				for (var j = 0, total2 = radios.length; j < total2; j++) {
 					radios[j].checked = false;
 				}
-				for (var _j = 0, _total2 = selected.length; _j < _total2; _j++) {
+				for (var _j = 0, _total3 = selected.length; _j < _total3; _j++) {
 					mejs.Utils.removeClass(selected[_j], player.options.classPrefix + 'playlist-selected');
 				}
 
 				this.checked = true;
 				mejs.Utils.addClass(this.parentNode, player.options.classPrefix + 'playlist-selected');
-				player.currentPlaylistItem = this.getAttribute('data-index');
+				player.currentPlaylistItem = this.getAttribute('data-playlist-index');
 				player.setSrc(this.value);
 				player.load();
 				player.play();
@@ -105,8 +116,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			});
 		}
 
-		for (var _i2 = 0, _total3 = items.length; _i2 < _total3; _i2++) {
-			items[_i2].addEventListener('click', function () {
+		for (var _i3 = 0, _total4 = items.length; _i3 < _total4; _i3++) {
+			items[_i3].addEventListener('click', function () {
 				var radio = mejs.Utils.siblings(this.querySelector('.' + player.options.classPrefix + 'playlist-selector-label'), function (el) {
 					return el.tagName === 'INPUT';
 				})[0],
@@ -204,15 +215,15 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		t.listItems = [];
-		for (var _i3 = 0, _total4 = t.playlist.length; _i3 < _total4; _i3++) {
-			var element = t.playlist[_i3],
+		for (var _i4 = 0, _total5 = t.playlist.length; _i4 < _total5; _i4++) {
+			var element = t.playlist[_i4],
 			    item = document.createElement('li'),
-			    id = t.id + '_playlist_item_' + _i3,
-			    thumbnail = element['data-thumbnail'] ? '<img tabindex="-1" src="' + element['data-thumbnail'] + '">' : '',
-			    description = element['data-description'] ? '<p role="link" tabindex="-1">' + element['data-description'] + '</p>' : '';
+			    id = t.id + '_playlist_item_' + _i4,
+			    thumbnail = element['data-playlist-thumbnail'] ? '<div class="' + t.options.classPrefix + 'playlist-item-thumbnail"><img tabindex="-1" src="' + element['data-playlist-thumbnail'] + '"></div>' : '',
+			    description = element['data-playlist-description'] ? '<div class="' + t.options.classPrefix + 'playlist-item-description">' + element['data-playlist-description'] + '</div>' : '';
 			item.tabIndex = 0;
 			item.classList = t.options.classPrefix + 'playlist-selector-list-item';
-			item.innerHTML = '<input type="radio" class="' + t.options.classPrefix + 'playlist-selector-input" ' + ('name="' + t.id + '_playlist" id="' + id + '" data-index="' + _i3 + '" value="' + element.src + '" disabled>') + ('<label class="' + t.options.classPrefix + 'playlist-selector-label" ') + ('for="' + id + '">' + (element.title || _i3) + '</label>') + ('<div class="' + t.options.classPrefix + 'playlist-content">' + thumbnail + description + '</div>');
+			item.innerHTML = '<div class="' + t.options.classPrefix + 'playlist-item-inner">' + ('' + thumbnail) + ('<div class="' + t.options.classPrefix + 'playlist-item-content">') + ('<div><input type="radio" class="' + t.options.classPrefix + 'playlist-selector-input" ') + ('name="' + t.id + '_playlist" id="' + id + '" data-index="' + _i4 + '" value="' + element.src + '" disabled>') + ('<label class="' + t.options.classPrefix + 'playlist-selector-label" ') + ('for="' + id + '">' + (element.title || _i4) + '</label></div>' + description + '</div></div>');
 
 			t.listItems.push(item.outerHTML);
 		}

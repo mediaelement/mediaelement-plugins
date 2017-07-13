@@ -57,12 +57,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.originalControlsIndex = controls.style.zIndex;
 		controls.style.zIndex = 5;
 
-		player.playlistButton = document.createElement('div');
-		player.playlistButton.className = `${player.options.classPrefix}button ${player.options.classPrefix}playlist-button`;
-		player.playlistButton.innerHTML = `<button type="button" aria-controls="${player.id}" title="${playlistTitle}" aria-label="${playlistTitle}" tabindex="0"></button>`;
-
 		player.playlistLayer = document.createElement('div');
-		player.playlistLayer.className = `${player.options.classPrefix}playlist-layer  ${player.options.classPrefix}layer ${player.options.classPrefix}playlist-hidden ${player.options.classPrefix}playlist-selector`;
+		player.playlistLayer.className = `${player.options.classPrefix}playlist-layer  ${player.options.classPrefix}layer ${(player.isVideo ? `${player.options.classPrefix}playlist-hidden` : '')} ${player.options.classPrefix}playlist-selector`;
 		player.playlistLayer.innerHTML = `<ul class="${player.options.classPrefix}playlist-selector-list"></ul>`;
 		layers.insertBefore(player.playlistLayer, layers.firstChild);
 
@@ -70,7 +66,26 @@ Object.assign(MediaElementPlayer.prototype, {
 			player.playlistLayer.querySelector('ul').innerHTML += player.listItems[i];
 		}
 
-		player.addControlElement(player.playlistButton, 'playlist');
+		if (player.isVideo) {
+			player.playlistButton = document.createElement('div');
+			player.playlistButton.className = `${player.options.classPrefix}button ${player.options.classPrefix}playlist-button`;
+			player.playlistButton.innerHTML = `<button type="button" aria-controls="${player.id}" title="${playlistTitle}" aria-label="${playlistTitle}" tabindex="0"></button>`;
+			player.playlistButton.addEventListener('click', function () {
+				mejs.Utils.toggleClass(player.playlistLayer, `${player.options.classPrefix}playlist-hidden`);
+			});
+			player.addControlElement(player.playlistButton, 'playlist');
+		} else {
+			const items = player.playlistLayer.querySelectorAll('li');
+
+			if (items.length <= 10) {
+				let height = 0;
+				for (let i = 0, total = items.length; i < total; i++) {
+					height += items[i].offsetHeight;
+				}
+				player.container.style.height = `${height}px`;
+			}
+		}
+
 		player.endedCallback = () => {
 			if (player.currentPlaylistItem < player.totalItems) {
 				player.setSrc(player.playlist[++player.currentPlaylistItem]);
@@ -89,10 +104,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// Once current element has ended, proceed to play next one
 		media.addEventListener('ended', player.endedCallback);
-
-		player.playlistButton.addEventListener('click', function () {
-			mejs.Utils.toggleClass(player.playlistLayer, `${player.options.classPrefix}playlist-hidden`);
-		});
 
 		const
 			items = player.playlistLayer.querySelectorAll(`.${player.options.classPrefix}playlist-selector-list-item`),
@@ -115,7 +126,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				this.checked = true;
 				mejs.Utils.addClass(this.parentNode, `${player.options.classPrefix}playlist-selected`);
-				player.currentPlaylistItem = this.getAttribute('data-index');
+				player.currentPlaylistItem = this.getAttribute('data-playlist-index');
 				player.setSrc(this.value);
 				player.load();
 				player.play();
@@ -234,16 +245,18 @@ Object.assign(MediaElementPlayer.prototype, {
 				element = t.playlist[i],
 				item = document.createElement('li'),
 				id = `${t.id}_playlist_item_${i}`,
-				thumbnail = element['data-thumbnail'] ? `<img tabindex="-1" src="${element['data-thumbnail']}">` : '',
-				description = element['data-description'] ? `<p role="link" tabindex="-1">${element['data-description']}</p>` : ''
+				thumbnail = element['data-playlist-thumbnail'] ? `<div class="${t.options.classPrefix}playlist-item-thumbnail"><img tabindex="-1" src="${element['data-playlist-thumbnail']}"></div>` : '',
+				description = element['data-playlist-description'] ? `<div class="${t.options.classPrefix}playlist-item-description">${element['data-playlist-description']}</div>` : ''
 			;
 			item.tabIndex = 0;
 			item.classList = `${t.options.classPrefix}playlist-selector-list-item`;
-			item.innerHTML = `<input type="radio" class="${t.options.classPrefix}playlist-selector-input" ` +
+			item.innerHTML = `<div class="${t.options.classPrefix}playlist-item-inner">` +
+				`${thumbnail}` +
+				`<div class="${t.options.classPrefix}playlist-item-content">` +
+				`<div><input type="radio" class="${t.options.classPrefix}playlist-selector-input" ` +
 				`name="${t.id}_playlist" id="${id}" data-index="${i}" value="${element.src}" disabled>` +
 				`<label class="${t.options.classPrefix}playlist-selector-label" ` +
-				`for="${id}">${(element.title || i)}</label>` +
-				`<div class="${t.options.classPrefix}playlist-content">${thumbnail}${description}</div>`;
+				`for="${id}">${(element.title || i)}</label></div>${description}</div></div>`;
 
 			t.listItems.push(item.outerHTML);
 		}
