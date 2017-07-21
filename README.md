@@ -31,9 +31,9 @@ This change is for `MediaElement` and `MediaElement Plugins` repositories.
 <a id="installation"></a>
 # Installation
 
-Download the package from https://github.com/johndyer/mediaelement-plugins, and reference any plugins you need from `dist` folder and add any configuration related to the plugin.
+Download the package from https://github.com/mediaelement/mediaelement-plugins, and reference any plugins you need from `dist` folder and add any configuration related to the plugin.
 
-Or you can use a CDN; check http://cdn.jsdelivr.net/npm/mediaelement-plugins/ or https://cdnjs.com/libraries/mediaelement-plugins.
+Or you can use a CDN; check https://cdnjs.com/libraries/mediaelement-plugins.
 
 For example, if you want to install `Speed` plugin do the following:
 ```html
