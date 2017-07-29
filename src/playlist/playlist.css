@@ -1,6 +1,6 @@
 .mejs__container.mejs__video,
 .mejs-container.mejs-video {
-    overflow-x: hidden;
+    overflow: hidden;
 }
 .mejs__container.mejs__audio,
 .mejs-container.mejs-audio {
@@ -15,20 +15,38 @@
 .mejs__next-button > button,
 .mejs-next-button > button,
 .mejs__prev-button > button,
-.mejs-prev-button > button {
+.mejs-prev-button > button,
+.mejs__loop-button > button,
+.mejs-loop-button > button,
+.mejs__shuffle-button > button,
+.mejs-shuffle-button > button {
     background: url('playlist-controls.svg') transparent no-repeat;
 }
 .mejs__playlist-button > button,
 .mejs-playlist-button > button {
-    background-position: -80px -1px;
+    background-position: -80px 0;
 }
 .mejs__next-button > button,
 .mejs-next-button > button {
-    background-position: 0 -1px;
+    background-position: 0;
 }
 .mejs__prev-button > button,
 .mejs-prev-button > button {
-    background-position: -20px -1px;
+    background-position: -20px 0;
+}
+.mejs__loop-button > button,
+.mejs-loop-button > button {
+    background-position: -120px 0;
+}
+.mejs__shuffle-button > button,
+.mejs-shuffle-button > button {
+    background-position: -100px 0;
+}
+.mejs__loop-button.mejs__loop-off > button,
+.mejs-loop-button.mejs-loop-off > button,
+.mejs__shuffle-button.mejs__shuffle-off > button,
+.mejs-shuffle-button.mejs-shuffle-off > button {
+    opacity: 0.7;
 }
 .mejs__playlist-button > .mejs__playlist-selector,
 .mejs-playlist-button > .mejs-playlist-selector {

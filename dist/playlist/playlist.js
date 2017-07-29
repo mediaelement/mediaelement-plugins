@@ -15,6 +15,8 @@
 mejs.i18n.en['mejs.playlist'] = 'Toggle Playlist';
 mejs.i18n.en['mejs.playlist-prev'] = 'Previous';
 mejs.i18n.en['mejs.playlist-next'] = 'Next';
+mejs.i18n.en['mejs.playlist-loop'] = 'Loop';
+mejs.i18n.en['mejs.playlist-shuffle'] = 'Shuffle';
 
 Object.assign(mejs.MepDefaults, {
 	playlist: [],
@@ -22,6 +24,10 @@ Object.assign(mejs.MepDefaults, {
 	prevText: null,
 
 	nextText: null,
+
+	loopText: null,
+
+	shuffleText: null,
 
 	playlistTitle: null
 });
@@ -134,7 +140,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 	},
 	cleanplaylist: function cleanplaylist(player, controls, layers, media) {
-		media.removeEventListener('ended', player.endedCallback_);
+		media.removeEventListener('ended', player.endedCallback);
 	},
 	buildprevtrack: function buildprevtrack(player) {
 
@@ -144,7 +150,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.prevButton.className = player.options.classPrefix + 'button ' + player.options.classPrefix + 'prev-button';
 		player.prevButton.innerHTML = '<button type="button" aria-controls="' + player.id + '" title="' + prevTitle + '" aria-label="' + prevTitle + '" tabindex="0"></button>';
 
-		player.prevPlaylistCallback_ = function () {
+		player.prevPlaylistCallback = function () {
 			if (player.playlist[--player.currentPlaylistItem]) {
 				player.setSrc(player.playlist[player.currentPlaylistItem].src);
 				player.load();
@@ -154,11 +160,11 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		};
 
-		player.prevButton.addEventListener('click', player.prevPlaylistCallback_);
+		player.prevButton.addEventListener('click', player.prevPlaylistCallback);
 		player.addControlElement(player.prevButton, 'prevtrack');
 	},
 	cleanprevtrack: function cleanprevtrack(player) {
-		player.prevButton.removeEventListener('click', player.prevPlaylistCallback_);
+		player.prevButton.removeEventListener('click', player.prevPlaylistCallback);
 	},
 	buildnexttrack: function buildnexttrack(player) {
 		var defaultNextTitle = mejs.i18n.t('mejs.playlist-next'),
@@ -167,7 +173,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.nextButton.className = player.options.classPrefix + 'button ' + player.options.classPrefix + 'next-button';
 		player.nextButton.innerHTML = '<button type="button" aria-controls="' + player.id + '" title="' + nextTitle + '" aria-label="' + nextTitle + '" tabindex="0"></button>';
 
-		player.nextPlaylistCallback_ = function () {
+		player.nextPlaylistCallback = function () {
 			if (player.playlist[++player.currentPlaylistItem]) {
 				player.setSrc(player.playlist[player.currentPlaylistItem].src);
 				player.load();
@@ -177,11 +183,79 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		};
 
-		player.nextButton.addEventListener('click', player.nextPlaylistCallback_);
+		player.nextButton.addEventListener('click', player.nextPlaylistCallback);
 		player.addControlElement(player.nextButton, 'nexttrack');
 	},
 	cleannexttrack: function cleannexttrack(player) {
-		player.nextButton.removeEventListener('click', player.nextPlaylistCallback_);
+		player.nextButton.removeEventListener('click', player.nextPlaylistCallback);
+	},
+	buildloop: function buildloop(player) {
+		var defaultLoopTitle = mejs.i18n.t('mejs.playlist-loop'),
+		    loopTitle = mejs.Utils.isString(player.options.loopText) ? player.options.loopText : defaultLoopTitle;
+
+		player.loopButton = document.createElement('div');
+		player.loopButton.className = player.options.classPrefix + 'button ' + player.options.classPrefix + 'loop-button ' + (player.options.loop ? player.options.classPrefix + 'loop-on' : player.options.classPrefix + 'loop-off');
+		player.loopButton.innerHTML = '<button type="button" aria-controls="' + player.id + '" title="' + loopTitle + '" aria-label="' + loopTitle + '" tabindex="0"></button>';
+		player.loopCallback = function () {
+			player.options.loop = !player.options.loop;
+			if (player.options.loop) {
+				mejs.Utils.removeClass(player.loopButton, player.options.classPrefix + 'loop-off');
+				mejs.Utils.addClass(player.loopButton, player.options.classPrefix + 'loop-on');
+			} else {
+				mejs.Utils.removeClass(player.loopButton, player.options.classPrefix + 'loop-on');
+				mejs.Utils.addClass(player.loopButton, player.options.classPrefix + 'loop-off');
+			}
+		};
+
+		player.loopButton.addEventListener('click', player.loopCallback);
+		player.addControlElement(player.loopButton, 'loop');
+	},
+	cleanloop: function cleanloop(player) {
+		player.loopButton.removeEventListener('click', player.loopCallback);
+	},
+	buildshuffle: function buildshuffle(player) {
+		var defaultShuffleTitle = mejs.i18n.t('mejs.playlist-shuffle'),
+		    shuffleTitle = mejs.Utils.isString(player.options.shuffleText) ? player.options.shuffleText : defaultShuffleTitle,
+		    playedItems = [];
+		player.shuffleButton = document.createElement('div');
+		player.shuffleButton.className = player.options.classPrefix + 'button ' + player.options.classPrefix + 'shuffle-button ' + player.options.classPrefix + 'shuffle-off';
+		player.shuffleButton.innerHTML = '<button type="button" aria-controls="' + player.id + '" title="' + shuffleTitle + '" aria-label="' + shuffleTitle + '" tabindex="0"></button>';
+
+		var enabled = false;
+		var endedCallback = function endedCallback() {
+			if (!player.options.loop) {
+				var randomItem = Math.floor(Math.random() * player.playlist.length);
+				if (playedItems.indexOf(randomItem) === -1) {
+					player.setSrc(player.playlist[randomItem].src);
+					player.load();
+					player.play();
+					player.currentPlaylistItem = randomItem;
+					playedItems.push(randomItem);
+				} else if (playedItems.length < player.playlist.length) {
+					player.shuffleCallback();
+				}
+			}
+		};
+
+		player.shuffleCallback = function () {
+			if (!enabled) {
+				mejs.Utils.removeClass(player.shuffleButton, player.options.classPrefix + 'shuffle-off');
+				mejs.Utils.addClass(player.shuffleButton, player.options.classPrefix + 'shuffle-on');
+				enabled = true;
+				t.media.addEventListener('ended', endedCallback);
+			} else {
+				mejs.Utils.removeClass(player.shuffleButton, player.options.classPrefix + 'shuffle-on');
+				mejs.Utils.addClass(player.shuffleButton, player.options.classPrefix + 'shuffle-off');
+				enabled = false;
+				t.media.removeEventListener('ended', endedCallback);
+			}
+		};
+
+		player.shuffleButton.addEventListener('click', player.shuffleCallback);
+		player.addControlElement(player.shuffleButton, 'shuffle');
+	},
+	cleanshuffle: function cleanshuffle(player) {
+		player.shuffleButton.removeEventListener('click', player.shuffleCallback);
 	},
 	createPlayList_: function createPlayList_() {
 		var t = this;

@@ -10,6 +10,8 @@
 mejs.i18n.en['mejs.playlist'] = 'Toggle Playlist';
 mejs.i18n.en['mejs.playlist-prev'] = 'Previous';
 mejs.i18n.en['mejs.playlist-next'] = 'Next';
+mejs.i18n.en['mejs.playlist-loop'] = 'Loop';
+mejs.i18n.en['mejs.playlist-shuffle'] = 'Shuffle';
 
 // Feature configuration
 Object.assign(mejs.MepDefaults, {
@@ -26,6 +28,14 @@ Object.assign(mejs.MepDefaults, {
 	 * @type {?String}
 	 */
 	nextText: null,
+	/*
+	 * @type {?String}
+	 */
+	loopText: null,
+	/*
+	 * @type {?String}
+	 */
+	shuffleText: null,
 	/**
 	 * @type {?String}
 	 */
@@ -156,7 +166,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 	},
 	cleanplaylist (player, controls, layers, media) {
-		media.removeEventListener('ended', player.endedCallback_);
+		media.removeEventListener('ended', player.endedCallback);
 	},
 	buildprevtrack (player)  {
 
@@ -168,7 +178,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.prevButton.className = `${player.options.classPrefix}button ${player.options.classPrefix}prev-button`;
 		player.prevButton.innerHTML = `<button type="button" aria-controls="${player.id}" title="${prevTitle}" aria-label="${prevTitle}" tabindex="0"></button>`;
 
-		player.prevPlaylistCallback_= () => {
+		player.prevPlaylistCallback = () => {
 			if (player.playlist[--player.currentPlaylistItem]) {
 				player.setSrc(player.playlist[player.currentPlaylistItem].src);
 				player.load();
@@ -178,11 +188,11 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		};
 
-		player.prevButton.addEventListener('click', player.prevPlaylistCallback_);
+		player.prevButton.addEventListener('click', player.prevPlaylistCallback);
 		player.addControlElement(player.prevButton, 'prevtrack');
 	},
 	cleanprevtrack (player) {
-		player.prevButton.removeEventListener('click', player.prevPlaylistCallback_);
+		player.prevButton.removeEventListener('click', player.prevPlaylistCallback);
 	},
 	buildnexttrack (player)  {
 		const
@@ -193,7 +203,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.nextButton.className = `${player.options.classPrefix}button ${player.options.classPrefix}next-button`;
 		player.nextButton.innerHTML = `<button type="button" aria-controls="${player.id}" title="${nextTitle}" aria-label="${nextTitle}" tabindex="0"></button>`;
 
-		player.nextPlaylistCallback_= () => {
+		player.nextPlaylistCallback = () => {
 			if (player.playlist[++player.currentPlaylistItem]) {
 				player.setSrc(player.playlist[player.currentPlaylistItem].src);
 				player.load();
@@ -203,12 +213,86 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		};
 
-		player.nextButton.addEventListener('click', player.nextPlaylistCallback_);
+		player.nextButton.addEventListener('click', player.nextPlaylistCallback);
 		player.addControlElement(player.nextButton, 'nexttrack');
 	},
 	cleannexttrack (player) {
-		player.nextButton.removeEventListener('click', player.nextPlaylistCallback_);
+		player.nextButton.removeEventListener('click', player.nextPlaylistCallback);
 	},
+	buildloop (player)  {
+		const
+			defaultLoopTitle = mejs.i18n.t('mejs.playlist-loop'),
+			loopTitle = mejs.Utils.isString(player.options.loopText) ? player.options.loopText : defaultLoopTitle
+		;
+
+		player.loopButton = document.createElement('div');
+		player.loopButton.className = `${player.options.classPrefix}button ${player.options.classPrefix}loop-button ${((player.options.loop) ? `${player.options.classPrefix}loop-on` : `${player.options.classPrefix}loop-off`)}`;
+		player.loopButton.innerHTML = `<button type="button" aria-controls="${player.id}" title="${loopTitle}" aria-label="${loopTitle}" tabindex="0"></button>`;
+		player.loopCallback = () => {
+			player.options.loop = !player.options.loop;
+			if (player.options.loop) {
+				mejs.Utils.removeClass(player.loopButton, `${player.options.classPrefix}loop-off`);
+				mejs.Utils.addClass(player.loopButton, `${player.options.classPrefix}loop-on`);
+			} else {
+				mejs.Utils.removeClass(player.loopButton, `${player.options.classPrefix}loop-on`);
+				mejs.Utils.addClass(player.loopButton, `${player.options.classPrefix}loop-off`);
+			}
+		};
+
+		// add a click toggle event
+		player.loopButton.addEventListener('click', player.loopCallback);
+		player.addControlElement(player.loopButton, 'loop');
+	},
+	cleanloop (player) {
+		player.loopButton.removeEventListener('click', player.loopCallback);
+	},
+	buildshuffle (player)  {
+		const
+			defaultShuffleTitle = mejs.i18n.t('mejs.playlist-shuffle'),
+			shuffleTitle = mejs.Utils.isString(player.options.shuffleText) ? player.options.shuffleText : defaultShuffleTitle,
+			playedItems = []
+		;
+		player.shuffleButton = document.createElement('div');
+		player.shuffleButton.className = `${player.options.classPrefix}button ${player.options.classPrefix}shuffle-button ${player.options.classPrefix}shuffle-off`;
+		player.shuffleButton.innerHTML = `<button type="button" aria-controls="${player.id}" title="${shuffleTitle}" aria-label="${shuffleTitle}" tabindex="0"></button>`;
+
+		let enabled = false;
+		const endedCallback = () => {
+			if (!player.options.loop) {
+				const randomItem = Math.floor(Math.random() * player.playlist.length);
+				if (playedItems.indexOf(randomItem) === -1) {
+					player.setSrc(player.playlist[randomItem].src);
+					player.load();
+					player.play();
+					player.currentPlaylistItem = randomItem;
+					playedItems.push(randomItem);
+				} else if (playedItems.length < player.playlist.length) {
+					player.shuffleCallback();
+				}
+			}
+		};
+
+		player.shuffleCallback = () => {
+			if (!enabled) {
+				mejs.Utils.removeClass(player.shuffleButton, `${player.options.classPrefix}shuffle-off`);
+				mejs.Utils.addClass(player.shuffleButton, `${player.options.classPrefix}shuffle-on`);
+				enabled = true;
+				t.media.addEventListener('ended', endedCallback);
+			} else {
+				mejs.Utils.removeClass(player.shuffleButton, `${player.options.classPrefix}shuffle-on`);
+				mejs.Utils.addClass(player.shuffleButton, `${player.options.classPrefix}shuffle-off`);
+				enabled = false;
+				t.media.removeEventListener('ended', endedCallback);
+			}
+		};
+
+		player.shuffleButton.addEventListener('click', player.shuffleCallback);
+		player.addControlElement(player.shuffleButton, 'shuffle');
+	},
+	cleanshuffle (player) {
+		player.shuffleButton.removeEventListener('click', player.shuffleCallback);
+	},
+
 	createPlayList_ () {
 		const t = this;
 
