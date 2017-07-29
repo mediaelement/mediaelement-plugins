@@ -1,10 +1,12 @@
 ### Version History
 
-*2.3.1 (2017/??/??)*
+*2.3.1 (2017/07/22)*
 
 * Added missing workflow to avoid loading multiple times same source on `Chromecast` plugin and added code to end session correctly @rafa8626
 * Fixed issues on `Ads` plugin when using iframe renderers with it @rafa8626
 * Fixed issue with `Context Menu` plugin to only be used on video media @rafa8626
+* Fixed height on `Speed` plugin to display speed rates properly on audio tag @rafa8626
+* Updated README file @rafa8626
 
 *2.3.0 (2017/06/26)*
 
