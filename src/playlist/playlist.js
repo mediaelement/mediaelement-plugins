@@ -16,6 +16,10 @@ mejs.i18n.en['mejs.playlist-shuffle'] = 'Shuffle';
 // Feature configuration
 Object.assign(mejs.MepDefaults, {
 	/**
+	 * @type {Boolean}
+	 */
+	showPlaylist: true,
+	/**
 	 * List to be played; each object MUST have `src` and `title`; other items: `data-thumbnail`, `type`, `description`
 	 * @type {Object[]}
 	 */
@@ -39,7 +43,11 @@ Object.assign(mejs.MepDefaults, {
 	/**
 	 * @type {?String}
 	 */
-	playlistTitle: null
+	playlistTitle: null,
+	/**
+	 * @type {?String}
+	 */
+	currentMessage: null,
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -52,7 +60,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {HTMLElement} layers
 	 * @param {HTMLElement} media
 	 */
-	buildplaylist (player, controls, layers, media)  {
+	buildplaylist (player, controls, layers, media) {
 
 		const
 			defaultPlaylistTitle = mejs.i18n.t('mejs.playlist'),
@@ -67,108 +75,126 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.originalControlsIndex = controls.style.zIndex;
 		controls.style.zIndex = 5;
 
-		player.playlistLayer = document.createElement('div');
-		player.playlistLayer.className = `${player.options.classPrefix}playlist-layer  ${player.options.classPrefix}layer ${(player.isVideo ? `${player.options.classPrefix}playlist-hidden` : '')} ${player.options.classPrefix}playlist-selector`;
-		player.playlistLayer.innerHTML = `<ul class="${player.options.classPrefix}playlist-selector-list"></ul>`;
-		layers.insertBefore(player.playlistLayer, layers.firstChild);
-
-		for (let i = 0, total = player.listItems.length; i < total; i++) {
-			player.playlistLayer.querySelector('ul').innerHTML += player.listItems[i];
-		}
-
-		if (player.isVideo) {
-			player.playlistButton = document.createElement('div');
-			player.playlistButton.className = `${player.options.classPrefix}button ${player.options.classPrefix}playlist-button`;
-			player.playlistButton.innerHTML = `<button type="button" aria-controls="${player.id}" title="${playlistTitle}" aria-label="${playlistTitle}" tabindex="0"></button>`;
-			player.playlistButton.addEventListener('click', function () {
-				mejs.Utils.toggleClass(player.playlistLayer, `${player.options.classPrefix}playlist-hidden`);
-			});
-			player.addControlElement(player.playlistButton, 'playlist');
-		} else {
-			const items = player.playlistLayer.querySelectorAll('li');
-
-			if (items.length <= 10) {
-				let height = 0;
-				for (let i = 0, total = items.length; i < total; i++) {
-					height += items[i].offsetHeight;
-				}
-				player.container.style.height = `${height}px`;
-			}
-		}
-
 		player.endedCallback = () => {
 			if (player.currentPlaylistItem < player.totalItems) {
 				player.setSrc(player.playlist[++player.currentPlaylistItem]);
 				player.load();
 				player.play();
-			} else {
-				mejs.Utils.addClass(nextButton, `${this.options.classPrefix}off`);
 			}
-		};
-
-		player.keydownCallback = function (e) {
-			const event = mejs.Utils.createEvent('click', e.target);
-			e.target.dispatchEvent(event);
-			return false;
 		};
 
 		// Once current element has ended, proceed to play next one
 		media.addEventListener('ended', player.endedCallback);
 
-		const
-			items = player.playlistLayer.querySelectorAll(`.${player.options.classPrefix}playlist-selector-list-item`),
-			inputs = player.playlistLayer.querySelectorAll('input[type=radio]')
-		;
+		if (!player.isVideo) {
+			const currentItem = document.createElement('div');
+			currentItem.className = `${player.options.classPrefix}playlist-current ${player.options.classPrefix}layer`;
+			currentItem.innerHTML = `<p>${player.options.currentMessage}</p>`;
+			layers.insertBefore(currentItem, layers.firstChild);
 
-		for (let i = 0, total = inputs.length; i < total; i++) {
-			inputs[i].addEventListener('click', function () {
-				const
-					radios = player.playlistLayer.querySelectorAll('input[type="radio"]'),
-					selected = player.playlistLayer.querySelectorAll(`.${player.options.classPrefix}playlist-selected`)
-				;
-
-				for (let j = 0, total2 = radios.length; j < total2; j++) {
-					radios[j].checked = false;
+			media.addEventListener('play', () => {
+				currentItem.innerHTML = `<p>${player.options.currentMessage} <span class="${player.options.classPrefix}playlist-current-title">${player.playlist[player.currentPlaylistItem].title}</span>`;
+				if (player.playlist[player.currentPlaylistItem].description) {
+					currentItem.innerHTML += ` - <span class="${player.options.classPrefix}playlist-current-description">${player.playlist[player.currentPlaylistItem].description}</span>`;
 				}
-				for (let j = 0, total2 = selected.length; j < total2; j++) {
-					mejs.Utils.removeClass(selected[j], `${player.options.classPrefix}playlist-selected`);
-				}
-
-				this.checked = true;
-				mejs.Utils.addClass(this.parentNode, `${player.options.classPrefix}playlist-selected`);
-				player.currentPlaylistItem = this.getAttribute('data-playlist-index');
-				player.setSrc(this.value);
-				player.load();
-				player.play();
-
-				if (player.isVideo) {
-					mejs.Utils.toggleClass(player.playlistLayer, `${player.options.classPrefix}playlist-hidden`);
-				}
+				currentItem.innerHTML += '</p>';
+				player.resetSize();
 			});
 		}
 
-		for (let i = 0, total = items.length; i < total; i++) {
-			items[i].addEventListener('click',  function () {
-				const
-					radio = mejs.Utils.siblings(this.querySelector(`.${player.options.classPrefix}playlist-selector-label`), (el) => el.tagName === 'INPUT')[0],
-					event = mejs.Utils.createEvent('click', radio)
-				;
-				radio.dispatchEvent(event);
-			});
-		}
+		if (player.options.showPlaylist) {
+			player.playlistLayer = document.createElement('div');
+			player.playlistLayer.className = `${player.options.classPrefix}playlist-layer  ${player.options.classPrefix}layer ${(player.isVideo ? `${player.options.classPrefix}playlist-hidden` : '')} ${player.options.classPrefix}playlist-selector`;
+			player.playlistLayer.innerHTML = `<ul class="${player.options.classPrefix}playlist-selector-list"></ul>`;
+			layers.insertBefore(player.playlistLayer, layers.firstChild);
 
-		//Allow up/down arrow to change the selected radio without changing the volume.
-		player.playlistLayer.addEventListener('keydown', function (e) {
-			const keyCode = e.which || e.keyCode || 0;
-			if (~[13, 32, 38, 40].indexOf(keyCode)) {
-				player.keydownCallback(e);
+			for (let i = 0, total = player.listItems.length; i < total; i++) {
+				player.playlistLayer.querySelector('ul').innerHTML += player.listItems[i];
 			}
-		});
+
+			if (player.isVideo) {
+				player.playlistButton = document.createElement('div');
+				player.playlistButton.className = `${player.options.classPrefix}button ${player.options.classPrefix}playlist-button`;
+				player.playlistButton.innerHTML = `<button type="button" aria-controls="${player.id}" title="${playlistTitle}" aria-label="${playlistTitle}" tabindex="0"></button>`;
+				player.playlistButton.addEventListener('click', function () {
+					mejs.Utils.toggleClass(player.playlistLayer, `${player.options.classPrefix}playlist-hidden`);
+				});
+				player.addControlElement(player.playlistButton, 'playlist');
+			} else {
+				const items = player.playlistLayer.querySelectorAll('li');
+
+				if (items.length <= 10) {
+					let height = 0;
+					for (let i = 0, total = items.length; i < total; i++) {
+						height += items[i].offsetHeight;
+					}
+					player.container.style.height = `${height}px`;
+				}
+			}
+
+			const
+				items = player.playlistLayer.querySelectorAll(`.${player.options.classPrefix}playlist-selector-list-item`),
+				inputs = player.playlistLayer.querySelectorAll('input[type=radio]')
+			;
+
+			for (let i = 0, total = inputs.length; i < total; i++) {
+				inputs[i].addEventListener('click', function () {
+					const
+						radios = player.playlistLayer.querySelectorAll('input[type="radio"]'),
+						selected = player.playlistLayer.querySelectorAll(`.${player.options.classPrefix}playlist-selected`)
+					;
+
+					for (let j = 0, total2 = radios.length; j < total2; j++) {
+						radios[j].checked = false;
+					}
+					for (let j = 0, total2 = selected.length; j < total2; j++) {
+						mejs.Utils.removeClass(selected[j], `${player.options.classPrefix}playlist-selected`);
+					}
+
+					this.checked = true;
+					mejs.Utils.addClass(this.parentNode, `${player.options.classPrefix}playlist-selected`);
+					player.currentPlaylistItem = this.getAttribute('data-playlist-index');
+					player.setSrc(this.value);
+					player.load();
+					player.play();
+
+					if (player.isVideo) {
+						mejs.Utils.toggleClass(player.playlistLayer, `${player.options.classPrefix}playlist-hidden`);
+					}
+				});
+			}
+
+			for (let i = 0, total = items.length; i < total; i++) {
+				items[i].addEventListener('click', function () {
+					const
+						radio = mejs.Utils.siblings(this.querySelector(`.${player.options.classPrefix}playlist-selector-label`), (el) => el.tagName === 'INPUT')[0],
+						event = mejs.Utils.createEvent('click', radio)
+					;
+					radio.dispatchEvent(event);
+				});
+			}
+
+			player.keydownCallback = function (e) {
+				const event = mejs.Utils.createEvent('click', e.target);
+				e.target.dispatchEvent(event);
+				return false;
+			};
+
+			//Allow up/down arrow to change the selected radio without changing the volume.
+			player.playlistLayer.addEventListener('keydown', function (e) {
+				const keyCode = e.which || e.keyCode || 0;
+				if (~[13, 32, 38, 40].indexOf(keyCode)) {
+					player.keydownCallback(e);
+				}
+			});
+		} else {
+			mejs.Utils.addClass(player.container, `${player.options.classPrefix}no-playlist`);
+		}
 	},
 	cleanplaylist (player, controls, layers, media) {
 		media.removeEventListener('ended', player.endedCallback);
 	},
-	buildprevtrack (player)  {
+	buildprevtrack (player) {
 
 		const
 			defaultPrevTitle = mejs.i18n.t('mejs.playlist-prev'),
@@ -194,7 +220,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	cleanprevtrack (player) {
 		player.prevButton.removeEventListener('click', player.prevPlaylistCallback);
 	},
-	buildnexttrack (player)  {
+	buildnexttrack (player) {
 		const
 			defaultNextTitle = mejs.i18n.t('mejs.playlist-next'),
 			nextTitle = mejs.Utils.isString(player.options.nextText) ? player.options.nextText : defaultNextTitle
@@ -219,7 +245,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	cleannexttrack (player) {
 		player.nextButton.removeEventListener('click', player.nextPlaylistCallback);
 	},
-	buildloop (player)  {
+	buildloop (player) {
 		const
 			defaultLoopTitle = mejs.i18n.t('mejs.playlist-loop'),
 			loopTitle = mejs.Utils.isString(player.options.loopText) ? player.options.loopText : defaultLoopTitle
@@ -246,7 +272,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	cleanloop (player) {
 		player.loopButton.removeEventListener('click', player.loopCallback);
 	},
-	buildshuffle (player)  {
+	buildshuffle (player) {
 		const
 			defaultShuffleTitle = mejs.i18n.t('mejs.playlist-shuffle'),
 			shuffleTitle = mejs.Utils.isString(player.options.shuffleText) ? player.options.shuffleText : defaultShuffleTitle,
@@ -255,9 +281,14 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.shuffleButton = document.createElement('div');
 		player.shuffleButton.className = `${player.options.classPrefix}button ${player.options.classPrefix}shuffle-button ${player.options.classPrefix}shuffle-off`;
 		player.shuffleButton.innerHTML = `<button type="button" aria-controls="${player.id}" title="${shuffleTitle}" aria-label="${shuffleTitle}" tabindex="0"></button>`;
+		player.shuffleButton.style.display = 'none';
+		player.media.addEventListener('play', () => {
+			player.shuffleButton.style.display = '';
+			player.resetSize();
+		});
 
 		let enabled = false;
-		const endedCallback = () => {
+		const randomizeCallback = () => {
 			if (!player.options.loop) {
 				const randomItem = Math.floor(Math.random() * player.playlist.length);
 				if (playedItems.indexOf(randomItem) === -1) {
@@ -277,12 +308,12 @@ Object.assign(MediaElementPlayer.prototype, {
 				mejs.Utils.removeClass(player.shuffleButton, `${player.options.classPrefix}shuffle-off`);
 				mejs.Utils.addClass(player.shuffleButton, `${player.options.classPrefix}shuffle-on`);
 				enabled = true;
-				t.media.addEventListener('ended', endedCallback);
+				player.media.addEventListener('ended', randomizeCallback);
 			} else {
 				mejs.Utils.removeClass(player.shuffleButton, `${player.options.classPrefix}shuffle-on`);
 				mejs.Utils.addClass(player.shuffleButton, `${player.options.classPrefix}shuffle-off`);
 				enabled = false;
-				t.media.removeEventListener('ended', endedCallback);
+				player.media.removeEventListener('ended', randomizeCallback);
 			}
 		};
 

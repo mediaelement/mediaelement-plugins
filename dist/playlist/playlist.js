@@ -19,6 +19,8 @@ mejs.i18n.en['mejs.playlist-loop'] = 'Loop';
 mejs.i18n.en['mejs.playlist-shuffle'] = 'Shuffle';
 
 Object.assign(mejs.MepDefaults, {
+	showPlaylist: true,
+
 	playlist: [],
 
 	prevText: null,
@@ -29,12 +31,13 @@ Object.assign(mejs.MepDefaults, {
 
 	shuffleText: null,
 
-	playlistTitle: null
+	playlistTitle: null,
+
+	currentMessage: null
 });
 
 Object.assign(MediaElementPlayer.prototype, {
 	buildplaylist: function buildplaylist(player, controls, layers, media) {
-		var _this = this;
 
 		var defaultPlaylistTitle = mejs.i18n.t('mejs.playlist'),
 		    playlistTitle = mejs.Utils.isString(player.options.playlistTitle) ? player.options.playlistTitle : defaultPlaylistTitle;
@@ -47,97 +50,115 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.originalControlsIndex = controls.style.zIndex;
 		controls.style.zIndex = 5;
 
-		player.playlistLayer = document.createElement('div');
-		player.playlistLayer.className = player.options.classPrefix + 'playlist-layer  ' + player.options.classPrefix + 'layer ' + (player.isVideo ? player.options.classPrefix + 'playlist-hidden' : '') + ' ' + player.options.classPrefix + 'playlist-selector';
-		player.playlistLayer.innerHTML = '<ul class="' + player.options.classPrefix + 'playlist-selector-list"></ul>';
-		layers.insertBefore(player.playlistLayer, layers.firstChild);
-
-		for (var i = 0, total = player.listItems.length; i < total; i++) {
-			player.playlistLayer.querySelector('ul').innerHTML += player.listItems[i];
-		}
-
-		if (player.isVideo) {
-			player.playlistButton = document.createElement('div');
-			player.playlistButton.className = player.options.classPrefix + 'button ' + player.options.classPrefix + 'playlist-button';
-			player.playlistButton.innerHTML = '<button type="button" aria-controls="' + player.id + '" title="' + playlistTitle + '" aria-label="' + playlistTitle + '" tabindex="0"></button>';
-			player.playlistButton.addEventListener('click', function () {
-				mejs.Utils.toggleClass(player.playlistLayer, player.options.classPrefix + 'playlist-hidden');
-			});
-			player.addControlElement(player.playlistButton, 'playlist');
-		} else {
-			var _items = player.playlistLayer.querySelectorAll('li');
-
-			if (_items.length <= 10) {
-				var height = 0;
-				for (var _i = 0, _total = _items.length; _i < _total; _i++) {
-					height += _items[_i].offsetHeight;
-				}
-				player.container.style.height = height + 'px';
-			}
-		}
-
 		player.endedCallback = function () {
 			if (player.currentPlaylistItem < player.totalItems) {
 				player.setSrc(player.playlist[++player.currentPlaylistItem]);
 				player.load();
 				player.play();
-			} else {
-				mejs.Utils.addClass(nextButton, _this.options.classPrefix + 'off');
 			}
-		};
-
-		player.keydownCallback = function (e) {
-			var event = mejs.Utils.createEvent('click', e.target);
-			e.target.dispatchEvent(event);
-			return false;
 		};
 
 		media.addEventListener('ended', player.endedCallback);
 
-		var items = player.playlistLayer.querySelectorAll('.' + player.options.classPrefix + 'playlist-selector-list-item'),
-		    inputs = player.playlistLayer.querySelectorAll('input[type=radio]');
+		if (!player.isVideo) {
+			var currentItem = document.createElement('div');
+			currentItem.className = player.options.classPrefix + 'playlist-current ' + player.options.classPrefix + 'layer';
+			currentItem.innerHTML = '<p>' + player.options.currentMessage + '</p>';
+			layers.insertBefore(currentItem, layers.firstChild);
 
-		for (var _i2 = 0, _total2 = inputs.length; _i2 < _total2; _i2++) {
-			inputs[_i2].addEventListener('click', function () {
-				var radios = player.playlistLayer.querySelectorAll('input[type="radio"]'),
-				    selected = player.playlistLayer.querySelectorAll('.' + player.options.classPrefix + 'playlist-selected');
-
-				for (var j = 0, total2 = radios.length; j < total2; j++) {
-					radios[j].checked = false;
+			media.addEventListener('play', function () {
+				currentItem.innerHTML = '<p>' + player.options.currentMessage + ' <span class="' + player.options.classPrefix + 'playlist-current-title">' + player.playlist[player.currentPlaylistItem].title + '</span>';
+				if (player.playlist[player.currentPlaylistItem].description) {
+					currentItem.innerHTML += ' - <span class="' + player.options.classPrefix + 'playlist-current-description">' + player.playlist[player.currentPlaylistItem].description + '</span>';
 				}
-				for (var _j = 0, _total3 = selected.length; _j < _total3; _j++) {
-					mejs.Utils.removeClass(selected[_j], player.options.classPrefix + 'playlist-selected');
-				}
-
-				this.checked = true;
-				mejs.Utils.addClass(this.parentNode, player.options.classPrefix + 'playlist-selected');
-				player.currentPlaylistItem = this.getAttribute('data-playlist-index');
-				player.setSrc(this.value);
-				player.load();
-				player.play();
-
-				if (player.isVideo) {
-					mejs.Utils.toggleClass(player.playlistLayer, player.options.classPrefix + 'playlist-hidden');
-				}
+				currentItem.innerHTML += '</p>';
+				player.resetSize();
 			});
 		}
 
-		for (var _i3 = 0, _total4 = items.length; _i3 < _total4; _i3++) {
-			items[_i3].addEventListener('click', function () {
-				var radio = mejs.Utils.siblings(this.querySelector('.' + player.options.classPrefix + 'playlist-selector-label'), function (el) {
-					return el.tagName === 'INPUT';
-				})[0],
-				    event = mejs.Utils.createEvent('click', radio);
-				radio.dispatchEvent(event);
-			});
-		}
+		if (player.options.showPlaylist) {
+			player.playlistLayer = document.createElement('div');
+			player.playlistLayer.className = player.options.classPrefix + 'playlist-layer  ' + player.options.classPrefix + 'layer ' + (player.isVideo ? player.options.classPrefix + 'playlist-hidden' : '') + ' ' + player.options.classPrefix + 'playlist-selector';
+			player.playlistLayer.innerHTML = '<ul class="' + player.options.classPrefix + 'playlist-selector-list"></ul>';
+			layers.insertBefore(player.playlistLayer, layers.firstChild);
 
-		player.playlistLayer.addEventListener('keydown', function (e) {
-			var keyCode = e.which || e.keyCode || 0;
-			if (~[13, 32, 38, 40].indexOf(keyCode)) {
-				player.keydownCallback(e);
+			for (var i = 0, total = player.listItems.length; i < total; i++) {
+				player.playlistLayer.querySelector('ul').innerHTML += player.listItems[i];
 			}
-		});
+
+			if (player.isVideo) {
+				player.playlistButton = document.createElement('div');
+				player.playlistButton.className = player.options.classPrefix + 'button ' + player.options.classPrefix + 'playlist-button';
+				player.playlistButton.innerHTML = '<button type="button" aria-controls="' + player.id + '" title="' + playlistTitle + '" aria-label="' + playlistTitle + '" tabindex="0"></button>';
+				player.playlistButton.addEventListener('click', function () {
+					mejs.Utils.toggleClass(player.playlistLayer, player.options.classPrefix + 'playlist-hidden');
+				});
+				player.addControlElement(player.playlistButton, 'playlist');
+			} else {
+				var _items = player.playlistLayer.querySelectorAll('li');
+
+				if (_items.length <= 10) {
+					var height = 0;
+					for (var _i = 0, _total = _items.length; _i < _total; _i++) {
+						height += _items[_i].offsetHeight;
+					}
+					player.container.style.height = height + 'px';
+				}
+			}
+
+			var items = player.playlistLayer.querySelectorAll('.' + player.options.classPrefix + 'playlist-selector-list-item'),
+			    inputs = player.playlistLayer.querySelectorAll('input[type=radio]');
+
+			for (var _i2 = 0, _total2 = inputs.length; _i2 < _total2; _i2++) {
+				inputs[_i2].addEventListener('click', function () {
+					var radios = player.playlistLayer.querySelectorAll('input[type="radio"]'),
+					    selected = player.playlistLayer.querySelectorAll('.' + player.options.classPrefix + 'playlist-selected');
+
+					for (var j = 0, total2 = radios.length; j < total2; j++) {
+						radios[j].checked = false;
+					}
+					for (var _j = 0, _total3 = selected.length; _j < _total3; _j++) {
+						mejs.Utils.removeClass(selected[_j], player.options.classPrefix + 'playlist-selected');
+					}
+
+					this.checked = true;
+					mejs.Utils.addClass(this.parentNode, player.options.classPrefix + 'playlist-selected');
+					player.currentPlaylistItem = this.getAttribute('data-playlist-index');
+					player.setSrc(this.value);
+					player.load();
+					player.play();
+
+					if (player.isVideo) {
+						mejs.Utils.toggleClass(player.playlistLayer, player.options.classPrefix + 'playlist-hidden');
+					}
+				});
+			}
+
+			for (var _i3 = 0, _total4 = items.length; _i3 < _total4; _i3++) {
+				items[_i3].addEventListener('click', function () {
+					var radio = mejs.Utils.siblings(this.querySelector('.' + player.options.classPrefix + 'playlist-selector-label'), function (el) {
+						return el.tagName === 'INPUT';
+					})[0],
+					    event = mejs.Utils.createEvent('click', radio);
+					radio.dispatchEvent(event);
+				});
+			}
+
+			player.keydownCallback = function (e) {
+				var event = mejs.Utils.createEvent('click', e.target);
+				e.target.dispatchEvent(event);
+				return false;
+			};
+
+			player.playlistLayer.addEventListener('keydown', function (e) {
+				var keyCode = e.which || e.keyCode || 0;
+				if (~[13, 32, 38, 40].indexOf(keyCode)) {
+					player.keydownCallback(e);
+				}
+			});
+		} else {
+			mejs.Utils.addClass(player.container, player.options.classPrefix + 'no-playlist');
+		}
 	},
 	cleanplaylist: function cleanplaylist(player, controls, layers, media) {
 		media.removeEventListener('ended', player.endedCallback);
@@ -220,9 +241,14 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.shuffleButton = document.createElement('div');
 		player.shuffleButton.className = player.options.classPrefix + 'button ' + player.options.classPrefix + 'shuffle-button ' + player.options.classPrefix + 'shuffle-off';
 		player.shuffleButton.innerHTML = '<button type="button" aria-controls="' + player.id + '" title="' + shuffleTitle + '" aria-label="' + shuffleTitle + '" tabindex="0"></button>';
+		player.shuffleButton.style.display = 'none';
+		player.media.addEventListener('play', function () {
+			player.shuffleButton.style.display = '';
+			player.resetSize();
+		});
 
 		var enabled = false;
-		var endedCallback = function endedCallback() {
+		var randomizeCallback = function randomizeCallback() {
 			if (!player.options.loop) {
 				var randomItem = Math.floor(Math.random() * player.playlist.length);
 				if (playedItems.indexOf(randomItem) === -1) {
@@ -242,12 +268,12 @@ Object.assign(MediaElementPlayer.prototype, {
 				mejs.Utils.removeClass(player.shuffleButton, player.options.classPrefix + 'shuffle-off');
 				mejs.Utils.addClass(player.shuffleButton, player.options.classPrefix + 'shuffle-on');
 				enabled = true;
-				t.media.addEventListener('ended', endedCallback);
+				player.media.addEventListener('ended', randomizeCallback);
 			} else {
 				mejs.Utils.removeClass(player.shuffleButton, player.options.classPrefix + 'shuffle-on');
 				mejs.Utils.addClass(player.shuffleButton, player.options.classPrefix + 'shuffle-off');
 				enabled = false;
-				t.media.removeEventListener('ended', endedCallback);
+				player.media.removeEventListener('ended', randomizeCallback);
 			}
 		};
 

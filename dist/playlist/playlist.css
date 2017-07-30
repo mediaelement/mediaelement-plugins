@@ -6,6 +6,10 @@
 .mejs-container.mejs-audio {
     min-height: 200px;
 }
+.mejs__container.mejs__audio.mejs__no-playlist,
+.mejs-container.mejs-audio.mejs__no-playlist {
+    min-height: 60px;
+}
 .mejs__playlist-button,
 .mejs-playlist-button {
     position: relative;
@@ -28,7 +32,7 @@
 }
 .mejs__next-button > button,
 .mejs-next-button > button {
-    background-position: 0;
+    background-position: 0 0;
 }
 .mejs__prev-button > button,
 .mejs-prev-button > button {
@@ -173,4 +177,25 @@
     clear: left;
     padding: 5px 5px 5px 0;
     text-align: left;
+}
+.mejs__playlist-current,
+.mejs-playlist-current {
+    background: #000;
+    bottom: 34px;
+    height: auto !important;
+    left: 0;
+    position: absolute;
+    z-index: 3;
+}
+.mejs__playlist-current p,
+.mejs-playlist-current p {
+    color: #fff;
+    font-size: 0.8em;
+    margin: 10px;
+}
+.mejs__playlist-current-title,
+.mejs-playlist-current-title,
+.mejs__playlist-current-description,
+.mejs-playlist-current-description {
+    font-style: italic;
 }
