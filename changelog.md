@@ -1,5 +1,9 @@
 ### Version History
 
+*2.4.0 (2017/??/??)*
+
+* Added missing translations and removed Brazilian Portuguese to favor Portuguese @rafa8626
+
 *2.3.1 (2017/07/22)*
 
 * Added missing workflow to avoid loading multiple times same source on `Chromecast` plugin and added code to end session correctly @rafa8626
