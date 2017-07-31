@@ -236,8 +236,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	},
 	buildshuffle: function buildshuffle(player) {
 		var defaultShuffleTitle = mejs.i18n.t('mejs.playlist-shuffle'),
-		    shuffleTitle = mejs.Utils.isString(player.options.shuffleText) ? player.options.shuffleText : defaultShuffleTitle,
-		    playedItems = [];
+		    shuffleTitle = mejs.Utils.isString(player.options.shuffleText) ? player.options.shuffleText : defaultShuffleTitle;
 		player.shuffleButton = document.createElement('div');
 		player.shuffleButton.className = player.options.classPrefix + 'button ' + player.options.classPrefix + 'shuffle-button ' + player.options.classPrefix + 'shuffle-off';
 		player.shuffleButton.innerHTML = '<button type="button" aria-controls="' + player.id + '" title="' + shuffleTitle + '" aria-label="' + shuffleTitle + '" tabindex="0"></button>';
@@ -247,7 +246,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			player.resetSize();
 		});
 
-		var enabled = false;
+		var enabled = false,
+		    playedItems = [];
 		var randomizeCallback = function randomizeCallback() {
 			if (!player.options.loop) {
 				var randomItem = Math.floor(Math.random() * player.playlist.length);
@@ -259,6 +259,10 @@ Object.assign(MediaElementPlayer.prototype, {
 					playedItems.push(randomItem);
 				} else if (playedItems.length < player.playlist.length) {
 					player.shuffleCallback();
+				} else if (playedItems.length < player.playlist.length) {
+					playedItems = [];
+					player.currentPlaylistItem = randomItem;
+					playedItems.push(randomItem);
 				}
 			}
 		};
