@@ -7,7 +7,7 @@
  */
 
 // Translations (English required)
-mejs.i18n.en["mejs.source-chooser"] = "Source Chooser";
+mejs.i18n.en['mejs.source-chooser'] = 'Source Chooser';
 
 // Feature configuration
 Object.assign(mejs.MepDefaults, {

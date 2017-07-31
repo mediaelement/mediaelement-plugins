@@ -12,7 +12,7 @@
  */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
 
-mejs.i18n.en["mejs.source-chooser"] = "Source Chooser";
+mejs.i18n.en['mejs.source-chooser'] = 'Source Chooser';
 
 Object.assign(mejs.MepDefaults, {
 	sourcechooserText: null
@@ -43,8 +43,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		player.sourcechooserButton = document.createElement('div');
-		player.sourcechooserButton.className = t.options.classPrefix + "button " + t.options.classPrefix + "sourcechooser-button";
-		player.sourcechooserButton.innerHTML = "<button type=\"button\" role=\"button\" aria-haspopup=\"true\" aria-owns=\"" + t.id + "\" title=\"" + sourceTitle + "\" aria-label=\"" + sourceTitle + "\" tabindex=\"0\"></button>" + ("<div class=\"" + t.options.classPrefix + "sourcechooser-selector " + t.options.classPrefix + "offscreen\" role=\"menu\" aria-expanded=\"false\" aria-hidden=\"true\"><ul></ul></div>");
+		player.sourcechooserButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'sourcechooser-button';
+		player.sourcechooserButton.innerHTML = '<button type="button" role="button" aria-haspopup="true" aria-owns="' + t.id + '" title="' + sourceTitle + '" aria-label="' + sourceTitle + '" tabindex="0"></button>' + ('<div class="' + t.options.classPrefix + 'sourcechooser-selector ' + t.options.classPrefix + 'offscreen" role="menu" aria-expanded="false" aria-hidden="true"><ul></ul></div>');
 
 		t.addControlElement(player.sourcechooserButton, 'sourcechooser');
 
@@ -96,7 +96,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		player.sourcechooserButton.addEventListener('focusout', mejs.Utils.debounce(function () {
 			setTimeout(function () {
-				var parent = document.activeElement.closest("." + t.options.classPrefix + "sourcechooser-selector");
+				var parent = document.activeElement.closest('.' + t.options.classPrefix + 'sourcechooser-selector');
 				if (!parent) {
 					player.hideSourcechooserSelector();
 				}
@@ -110,7 +110,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				this.setAttribute('aria-selected', true);
 				this.checked = true;
 
-				var otherRadios = this.closest("." + t.options.classPrefix + "sourcechooser-selector").querySelectorAll('input[type=radio]');
+				var otherRadios = this.closest('.' + t.options.classPrefix + 'sourcechooser-selector').querySelectorAll('input[type=radio]');
 
 				for (var j = 0, radioTotal = otherRadios.length; j < radioTotal; j++) {
 					if (otherRadios[j] !== this) {
@@ -142,7 +142,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		player.sourcechooserButton.querySelector('button').addEventListener('click', function () {
-			if (mejs.Utils.hasClass(mejs.Utils.siblings(this, "." + t.options.classPrefix + "sourcechooser-selector"), t.options.classPrefix + "offscreen")) {
+			if (mejs.Utils.hasClass(mejs.Utils.siblings(this, '.' + t.options.classPrefix + 'sourcechooser-selector'), t.options.classPrefix + 'offscreen')) {
 				player.showSourcechooserSelector();
 				player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
 			} else {
@@ -157,14 +157,14 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 		type = type.split('/')[1];
 
-		t.sourcechooserButton.querySelector('ul').innerHTML += "<li>" + ("<input type=\"radio\" name=\"" + t.id + "_sourcechooser\" id=\"" + t.id + "_sourcechooser_" + label + type + "\" ") + ("role=\"menuitemradio\" value=\"" + src + "\" " + (isCurrent ? 'checked="checked"' : '') + " aria-selected=\"" + isCurrent + "\"/>") + ("<label for=\"" + t.id + "_sourcechooser_" + label + type + "\" aria-hidden=\"true\">" + label + " (" + type + ")</label>") + "</li>";
+		t.sourcechooserButton.querySelector('ul').innerHTML += '<li>' + ('<input type="radio" name="' + t.id + '_sourcechooser" id="' + t.id + '_sourcechooser_' + label + type + '" ') + ('role="menuitemradio" value="' + src + '" ' + (isCurrent ? 'checked="checked"' : '') + ' aria-selected="' + isCurrent + '"/>') + ('<label for="' + t.id + '_sourcechooser_' + label + type + '" aria-hidden="true">' + label + ' (' + type + ')</label>') + '</li>';
 
 		t.adjustSourcechooserBox();
 	},
 	adjustSourcechooserBox: function adjustSourcechooserBox() {
 		var t = this;
 
-		t.sourcechooserButton.querySelector("." + t.options.classPrefix + "sourcechooser-selector").style.height = parseFloat(t.sourcechooserButton.querySelector("." + t.options.classPrefix + "sourcechooser-selector ul").offsetHeight) + "px";
+		t.sourcechooserButton.querySelector('.' + t.options.classPrefix + 'sourcechooser-selector').style.height = parseFloat(t.sourcechooserButton.querySelector('.' + t.options.classPrefix + 'sourcechooser-selector ul').offsetHeight) + 'px';
 	},
 	hideSourcechooserSelector: function hideSourcechooserSelector() {
 
@@ -174,11 +174,11 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		var selector = t.sourcechooserButton.querySelector("." + t.options.classPrefix + "sourcechooser-selector"),
+		var selector = t.sourcechooserButton.querySelector('.' + t.options.classPrefix + 'sourcechooser-selector'),
 		    radios = selector.querySelectorAll('input[type=radio]');
 		selector.setAttribute('aria-expanded', 'false');
 		selector.setAttribute('aria-hidden', 'true');
-		mejs.Utils.addClass(selector, t.options.classPrefix + "offscreen");
+		mejs.Utils.addClass(selector, t.options.classPrefix + 'offscreen');
 
 		for (var i = 0, total = radios.length; i < total; i++) {
 			radios[i].setAttribute('tabindex', '-1');
@@ -192,11 +192,11 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		var selector = t.sourcechooserButton.querySelector("." + t.options.classPrefix + "sourcechooser-selector"),
+		var selector = t.sourcechooserButton.querySelector('.' + t.options.classPrefix + 'sourcechooser-selector'),
 		    radios = selector.querySelectorAll('input[type=radio]');
 		selector.setAttribute('aria-expanded', 'true');
 		selector.setAttribute('aria-hidden', 'false');
-		mejs.Utils.removeClass(selector, t.options.classPrefix + "offscreen");
+		mejs.Utils.removeClass(selector, t.options.classPrefix + 'offscreen');
 
 		for (var i = 0, total = radios.length; i < total; i++) {
 			radios[i].setAttribute('tabindex', '0');
