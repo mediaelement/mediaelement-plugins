@@ -237,7 +237,6 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 
 * [Ads](docs/ads.md)
 * [AirPlay](docs/airplay.md)
-* [VAST/VPAID](docs/ads-vast.md)
 * [Chromecast](docs/chromecast.md)
 * [Context Menu](docs/context-menu.md)
 * [Facebook Pixel](docs/facebook-pixel.md)
@@ -253,6 +252,7 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 * [Source Chooser](docs/source-chooser.md)
 * [Speed](docs/speed.md)
 * [Stop](docs/stop.md)
+* [VAST/VPAID](docs/ads-vast.md)
 
 # Changelog
 
