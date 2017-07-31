@@ -8,7 +8,7 @@
  */
 
 // Translations (English required)
-mejs.i18n.en["mejs.loop"] =  "Toggle Loop";
+mejs.i18n.en['mejs.loop'] =  'Toggle Loop';
 
 // Feature configuration
 Object.assign(mejs.MepDefaults, {

@@ -6,8 +6,8 @@
  */
 
 // Translations (English required)
-mejs.i18n.en["mejs.ad-skip"] = "Skip ad";
-mejs.i18n.en["mejs.ad-skip-info"] = ["Skip in 1 second", "Skip in %1 seconds"];
+mejs.i18n.en['mejs.ad-skip'] = 'Skip ad';
+mejs.i18n.en['mejs.ad-skip-info'] = ['Skip in 1 second', 'Skip in %1 seconds'];
 
 Object.assign(mejs.MepDefaults, {
 	/**

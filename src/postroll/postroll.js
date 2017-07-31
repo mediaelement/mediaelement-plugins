@@ -9,7 +9,7 @@
  */
 
 // Translations (English required)
-mejs.i18n.en["mejs.close"] = "Close";
+mejs.i18n.en['mejs.close'] = 'Close';
 
 // Feature configuration
 Object.assign(mejs.MepDefaults, {

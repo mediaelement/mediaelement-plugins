@@ -7,7 +7,7 @@
  */
 
 // Translations (English required)
-mejs.i18n.en["mejs.speed-rate"] = "Speed Rate";
+mejs.i18n.en['mejs.speed-rate'] = 'Speed Rate';
 
 // Feature configuration
 Object.assign(mejs.MepDefaults, {
