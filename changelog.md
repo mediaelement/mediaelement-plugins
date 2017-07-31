@@ -3,6 +3,7 @@
 *2.4.0 (2017/??/??)*
 
 * Added missing translations and removed Brazilian Portuguese to favor Portuguese @rafa8626
+* Integrated `Playlist` plugin @rafa8626
 
 *2.3.1 (2017/07/22)*
 
