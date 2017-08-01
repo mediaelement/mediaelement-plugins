@@ -5,6 +5,7 @@
 * Added missing translations and removed Brazilian Portuguese to favor Portuguese @rafa8626
 * Sorted alphabetically plugins name on README (https://github.com/mediaelement/mediaelement-plugins/pull/77) @isantolin
 * Integrated `Playlist` plugin @rafa8626
+* Added support for audio play on `Chromecast` @rafa8626
 
 *2.3.1 (2017/07/22)*
 

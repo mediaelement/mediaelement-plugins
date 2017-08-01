@@ -70,11 +70,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			castTitle = mejs.Utils.isString(t.options.castTitle) ? t.options.castTitle : 'Chromecast'
 		;
 
-		// Only one sender per page
-		if (!player.isVideo) {
-			return;
-		}
-
 		player.chromecastLayer = document.createElement('div');
 		player.chromecastLayer.className = `${t.options.classPrefix}chromecast-layer ${t.options.classPrefix}layer`;
 		player.chromecastLayer.innerHTML = `<div class="${t.options.classPrefix}chromecast-info"></div>`;
@@ -120,7 +115,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		window.__onGCastApiAvailable = (isAvailable) => {
 			const
 				mediaType = mejs.Utils.getTypeFromFile(media.originalNode.src).toLowerCase(),
-				canPlay = mediaType && ['application/x-mpegurl', 'vnd.apple.mpegurl', 'application/dash+xml', 'video/mp4'].indexOf(mediaType) > -1
+				canPlay = mediaType &&
+					['application/x-mpegurl', 'application/vnd.apple.mpegurl', 'application/dash+xml', 'video/mp4', 'audio/mp3', 'audio/mp4'].indexOf(mediaType) > -1
 			;
 
 			if (isAvailable && canPlay) {

@@ -82,7 +82,10 @@
         <h3>Audio Player</h3>
 
         <div class="media-wrapper">
-            <audio id="player2" preload="none" controls style="max-width:100%;">
+            <audio id="player2" preload="none" controls style="max-width:100%;"
+                   data-cast-title="Jazz Example"
+                   data-cast-description="This is a description for audio only"
+                   data-cast-poster="http://mediaelementjs.com/images/big_buck_bunny.jpg">
                 <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3" title="Jazz Example" data-playlist-thumbnail="http://mediaelementjs.com/images/big_buck_bunny.jpg" data-playlist-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum justo arcu. Vestibulum commodo lacus bibendum sollicitudin commodo.">
                 <source src="https://api.soundcloud.com/tracks/323195515/stream?client_id=95f22ed54a5c297b1c41f72d713623ef" type="audio/mp3" title="Soundcloud rocks!" data-playlist-description="Curabitur et malesuada arcu. Praesent hendrerit, quam vel pellentesque aliquam, metus felis mattis velit, quis varius metus diam vitae diam. Integer ante massa, tempor in accumsan eu, sodales in lectus.">
                 <source src="rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st/mp3:fake_empire-cbr" type="rtmp/video" title="Playing RTMP audio...">
@@ -104,13 +107,18 @@
 	var mediaElements = document.querySelectorAll('video, audio');
 
 	for (var i = 0, total = mediaElements.length; i < total; i++) {
+		var features = ['prevtrack', 'playpause', 'nexttrack', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward',
+		'markers', 'volume', 'playlist', 'loop', 'shuffle', 'contextmenu'];
+		// To demonstrate the use of Chromecast with audio
+		if (mediaElements[i].tagName === 'AUDIO') {
+		    features.push('chromecast');
+        }
 	    new MediaElementPlayer(mediaElements[i], {
 		    // This is needed to make Jump Forward to work correctly
             pluginPath: 'https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.3/',
 		    shimScriptAccess: 'always',
 		    autoRewind: false,
-		    features: ['prevtrack', 'playpause', 'nexttrack', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward', 'chromecast',
-			    'markers', 'volume', 'playlist', 'loop', 'shuffle', 'contextmenu'],
+		    features: features,
             currentMessage: 'Now playing:'
 	    });
     }
