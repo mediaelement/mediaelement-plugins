@@ -19,9 +19,11 @@ mejs.i18n.en['mejs.playlist-loop'] = 'Loop';
 mejs.i18n.en['mejs.playlist-shuffle'] = 'Shuffle';
 
 Object.assign(mejs.MepDefaults, {
+	playlist: [],
+
 	showPlaylist: true,
 
-	playlist: [],
+	autoClosePlaylist: false,
 
 	prevText: null,
 
@@ -61,19 +63,24 @@ Object.assign(MediaElementPlayer.prototype, {
 		media.addEventListener('ended', player.endedCallback);
 
 		if (!player.isVideo) {
-			var currentItem = document.createElement('div');
-			currentItem.className = player.options.classPrefix + 'playlist-current ' + player.options.classPrefix + 'layer';
-			currentItem.innerHTML = '<p>' + player.options.currentMessage + '</p>';
-			layers.insertBefore(currentItem, layers.firstChild);
+			var currentItem = document.createElement('div'),
+			    audioCallback = function audioCallback() {
+				currentItem.innerHTML = '';
+				if (typeof player.playlist[player.currentPlaylistItem]['data-playlist-thumbnail'] !== 'undefined') {
+					currentItem.innerHTML += '<img tabindex="-1" src="' + player.playlist[player.currentPlaylistItem]['data-playlist-thumbnail'] + '">';
+				}
 
-			media.addEventListener('play', function () {
-				currentItem.innerHTML = '<p>' + player.options.currentMessage + ' <span class="' + player.options.classPrefix + 'playlist-current-title">' + player.playlist[player.currentPlaylistItem].title + '</span>';
-				if (player.playlist[player.currentPlaylistItem].description) {
+				currentItem.innerHTML += '<p>' + player.options.currentMessage + ' <span class="' + player.options.classPrefix + 'playlist-current-title">' + player.playlist[player.currentPlaylistItem].title + '</span>';
+				if (typeof player.playlist[player.currentPlaylistItem].description !== 'undefined') {
 					currentItem.innerHTML += ' - <span class="' + player.options.classPrefix + 'playlist-current-description">' + player.playlist[player.currentPlaylistItem].description + '</span>';
 				}
 				currentItem.innerHTML += '</p>';
 				player.resetSize();
-			});
+			};
+			currentItem.className = player.options.classPrefix + 'playlist-current ' + player.options.classPrefix + 'layer';
+			audioCallback();
+			layers.insertBefore(currentItem, layers.firstChild);
+			media.addEventListener('play', audioCallback);
 		}
 
 		if (player.options.showPlaylist) {
@@ -119,16 +126,18 @@ Object.assign(MediaElementPlayer.prototype, {
 					}
 					for (var _j = 0, _total3 = selected.length; _j < _total3; _j++) {
 						mejs.Utils.removeClass(selected[_j], player.options.classPrefix + 'playlist-selected');
+						selected[_j].querySelector('label').querySelector('span').remove();
 					}
 
 					this.checked = true;
-					mejs.Utils.addClass(this.parentNode, player.options.classPrefix + 'playlist-selected');
+					this.closest('.' + player.options.classPrefix + 'playlist-selector-list-item').querySelector('label').innerHTML = '<span>\u25B6</span> ' + this.closest('.' + player.options.classPrefix + 'playlist-selector-list-item').querySelector('label').innerHTML;
+					mejs.Utils.addClass(this.closest('.' + player.options.classPrefix + 'playlist-selector-list-item'), player.options.classPrefix + 'playlist-selected');
 					player.currentPlaylistItem = this.getAttribute('data-playlist-index');
 					player.setSrc(this.value);
 					player.load();
 					player.play();
 
-					if (player.isVideo) {
+					if (player.isVideo && player.options.autoClosePlaylist === true) {
 						mejs.Utils.toggleClass(player.playlistLayer, player.options.classPrefix + 'playlist-hidden');
 					}
 				});
@@ -326,8 +335,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			    thumbnail = element['data-playlist-thumbnail'] ? '<div class="' + t.options.classPrefix + 'playlist-item-thumbnail"><img tabindex="-1" src="' + element['data-playlist-thumbnail'] + '"></div>' : '',
 			    description = element['data-playlist-description'] ? '<div class="' + t.options.classPrefix + 'playlist-item-description">' + element['data-playlist-description'] + '</div>' : '';
 			item.tabIndex = 0;
-			item.classList = t.options.classPrefix + 'playlist-selector-list-item';
-			item.innerHTML = '<div class="' + t.options.classPrefix + 'playlist-item-inner">' + ('' + thumbnail) + ('<div class="' + t.options.classPrefix + 'playlist-item-content">') + ('<div><input type="radio" class="' + t.options.classPrefix + 'playlist-selector-input" ') + ('name="' + t.id + '_playlist" id="' + id + '" data-index="' + _i4 + '" value="' + element.src + '" disabled>') + ('<label class="' + t.options.classPrefix + 'playlist-selector-label" ') + ('for="' + id + '">' + (element.title || _i4) + '</label></div>' + description + '</div></div>');
+			item.classList = t.options.classPrefix + 'playlist-selector-list-item' + (_i4 === 0 ? ' ' + t.options.classPrefix + 'playlist-selected' : '');
+			item.innerHTML = '<div class="' + t.options.classPrefix + 'playlist-item-inner">' + ('' + thumbnail) + ('<div class="' + t.options.classPrefix + 'playlist-item-content">') + ('<div><input type="radio" class="' + t.options.classPrefix + 'playlist-selector-input" ') + ('name="' + t.id + '_playlist" id="' + id + '" data-playlist-index="' + _i4 + '" value="' + element.src + '" disabled>') + ('<label class="' + t.options.classPrefix + 'playlist-selector-label" ') + ('for="' + id + '">' + (_i4 === 0 ? '<span>\u25B6</span> ' : '') + (element.title || _i4) + '</label></div>' + description + '</div></div>');
 
 			t.listItems.push(item.outerHTML);
 		}

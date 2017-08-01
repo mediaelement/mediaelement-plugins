@@ -16,14 +16,18 @@ mejs.i18n.en['mejs.playlist-shuffle'] = 'Shuffle';
 // Feature configuration
 Object.assign(mejs.MepDefaults, {
 	/**
-	 * @type {Boolean}
-	 */
-	showPlaylist: true,
-	/**
 	 * List to be played; each object MUST have `src` and `title`; other items: `data-thumbnail`, `type`, `description`
 	 * @type {Object[]}
 	 */
 	playlist: [],
+	/**
+	 * @type {Boolean}
+	 */
+	showPlaylist: true,
+	/**
+	 * @type {Boolean}
+	 */
+	autoClosePlaylist: false,
 	/**
 	 * @type {?String}
 	 */
@@ -87,19 +91,26 @@ Object.assign(MediaElementPlayer.prototype, {
 		media.addEventListener('ended', player.endedCallback);
 
 		if (!player.isVideo) {
-			const currentItem = document.createElement('div');
-			currentItem.className = `${player.options.classPrefix}playlist-current ${player.options.classPrefix}layer`;
-			currentItem.innerHTML = `<p>${player.options.currentMessage}</p>`;
-			layers.insertBefore(currentItem, layers.firstChild);
+			const
+				currentItem = document.createElement('div'),
+				audioCallback = () => {
+					currentItem.innerHTML = '';
+					if (typeof player.playlist[player.currentPlaylistItem]['data-playlist-thumbnail'] !== 'undefined') {
+						currentItem.innerHTML += `<img tabindex="-1" src="${player.playlist[player.currentPlaylistItem]['data-playlist-thumbnail']}">`;
+					}
 
-			media.addEventListener('play', () => {
-				currentItem.innerHTML = `<p>${player.options.currentMessage} <span class="${player.options.classPrefix}playlist-current-title">${player.playlist[player.currentPlaylistItem].title}</span>`;
-				if (player.playlist[player.currentPlaylistItem].description) {
-					currentItem.innerHTML += ` - <span class="${player.options.classPrefix}playlist-current-description">${player.playlist[player.currentPlaylistItem].description}</span>`;
+					currentItem.innerHTML += `<p>${player.options.currentMessage} <span class="${player.options.classPrefix}playlist-current-title">${player.playlist[player.currentPlaylistItem].title}</span>`;
+					if (typeof player.playlist[player.currentPlaylistItem].description !== 'undefined') {
+						currentItem.innerHTML += ` - <span class="${player.options.classPrefix}playlist-current-description">${player.playlist[player.currentPlaylistItem].description}</span>`;
+					}
+					currentItem.innerHTML += '</p>';
+					player.resetSize();
 				}
-				currentItem.innerHTML += '</p>';
-				player.resetSize();
-			});
+			;
+			currentItem.className = `${player.options.classPrefix}playlist-current ${player.options.classPrefix}layer`;
+			audioCallback();
+			layers.insertBefore(currentItem, layers.firstChild);
+			media.addEventListener('play', audioCallback);
 		}
 
 		if (player.options.showPlaylist) {
@@ -149,16 +160,18 @@ Object.assign(MediaElementPlayer.prototype, {
 					}
 					for (let j = 0, total2 = selected.length; j < total2; j++) {
 						mejs.Utils.removeClass(selected[j], `${player.options.classPrefix}playlist-selected`);
+						selected[j].querySelector('label').querySelector('span').remove();
 					}
 
 					this.checked = true;
-					mejs.Utils.addClass(this.parentNode, `${player.options.classPrefix}playlist-selected`);
+					this.closest(`.${player.options.classPrefix}playlist-selector-list-item`).querySelector('label').innerHTML = `<span>\u25B6</span> ${this.closest(`.${player.options.classPrefix}playlist-selector-list-item`).querySelector('label').innerHTML}`;
+					mejs.Utils.addClass(this.closest(`.${player.options.classPrefix}playlist-selector-list-item`), `${player.options.classPrefix}playlist-selected`);
 					player.currentPlaylistItem = this.getAttribute('data-playlist-index');
 					player.setSrc(this.value);
 					player.load();
 					player.play();
 
-					if (player.isVideo) {
+					if (player.isVideo && player.options.autoClosePlaylist === true) {
 						mejs.Utils.toggleClass(player.playlistLayer, `${player.options.classPrefix}playlist-hidden`);
 					}
 				});
@@ -299,6 +312,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					player.play();
 					player.currentPlaylistItem = randomItem;
 					playedItems.push(randomItem);
+
 				} else if (playedItems.length < player.playlist.length) {
 					player.shuffleCallback();
 				} else if (playedItems.length < player.playlist.length) {
@@ -370,14 +384,14 @@ Object.assign(MediaElementPlayer.prototype, {
 				description = element['data-playlist-description'] ? `<div class="${t.options.classPrefix}playlist-item-description">${element['data-playlist-description']}</div>` : ''
 			;
 			item.tabIndex = 0;
-			item.classList = `${t.options.classPrefix}playlist-selector-list-item`;
+			item.classList = `${t.options.classPrefix}playlist-selector-list-item${(i === 0 ? ` ${t.options.classPrefix}playlist-selected` : '')}`;
 			item.innerHTML = `<div class="${t.options.classPrefix}playlist-item-inner">` +
 				`${thumbnail}` +
 				`<div class="${t.options.classPrefix}playlist-item-content">` +
 				`<div><input type="radio" class="${t.options.classPrefix}playlist-selector-input" ` +
-				`name="${t.id}_playlist" id="${id}" data-index="${i}" value="${element.src}" disabled>` +
+				`name="${t.id}_playlist" id="${id}" data-playlist-index="${i}" value="${element.src}" disabled>` +
 				`<label class="${t.options.classPrefix}playlist-selector-label" ` +
-				`for="${id}">${(element.title || i)}</label></div>${description}</div></div>`;
+				`for="${id}">${(i === 0 ? '<span>\u25B6</span> ' : '')}${(element.title || i)}</label></div>${description}</div></div>`;
 
 			t.listItems.push(item.outerHTML);
 		}

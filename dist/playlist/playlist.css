@@ -114,17 +114,27 @@
     float: left;
     font-size: 1.3em;
     margin: 0;
-    padding: 4px 0 0;
 }
 
+.mejs__playlist-selector-label > span,
+.mejs-playlist-selector-label > span {
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-color: #eb5802;
+    background-image: -webkit-linear-gradient(top, #eb5802, #f3ad39);
+    background-image: linear-gradient(to bottom, #eb5802, #f3ad39);
+    color: transparent;
+    font-size: 0.65em;
+    vertical-align: middle;
+}
 .mejs__playlist-selected,
 .mejs-playlist-selected {
-    background-color: rgba(35, 35, 35, 0.8);
+    background-color: #3a3a3a;
 }
 
 .mejs__playlist-layer,
 .mejs-playlist-layer {
-    background: rgba(50, 50, 50, 0.7);
+    background: #222;
     bottom: 40px;
     color: #fff;
     font-size: 12px;
@@ -142,6 +152,9 @@
 
 .mejs__container.mejs__audio .mejs__playlist-layer,
 .mejs-container.mejs-audio .mejs-playlist-layer {
+    bottom: 85px;
+    height: calc(100% - 85px) !important;
+    overflow: auto;
     width: 100% !important;
 }
 
@@ -159,6 +172,11 @@
     vertical-align: top;
     width: 30%;
 }
+.mejs__container.mejs__audio .mejs__playlist-item-thumbnail,
+.mejs-container.mejs-audio .mejs-playlist-item-thumbnail {
+    padding: 5px;
+    width: 15%;
+}
 
 .mejs__playlist-item-thumbnail > img,
 .mejs-playlist-item-thumbnail > img {
@@ -168,14 +186,18 @@
 .mejs__playlist-item-content,
 .mejs-playlist-item-content {
     display: table-cell;
-    padding-left: 10px;
-    padding-top: 2px;
+    padding: 10px;
     width: 70%;
+}
+.mejs__container.mejs__audio .mejs__playlist-item-content,
+.mejs-container.mejs-audio .mejs-playlist-item-content {
+    margin: 0;
+    width: 85%;
 }
 .mejs__playlist-item-description,
 .mejs-playlist-item-description {
     clear: left;
-    padding: 5px 5px 5px 0;
+    padding: 5px 0;
     text-align: left;
 }
 .mejs__playlist-current,
@@ -191,7 +213,13 @@
 .mejs-playlist-current p {
     color: #fff;
     font-size: 0.8em;
-    margin: 10px;
+    margin: 15px 10px;
+}
+.mejs__playlist-current > img,
+.mejs-playlist-current > img {
+    float: left;
+    margin: 5px 10px;
+    max-height: 35px;
 }
 .mejs__playlist-current-title,
 .mejs-playlist-current-title,
