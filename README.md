@@ -75,7 +75,7 @@ Once installed, at the command prompt, type `npm install`, which will download a
 * **BEFORE PUSHING** any changes, run `npm run eslint` to ensure code quality.
 * The file for the feature must be placed inside a folder matching its name, as well as any SVG/CSS elements needed (i.e, `loop/loop.js`).
 * Update `package.json` with a command under the `script` configuration to make sure it will be bundled and compiled properly. For more reference, [review the file](package.json).
-* Make sure you also write comments about their purpose, and add them into the README file to keep documentation up-to-date.
+* Make sure you also create a `docs/FEATURE_NAME.md` file describing its purpose, API, etc., and add the name with a link to its document in the `README` file to keep documentation up-to-date.
 * **DO NOT REINVENT THE WHEEL**: Use the utilities that `MediaElement` provides for DOM manipulation/AJAX/etc. Check [this link](https://github.com/mediaelement/mediaelement/blob/master/docs/utils.md) for more details.
 * You can also include CSS inside the feature folder, matching the name of the feature JS file and adding CSS styles for "legacy" and BEM naming convention.
 * If using an icon, its size **MUST** be **20x20px**, so it matches all the rest of the icons' dimensions.
@@ -161,65 +161,9 @@ if (mejs.i18n.ca !== undefined) {
 if (mejs.i18n.cs !== undefined) {
         mejs.i18n.cs["mejs.id1"] = "";
 }
-if (mejs.i18n.de !== undefined) {
-        mejs.i18n.de["mejs.id1"] = "";
-}
-if (mejs.i18n.es !== undefined) {
-        mejs.i18n.es["mejs.id1"] = "";
-}
-if (mejs.i18n.fr !== undefined) {
-        mejs.i18n.fr["mejs.id1"] = "";
-}
-if (mejs.i18n.hr !== undefined) {
-        mejs.i18n.hr["mejs.id1"] = "";
-}
-if (mejs.i18n.hu !== undefined) {
-        mejs.i18n.hu["mejs.id1"] = "";
-}
-if (mejs.i18n.it !== undefined) {
-        mejs.i18n.it["mejs.id1"] = "";
-}
-if (mejs.i18n.ja !== undefined) {
-        mejs.i18n.ja["mejs.id1"] = "";
-}
-if (mejs.i18n.ko !== undefined) {
-        mejs.i18n.ko["mejs.id1"] = "";
-}
-if (mejs.i18n.nl !== undefined) {
-        mejs.i18n.nl["mejs.id1"] = "";
-}
-if (mejs.i18n.pl !== undefined) {
-        mejs.i18n.pl["mejs.id1"] = "";
-}
-if (mejs.i18n.pt !== undefined) {
-        mejs.i18n.pt["mejs.id1"] = "";
-}
-if (mejs.i18n['pt-BR'] !== undefined) {
-        mejs.i18n['pt-BR']["mejs.id1"] = "";
-}
-if (mejs.i18n.ro !== undefined) {
-        mejs.i18n.ro["mejs.id1"] = "";
-}
-if (mejs.i18n.ru !== undefined) {
-        mejs.i18n.ru["mejs.id1"] = "";
-}
-if (mejs.i18n.sk !== undefined) {
-        mejs.i18n.sk["mejs.id1"] = "";
-}
-if (mejs.i18n.sv !== undefined) {
-        mejs.i18n.sv["mejs.id1"] = "";
-}
-if (mejs.i18n.uk !== undefined) {
-        mejs.i18n.uk["mejs.id1"] = "";
-}
-if (mejs.i18n.zh !== undefined) {
-        mejs.i18n.zh["mejs.id1"] = "";
-}
-if (mejs.i18n['zh-CN'] !== undefined) {
-        mejs.i18n['zh-CN']["mejs.id1"] = "";
-}
+// And the rest of the languages
 ```
-**NOTE**: The more languages are integrated on `MediaElementPlayer`, the bigger this template will become. So account for more languages.
+**NOTE**: The more languages are integrated on `MediaElementPlayer`, the bigger this template will become.
 
 Also, if you are adding a new language to `MediaElementPlayer`, you will need to add it in all the existing `i18n` files in the same way described in the template above.
 
