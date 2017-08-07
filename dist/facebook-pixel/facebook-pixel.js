@@ -13,30 +13,47 @@
 'use strict';
 
 Object.assign(mejs.MepDefaults, {
-    facebookPixelTitle: '',
+	facebookPixelTitle: '',
 
-    facebookPixelCategory: 'Videos'
+	facebookPixelCategory: 'Videos'
 });
 
 Object.assign(MediaElementPlayer.prototype, {
-    buildfacebookpixel: function buildfacebookpixel(player, controls, layers, media) {
+	buildfacebookpixel: function buildfacebookpixel(player, controls, layers, media) {
+		player.fbPixelPlay = function () {
+			if (typeof fbq !== 'undefined') {
+				fbq('trackCustom', player.options.facebookPixelCategory, {
+					Event: 'Play',
+					Title: player.options.facebookPixelTitle === '' ? player.media.currentSrc : player.options.facebookPixelTitle
+				});
+			}
+		};
+		player.fbPixelPause = function () {
+			if (typeof fbq !== 'undefined') {
+				fbq('trackCustom', player.options.facebookPixelCategory, {
+					Event: 'Pause',
+					Title: player.options.facebookPixelTitle === '' ? player.media.currentSrc : player.options.facebookPixelTitle
+				});
+			}
+		};
+		player.fbPixelEnded = function () {
+			if (typeof fbq !== 'undefined') {
+				fbq('trackCustom', player.options.facebookPixelCategory, {
+					Event: 'Ended',
+					Title: player.options.facebookPixelTitle === '' ? player.media.currentSrc : player.options.facebookPixelTitle
+				});
+			}
+		};
 
-        media.addEventListener('play', function () {
-            if (typeof fbq !== 'undefined') {
-                fbq('trackCustom', player.options.facebookPixelCategory, { Event: 'Play', Title: player.options.facebookPixelTitle === '' ? player.media.currentSrc : player.options.facebookPixelTitle });
-            }
-        }, false);
-        media.addEventListener('pause', function () {
-            if (typeof fbq !== 'undefined') {
-                fbq('trackCustom', player.options.facebookPixelCategory, { Event: 'Pause', Title: player.options.facebookPixelTitle === '' ? player.media.currentSrc : player.options.facebookPixelTitle });
-            }
-        }, false);
-        media.addEventListener('ended', function () {
-            if (typeof fbq !== 'undefined') {
-                fbq('trackCustom', player.options.facebookPixelCategory, { Event: 'Ended', Title: player.options.facebookPixelTitle === '' ? player.media.currentSrc : player.options.facebookPixelTitle });
-            }
-        }, false);
-    }
+		media.addEventListener('play', player.fbPixelPlay);
+		media.addEventListener('pause', player.fbPixelPause);
+		media.addEventListener('ended', player.fbPixelEnded);
+	},
+	cleanfacebookpixel: function cleanfacebookpixel(player, controls, layers, media) {
+		media.removeEventListener('play', player.fbPixelPlay);
+		media.removeEventListener('pause', player.fbPixelPause);
+		media.removeEventListener('ended', player.fbPixelEnded);
+	}
 });
 
 },{}]},{},[1]);

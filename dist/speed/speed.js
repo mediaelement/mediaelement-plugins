@@ -77,7 +77,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			return parseFloat(b.value) - parseFloat(a.value);
 		});
 
-		t.clearspeed(player);
+		t.cleanspeed(player);
 
 		player.speedButton = document.createElement('div');
 		player.speedButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'speed-button';
@@ -160,7 +160,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		});
 	},
-	clearspeed: function clearspeed(player) {
+	cleanspeed: function cleanspeed(player) {
 		if (player) {
 			if (player.speedButton) {
 				player.speedButton.parentNode.removeChild(player.speedButton);

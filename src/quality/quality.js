@@ -55,7 +55,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		t.clearquality(player);
+		t.cleanquality(player);
 
 		const
 			qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-quality'),
@@ -199,7 +199,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Always has to be prefixed with `clean` and the name that was used in MepDefaults.features list
 	 * @param {MediaElementPlayer} player
 	 */
-	clearquality (player)  {
+	cleanquality (player)  {
 		if (player) {
 			if (player.qualitiesButton) {
 				player.qualitiesButton.remove();

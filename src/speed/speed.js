@@ -103,7 +103,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			return parseFloat(b.value) - parseFloat(a.value);
 		});
 
-		t.clearspeed(player);
+		t.cleanspeed(player);
 
 		player.speedButton = document.createElement('div');
 		player.speedButton.className = `${t.options.classPrefix}button ${t.options.classPrefix}speed-button`;
@@ -208,7 +208,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Always has to be prefixed with `clean` and the name that was used in MepDefaults.features list
 	 * @param {MediaElementPlayer} player
 	 */
-	clearspeed (player)  {
+	cleanspeed (player)  {
 		if (player) {
 			if (player.speedButton) {
 				player.speedButton.parentNode.removeChild(player.speedButton);

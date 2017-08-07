@@ -41,7 +41,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		t.clearquality(player);
+		t.cleanquality(player);
 
 		var qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-quality'),
 		    getQualityNameFromValue = function getQualityNameFromValue(value) {
@@ -151,7 +151,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			e.stopPropagation();
 		});
 	},
-	clearquality: function clearquality(player) {
+	cleanquality: function cleanquality(player) {
 		if (player) {
 			if (player.qualitiesButton) {
 				player.qualitiesButton.remove();
