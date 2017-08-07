@@ -185,6 +185,7 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 * [Context Menu](docs/context-menu.md)
 * [Facebook Pixel](docs/facebook-pixel.md)
 * [Google Analytics](docs/google-analytics.md)
+* [Google Tag Manager](docs/google-tag-manager.md)
 * [Jump Forward](docs/jump-forward.md)
 * [Loop](docs/loop.md)
 * [Markers](docs/markers.md)
