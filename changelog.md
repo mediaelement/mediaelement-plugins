@@ -6,6 +6,8 @@
 * Sorted alphabetically plugins name on README (https://github.com/mediaelement/mediaelement-plugins/pull/77) @isantolin
 * Integrated `Playlist` plugin @rafa8626
 * Added support for audio play on `Chromecast` @rafa8626
+* Integrated `Google Tag Manager` plugin @rafa8626
+* Fixed typos on methods used when player is destroyed @rafa8626
 
 *2.3.1 (2017/07/22)*
 
