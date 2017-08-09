@@ -1,6 +1,6 @@
 ### Version History
 
-*2.4.0 (2017/??/??)*
+*2.4.0 (2017/08/09)*
 
 * Added missing translations and removed Brazilian Portuguese to favor Portuguese @rafa8626
 * Sorted alphabetically plugins name on README (https://github.com/mediaelement/mediaelement-plugins/pull/77) @isantolin
