@@ -39,9 +39,9 @@ For example, if you want to install `Speed` plugin do the following:
 ```html
 <script src="/path/to/mediaelement-and-player.min.js"></script>
 <!-- Include any languages from `build/lang` folder -->
-<script src="/path/to/dist/speed/speed.min,js"></script>
+<script src="/path/to/dist/speed/speed.min.js"></script>
 <!-- Translation file for plugin (includes ALL languages available on player)-->
-<script src="/path/to/dist/speed/speed-i18n,js"></script>
+<script src="/path/to/dist/speed/speed-i18n.js"></script>
 <script>
     var player = new MediaElementPlayer('playerId', {
     	defaultSpeed: 0.75,
