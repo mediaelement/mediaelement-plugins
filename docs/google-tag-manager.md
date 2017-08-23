@@ -8,6 +8,11 @@ to push dataLayer events, such as `play`, `pause`, `ended`, etc.
 It requires Google Tag Manager configuration to send events properly. For more information, check 
 [Set up GTM triggers](https://support.google.com/tagmanager/answer/6102821?hl=en).
 
+## Keyword to use it
+```javascript
+features: [..., 'googletagmanager']
+```
+
 ## API
 
 Parameter | Type | Default | Description

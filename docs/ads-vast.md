@@ -8,6 +8,11 @@ It will generate the proper structures after parsing VPAID/VAST XML files to be 
 
 **NOTE**: Currently, this plugin only supports Linear elements with MP4/FLV. Support for Flash and Javascript MediaFiles coming soon.
 
+## Keyword to use it
+```javascript
+features: [..., 'vast']
+```
+
 ## API
 
 Parameter | Type | Default | Description

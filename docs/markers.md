@@ -10,6 +10,11 @@ The `MediaElementPlayer` object and media's current time should be passed to the
 
 The marker color is configurable.
 
+## Keyword to use it
+```javascript
+features: [..., 'markers']
+```
+
 ## API
 
 Parameter | Type | Default | Description

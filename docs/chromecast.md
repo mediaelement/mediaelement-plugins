@@ -35,6 +35,11 @@ Also, a page can contain **ONLY ONE** sender; otherwise, an error indicating tha
 
 To avoid that, [this link](https://jsfiddle.net/Luuwnjfm/24/) shows a way to get away with it if you have to render your player dynamically.
 
+## Keyword to use it
+```javascript
+features: [..., 'chromecast']
+```
+
 ## API
 
 Parameter | Type | Default | Description

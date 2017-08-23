@@ -16,6 +16,11 @@ Shuffle  | `shuffle` | OPTIONAL; Control to shuffle the playlist
 
 **NOTE:** If you plan to use Loop, it is strongly recommended NOT to use the standalone version of Loop included in the project.
 
+## Keyword to use it
+```javascript
+features: [..., 'playlist', 'nexttrack', 'prevtrack', 'shuffle', 'loop']
+```
+
 ## API
 
 Parameter | Type | Default | Description

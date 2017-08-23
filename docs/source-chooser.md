@@ -12,6 +12,11 @@ This plugin generates a button to choose between different sources, if more than
 </video>
 ```
 
+## Keyword to use it
+```javascript
+features: [..., 'sourcechooser']
+```
+
 ## API
 
 Parameter | Type | Default | Description
