@@ -384,7 +384,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				description = element['data-playlist-description'] ? `<div class="${t.options.classPrefix}playlist-item-description">${element['data-playlist-description']}</div>` : ''
 			;
 			item.tabIndex = 0;
-			item.classList = `${t.options.classPrefix}playlist-selector-list-item${(i === 0 ? ` ${t.options.classPrefix}playlist-selected` : '')}`;
+			item.className = `${t.options.classPrefix}playlist-selector-list-item${(i === 0 ? ` ${t.options.classPrefix}playlist-selected` : '')}`;
 			item.innerHTML = `<div class="${t.options.classPrefix}playlist-item-inner">` +
 				`${thumbnail}` +
 				`<div class="${t.options.classPrefix}playlist-item-content">` +

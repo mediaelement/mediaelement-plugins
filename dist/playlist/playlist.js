@@ -334,7 +334,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			    thumbnail = element['data-playlist-thumbnail'] ? '<div class="' + t.options.classPrefix + 'playlist-item-thumbnail"><img tabindex="-1" src="' + element['data-playlist-thumbnail'] + '"></div>' : '',
 			    description = element['data-playlist-description'] ? '<div class="' + t.options.classPrefix + 'playlist-item-description">' + element['data-playlist-description'] + '</div>' : '';
 			item.tabIndex = 0;
-			item.classList = t.options.classPrefix + 'playlist-selector-list-item' + (_i4 === 0 ? ' ' + t.options.classPrefix + 'playlist-selected' : '');
+			item.className = t.options.classPrefix + 'playlist-selector-list-item' + (_i4 === 0 ? ' ' + t.options.classPrefix + 'playlist-selected' : '');
 			item.innerHTML = '<div class="' + t.options.classPrefix + 'playlist-item-inner">' + ('' + thumbnail) + ('<div class="' + t.options.classPrefix + 'playlist-item-content">') + ('<div><input type="radio" class="' + t.options.classPrefix + 'playlist-selector-input" ') + ('name="' + t.id + '_playlist" id="' + id + '" data-playlist-index="' + _i4 + '" value="' + element.src + '" disabled>') + ('<label class="' + t.options.classPrefix + 'playlist-selector-label" ') + ('for="' + id + '">' + (_i4 === 0 ? '<span>\u25B6</span> ' : '') + (element.title || _i4) + '</label></div>' + description + '</div></div>');
 
 			t.listItems.push(item.outerHTML);
