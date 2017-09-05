@@ -2,7 +2,7 @@
 
 *X.X.X (??/??/??)*
 
-* Fixed typo on `Playlist` plugin that caused error on Edge @rafa8626
+* Fixed typo on `Playlist` plugin that caused error on Edge and removed `disabled` attribute on each item @rafa8626
 
 *2.4.0 (2017/08/09)*
 

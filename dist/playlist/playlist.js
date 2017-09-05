@@ -116,6 +116,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			    inputs = player.playlistLayer.querySelectorAll('input[type=radio]');
 
 			for (var _i2 = 0, _total2 = inputs.length; _i2 < _total2; _i2++) {
+				inputs[_i2].disabled = false;
 				inputs[_i2].addEventListener('click', function () {
 					var radios = player.playlistLayer.querySelectorAll('input[type="radio"]'),
 					    selected = player.playlistLayer.querySelectorAll('.' + player.options.classPrefix + 'playlist-selected');
