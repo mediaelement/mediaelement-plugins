@@ -52,10 +52,12 @@ Object.assign(MediaElementPlayer.prototype, {
 		controls.style.zIndex = 5;
 
 		player.endedCallback = function () {
-			if (player.currentPlaylistItem < player.totalItems) {
+			if (player.currentPlaylistItem < player.listItems.length) {
 				player.setSrc(player.playlist[++player.currentPlaylistItem]);
 				player.load();
-				player.play();
+				setTimeout(function () {
+					player.play();
+				}, 200);
 			}
 		};
 
@@ -116,6 +118,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			    inputs = player.playlistLayer.querySelectorAll('input[type=radio]');
 
 			for (var _i2 = 0, _total2 = inputs.length; _i2 < _total2; _i2++) {
+				inputs[_i2].disabled = false;
 				inputs[_i2].addEventListener('click', function () {
 					var radios = player.playlistLayer.querySelectorAll('input[type="radio"]'),
 					    selected = player.playlistLayer.querySelectorAll('.' + player.options.classPrefix + 'playlist-selected');

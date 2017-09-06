@@ -80,10 +80,12 @@ Object.assign(MediaElementPlayer.prototype, {
 		controls.style.zIndex = 5;
 
 		player.endedCallback = () => {
-			if (player.currentPlaylistItem < player.totalItems) {
+			if (player.currentPlaylistItem < player.listItems.length) {
 				player.setSrc(player.playlist[++player.currentPlaylistItem]);
 				player.load();
-				player.play();
+				setTimeout(() => {
+					player.play();
+				}, 200);
 			}
 		};
 
@@ -149,6 +151,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			;
 
 			for (let i = 0, total = inputs.length; i < total; i++) {
+				inputs[i].disabled = false;
 				inputs[i].addEventListener('click', function () {
 					const
 						radios = player.playlistLayer.querySelectorAll('input[type="radio"]'),
