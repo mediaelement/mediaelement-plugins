@@ -115,7 +115,6 @@ module.exports = function (grunt) {
 					'dist/chromecast/chromecast.css': 'src/chromecast/chromecast.css',
 					'dist/context-menu/context-menu.css': 'src/context-menu/context-menu.css',
 					'dist/jump-forward/jump-forward.css': 'src/jump-forward/jump-forward.css',
-					'dist/google-ima/google-ima.css': 'src/google-ima/google-ima.css',
 					'dist/loop/loop.css': 'src/loop/loop.css',
 					'dist/playlist/playlist.css': 'src/playlist/playlist.css',
 					'dist/postroll/postroll.css': 'src/postroll/postroll.css',
