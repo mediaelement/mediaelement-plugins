@@ -171,6 +171,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						media.pause();
 						media.setSrc(src.src);
 						media.load();
+            media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
 						media.addEventListener('canplay', canPlayAfterSourceSwitchHandler);
 					}
 				}
