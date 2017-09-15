@@ -85,8 +85,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		for (var _i3 = 0, _total3 = outEvents.length; _i3 < _total3; _i3++) {
-			selector.addEventListener(outEvents[_i3], function () {
-				mejs.Utils.addClass(this, t.options.classPrefix + 'offscreen');
+			player.qualitiesButton.addEventListener(outEvents[_i3], function () {
+				mejs.Utils.addClass(selector, t.options.classPrefix + 'offscreen');
 			});
 		}
 
@@ -130,6 +130,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						media.pause();
 						media.setSrc(_src.src);
 						media.load();
+						media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
 						media.addEventListener('canplay', canPlayAfterSourceSwitchHandler);
 					}
 				}
