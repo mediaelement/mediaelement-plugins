@@ -3,6 +3,7 @@
 *X.X.X (??/??/??)*
 
 * Fixed typo on `Playlist` plugin that caused error on Edge, removed `disabled` attribute on each item and fixed workflow to autoplay next element @rafa8626
+* Fixed issue when mouse leave from Quality button, its selector does not hide (https://github.com/mediaelement/mediaelement-plugins/pull/89) @meathill
 
 *2.4.0 (2017/08/09)*
 

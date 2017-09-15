@@ -67,7 +67,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				} else {
 					label = value;
 				}
-				
+
 				return label;
 			},
 			defaultValue = getQualityNameFromValue(t.options.defaultQuality)
@@ -121,7 +121,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		for (let i = 0, total = outEvents.length; i < total; i++) {
-      player.qualitiesButton.addEventListener(outEvents[i], function () {
+			player.qualitiesButton.addEventListener(outEvents[i], () => {
 				mejs.Utils.addClass(selector, `${t.options.classPrefix}offscreen`);
 			});
 		}
