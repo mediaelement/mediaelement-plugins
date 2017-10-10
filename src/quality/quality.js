@@ -313,10 +313,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (counter === index) {
 				keyValue.key = key;
 				keyValue.value = value;
-				counter ++;
-			} else {
-				counter ++;
 			}
+			counter ++;
 		});
 		return keyValue;
 	}
