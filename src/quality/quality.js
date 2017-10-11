@@ -38,19 +38,18 @@ Object.assign(MediaElementPlayer.prototype, {
 		const
 				t = this,
 				qualities = [],
-				parent = t.node,
 				children = t.mediaFiles ? t.mediaFiles : t.node.children,
 				qualityMap = new Map()
 		;
 
 		for (let i = 0, total = children.length; i < total; i++) {
-			const s = children[i];
+			const mediaNode = children[i];
 
 			if (t.mediaFiles) {
-				qualities.push(s);
-			} else if (s.nodeName === 'SOURCE') {
-				let label = s instanceof HTMLElement ? s.getAttribute('data-quality') : s['data-quality']
-				t.addValueToKey(qualityMap, label, s);
+				qualities.push(mediaNode);
+			} else if (mediaNode.nodeName === 'SOURCE') {
+				const quality = mediaNode instanceof HTMLElement ? mediaNode.getAttribute('data-quality') : mediaNode['data-quality']
+				t.addValueToKey(qualityMap, label, mediaNode);
 			}
 		}
 
