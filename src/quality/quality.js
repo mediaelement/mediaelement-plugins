@@ -49,7 +49,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				qualities.push(mediaNode);
 			} else if (mediaNode.nodeName === 'SOURCE') {
 				const quality = mediaNode instanceof HTMLElement ? mediaNode.getAttribute('data-quality') : mediaNode['data-quality']
-				t.addValueToKey(qualityMap, label, mediaNode);
+				t.addValueToKey(qualityMap, quality, mediaNode);
 			}
 		}
 
