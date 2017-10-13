@@ -80,17 +80,6 @@
         </div>
 
         <h3>Audio Player</h3>
-
-        <div class="media-wrapper">
-            <audio id="player2" preload="none" controls style="max-width:100%;"
-                   data-cast-title="Jazz Example"
-                   data-cast-description="This is a description for audio only"
-                   data-cast-poster="http://mediaelementjs.com/images/big_buck_bunny.jpg">
-                <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3" title="Jazz Example" data-playlist-thumbnail="http://mediaelementjs.com/images/big_buck_bunny.jpg" data-playlist-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum justo arcu. Vestibulum commodo lacus bibendum sollicitudin commodo.">
-                <source src="https://api.soundcloud.com/tracks/323195515/stream?client_id=95f22ed54a5c297b1c41f72d713623ef" type="audio/mp3" title="Soundcloud rocks!" data-playlist-description="Curabitur et malesuada arcu. Praesent hendrerit, quam vel pellentesque aliquam, metus felis mattis velit, quis varius metus diam vitae diam. Integer ante massa, tempor in accumsan eu, sodales in lectus.">
-                <source src="rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st/mp3:fake_empire-cbr" type="rtmp/video" title="Playing RTMP audio...">
-            </audio>
-        </div>
         <h4>Code snippet</h4>
         <pre data-lang="Javascript"><code></code></pre>
     </div>
@@ -103,21 +92,27 @@
 <script src="../dist/chromecast/chromecast.js"></script>
 <script src="../dist/context-menu/context-menu.js"></script>
 <script src="../dist/playlist/playlist.js"></script>
+<script src="../dist/google-ima/google-ima.js"></script>
 <script id="mejs-code">
 	var mediaElements = document.querySelectorAll('video, audio');
 
 	for (var i = 0, total = mediaElements.length; i < total; i++) {
-		var features = ['prevtrack', 'playpause', 'nexttrack', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward',
-		'markers', 'volume', 'playlist', 'loop', 'shuffle', 'contextmenu'];
+//		var features = ['prevtrack', 'playpause', 'nexttrack', 'current', 'progress', 'duration', 'speed', 'skipback', 'jumpforward',
+//		'markers', 'volume', 'playlist', 'loop', 'shuffle', 'contextmenu'];
+        var features = ['playpause', 'googleima'];
 		// To demonstrate the use of Chromecast with audio
-		if (mediaElements[i].tagName === 'AUDIO') {
-		    features.push('chromecast');
-        }
+//		if (mediaElements[i].tagName === 'AUDIO') {
+//		    features.push('chromecast');
+//        }
 	    new MediaElementPlayer(mediaElements[i], {
 		    // This is needed to make Jump Forward to work correctly
             pluginPath: 'https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.5/',
 		    shimScriptAccess: 'always',
 		    autoRewind: false,
+		    adsUrl: 'https://pubads.g.doubleclick.net/gampad/ads?' +
+	    'sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&' +
+	    'impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&' +
+	    'cust_params=deployment%3Ddevsite%26sample_ct%3Dlinear&correlator=',
 		    features: features,
             currentMessage: 'Now playing:'
 	    });

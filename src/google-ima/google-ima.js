@@ -29,13 +29,13 @@ Object.assign(MediaElementPlayer.prototype, {
 		player.imaLayer = document.createElement('div');
 		player.imaLayer.id = `${player.options.classPrefix}ads`;
 		player.imaLayer.className = `${player.options.classPrefix}overlay ${player.options.classPrefix}layer ${player.options.classPrefix}ima-layer`;
+		layers.insertBefore(player.imaLayer, layers.firstChild);
 
 		player.playingAds = false;
 		player.adsActive = false;
-		player.preloadListener = false;
-		player.contentCompleteCalled = false;
+		player.preloadListener = null;
 
-		layers.insertBefore(player.imaLayer, layers.firstChild);
+		player.contentCompleteCalled = false;
 
 		mejs.Utils.loadScript('https://imasdk.googleapis.com/js/sdkloader/ima3.js').then(() => {
 			// Activate VPAID by default
@@ -55,44 +55,33 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			player.resizeAdsCallback = () => {
 				if (player.adsManager) {
-					player.adsManager.resize(player.container.offsetWidth, player.container.offsetHeight, google.ima.ViewMode.FULLSCREEN);
+					player.adsManager.resize(player.container.offsetWidth, player.container.offsetHeight, google.ima.ViewMode.NORMAL);
 				}
 			};
+
+			player.originalPlayCallback = player.play;
+			player.originalPauseCallback = player.pause;
 
 			// An event listener to tell the SDK that our content video
 			// is completed so the SDK can play any post-roll ads.
 			media.addEventListener('ended', player.contentEndedListener_.bind(player));
-
+			player.play = player.playAds_.bind(player);
+			player.pause = player.playAds_.bind(player);
 			player.globalBind('resize', player.resizeAdsCallback);
-			const playPauseBtn = controls.querySelector(`.${player.options.classPrefix}playpause-button`);
-			if (playPauseBtn) {
-				playPauseBtn.addEventListener('click', player.playAds_.bind(player));
-			}
-			const bigPlay = layers.querySelector(`.${player.options.classPrefix}overlay-play`);
-			if (bigPlay) {
-				bigPlay.addEventListener('click', player.playAds_.bind(player));
-			}
 		});
 	},
 	cleangoogleima (player, controls, layers, media) {
 		media.removeEventListener('ended', player.contentEndedListener_.bind(player));
+		media.removeEventListener('play', player.playAds_.bind(player));
+		media.removeEventListener('pause', player.playAds_.bind(player));
 		player.globalUnbind('resize', player.resizeAdsCallback);
 		player.imaLayer.remove();
-
-		const playPauseBtn = player.controls.querySelector(`.${player.options.classPrefix}playpause-button`);
-		if (playPauseBtn) {
-			playPauseBtn.removeEventListener('click', player.playAds_.bind(player));
-		}
-		const bigPlay = player.layers.querySelector(`.${player.options.classPrefix}overlay-play`);
-		if (bigPlay) {
-			bigPlay.removeEventListener('click', player.playAds_.bind(player));
-		}
 	},
 	loadAds_ () {
 		const t = this;
 		if (t.preloadListener) {
 			t.media.removeEventListener('loadedmetadata', t.loadAds_.bind(t));
-			t.preloadListener = false;
+			t.preloadListener = null;
 		}
 		t.requestAds_(t.options.adsUrl);
 	},
@@ -100,17 +89,10 @@ Object.assign(MediaElementPlayer.prototype, {
 		this.contentCompleteCalled = true;
 		this.adsLoader.contentComplete();
 		this.imaLayer.style.display = 'none';
-
-		const playPauseBtn = this.controls.querySelector(`.${this.options.classPrefix}playpause-button`);
-		if (playPauseBtn) {
-			playPauseBtn.removeEventListener('click', this.playAds_.bind(this));
-		}
-		const bigPlay = this.layers.querySelector(`.${this.options.classPrefix}overlay-play`);
-		if (bigPlay) {
-			bigPlay.removeEventListener('click', this.playAds_.bind(this));
-		}
+		this.play = this.originalPlayCallback();
+		this.pause = this.originalPauseCallback();
 	},
-	playAds_ (e) {
+	playAds_ () {
 		const t = this;
 		// Initialize the container. Must be done via a user action on mobile devices.
 		if (!t.adsDone) {
@@ -121,7 +103,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			// simulate playback to enable the video element for later program-triggered
 			// playback.
 			if (t.paused && (mejs.Features.isAndroid || mejs.Features.isIOS)) {
-				t.preloadListener = true;
+				t.preloadListener = t.loadAds_();
 				t.media.addEventListener('loadedmetadata', t.loadAds_.bind(t));
 				t.media.load();
 			} else {
@@ -137,20 +119,14 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.adsManager.pause();
 				t.playingAds = false;
 				event = mejs.Utils.createEvent('pause', t.media);
+
 			} else if (t.adsManager) {
 				t.adsManager.resume();
 				t.playingAds = true;
 				event = mejs.Utils.createEvent('play', t.media);
 			}
 			t.media.dispatchEvent(event);
-		} else if (t.paused) {
-			t.play();
-		} else {
-			t.pause();
 		}
-
-		e.preventDefault();
-		e.stopPropagation();
 	},
 	requestAds_ (adTagUrl) {
 		const t = this;
@@ -173,8 +149,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.adsManager.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, t.onAdError_.bind(t));
 		t.adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED, t.onContentPauseRequested_.bind(t));
 		t.adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED, t.onContentResumeRequested_.bind(t));
-		t.adsManager.addEventListener(google.ima.AdEvent.Type.ALL_ADS_COMPLETED, t.onAdEvent_.bind(t));
-
 		var events = [
 			google.ima.AdEvent.Type.ALL_ADS_COMPLETED,
 			google.ima.AdEvent.Type.CLICK,
@@ -190,7 +164,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.adsManager.addEventListener(events[i], t.onAdEvent_.bind(t));
 		}
 
-		t.adsManager.init(t.width, t.height, google.ima.ViewMode.NORMAL);
+		t.adsManager.init(t.container.offsetWidth, t.container.offsetHeight, google.ima.ViewMode.NORMAL);
+		t.resetSize();
 		t.adsManager.start();
 	},
 	onAdEvent_ (adEvent) {
@@ -222,9 +197,11 @@ Object.assign(MediaElementPlayer.prototype, {
 
 	onContentResumeRequested_ () {
 		this.media.addEventListener('ended', this.contentEndedListener_.bind(this));
-		this.contentEndedListener_();
 		if (!this.contentCompleteCalled) {
 			this.adsActive = false;
+			this.imaLayer.style.display = 'none';
+			this.play = this.originalPlayCallback();
+			this.pause = this.originalPauseCallback();
 			this.play();
 		}
 	}
