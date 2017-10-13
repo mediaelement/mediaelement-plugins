@@ -93,6 +93,9 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.addControlElement(player.qualitiesButton, 'qualities');
 
+		media.setSrc(qualityMap.get(defaultValue)[0].src); // ensure the default sources to set to play 
+		media.load();
+
 			qualityMap.forEach(function (value, key) {
 				if (key !== 'map_keys_1') {
 					const
@@ -163,6 +166,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						media.pause();
 						t.updateVideoSource(media, qualityMap, newQuality);
 						media.setSrc(qualityMap.get(newQuality)[0].src);
+						media.load();
 						media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
 						media.play();
 						media.addEventListener('canplay', function canPlayAfterSourceSwitchHandler() {
@@ -186,7 +190,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		selector.addEventListener('keydown', (e) => {
 			e.stopPropagation();
 		});
-		const defaultSource = document.getElementById(`${t.id}-qualities-${defaultValue}`);
 		media.setSrc(qualityMap.get(defaultValue)[0].src);
 	},
 
