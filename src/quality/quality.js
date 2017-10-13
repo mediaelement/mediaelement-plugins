@@ -188,7 +188,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 		const defaultSource = document.getElementById(`${t.id}-qualities-${defaultValue}`);
 		media.setSrc(qualityMap.get(defaultValue)[0].src);
-		media.load();
 	},
 
 	/**
