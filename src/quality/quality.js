@@ -34,43 +34,46 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {HTMLElement} media
 	 */
 	buildquality (player, controls, layers, media) {
-
 		const
-			t = this,
-			qualities = [],
-			children = t.mediaFiles ? t.mediaFiles : t.node.children
+				t = this,
+				children = t.mediaFiles ? t.mediaFiles : t.node.children,
+				qualityMap = new Map()
 		;
 
 		for (let i = 0, total = children.length; i < total; i++) {
-			const s = children[i];
+			const mediaNode = children[i];
+			const quality = mediaNode instanceof HTMLElement ? mediaNode.getAttribute('data-quality') : mediaNode['data-quality'];
 
 			if (t.mediaFiles) {
-				qualities.push(s);
-			} else if (s.nodeName === 'SOURCE') {
-				qualities.push(s);
+				const source = document.createElement('source');
+				source.src = mediaNode['src'];
+				source.type = mediaNode['type'];
+
+				t.addValueToKey(qualityMap, quality, source);
+			} else if (mediaNode.nodeName === 'SOURCE') {
+				t.addValueToKey(qualityMap, quality, mediaNode);
 			}
 		}
 
-		if (qualities.length <= 1) {
+		if (qualityMap.size <= 1) {
 			return;
 		}
 
 		t.cleanquality(player);
 
 		const
-			qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-quality'),
-			getQualityNameFromValue = (value) => {
-				let label;
-				if (value === 'auto') {
-					const src = qualities[0];
-					label = src instanceof HTMLElement ? src.getAttribute('data-quality') : src['data-quality']
-				} else {
-					label = value;
-				}
-
-				return label;
-			},
-			defaultValue = getQualityNameFromValue(t.options.defaultQuality)
+				qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-quality'),
+				getQualityNameFromValue = (value) => {
+					let label;
+					if (value === 'auto') {
+							let keyValue = t.getMapIndex(qualityMap, 0);
+							label = keyValue.key;
+					} else {
+						label = value;
+					}
+					return label;
+				},
+				defaultValue = getQualityNameFromValue(t.options.defaultQuality)
 		;
 
 		// Get initial quality
@@ -85,23 +88,21 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.addControlElement(player.qualitiesButton, 'qualities');
 
-		for (let i = 0, total = qualities.length; i < total; i++) {
-			const
-				src = qualities[i],
-				quality = src instanceof HTMLElement ? src.getAttribute('data-quality') : src['data-quality'],
-				inputId = `${t.id}-qualities-${quality}`
-			;
-
-			player.qualitiesButton.querySelector('ul').innerHTML += `<li class="${t.options.classPrefix}qualities-selector-list-item">` +
-				`<input class="${t.options.classPrefix}qualities-selector-input" type="radio" name="${t.id}_qualities"` +
-					`disabled="disabled" value="${quality}" id="${inputId}"  ` +
-					`${(quality === defaultValue ? ' checked="checked"' : '')}/>` +
-				`<label for="${inputId}" class="${t.options.classPrefix}qualities-selector-label` +
-					`${(quality === defaultValue ? ` ${t.options.classPrefix}qualities-selected` : '')}">` +
-					`${src.title || quality}</label>` +
-			`</li>`;
-		}
-
+			qualityMap.forEach(function (value, key) {
+				const
+						src     = value[0],
+						quality = key,
+						inputId = `${t.id}-qualities-${quality}`
+				;
+				player.qualitiesButton.querySelector('ul').innerHTML += `<li class="${t.options.classPrefix}qualities-selector-list-item">` +
+						`<input class="${t.options.classPrefix}qualities-selector-input" type="radio" name="${t.id}_qualities"` +
+							`disabled="disabled" value="${quality}" id="${inputId}"  ` +
+							`${(quality === defaultValue ? ' checked="checked"' : '')}/>` +
+						`<label for="${inputId}" class="${t.options.classPrefix}qualities-selector-label` +
+							`${(quality === defaultValue ? ` ${t.options.classPrefix}qualities-selected` : '')}">` +
+							`${src.title || quality}</label>` +
+						`</li>`;
+			});
 		const
 			inEvents = ['mouseenter', 'focusin'],
 			outEvents = ['mouseleave', 'focusout'],
@@ -129,7 +130,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		for (let i = 0, total = radios.length; i < total; i++) {
 			const radio = radios[i];
 			radio.disabled = false;
-			radio.addEventListener('click', function() {
+			radio.addEventListener('change', function() {
 				const
 					self = this,
 					newQuality = self.value
@@ -146,38 +147,26 @@ Object.assign(MediaElementPlayer.prototype, {
 					mejs.Utils.addClass(siblings[j], `${t.options.classPrefix}qualities-selected`);
 				}
 
-
 				let currentTime = media.currentTime;
 
-				const
-					paused = media.paused,
-					canPlayAfterSourceSwitchHandler = () => {
-						if (!paused) {
-							media.setCurrentTime(currentTime);
-							media.play();
-						}
-						media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
-					}
+				const paused = media.paused,
+							canPlayAfterSourceSwitchHandler = () => {
+											media.setCurrentTime(currentTime);
+											media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
+							}
 				;
 
-				for (let i = 0, total = qualities.length; i < total; i++) {
-					const
-						src = qualities[i],
-						quality = src instanceof HTMLElement ? src.getAttribute('data-quality') : src['data-quality']
-					;
-
-					if (quality === newQuality) {
-						player.qualitiesButton.querySelector('button').innerHTML = src.title || getQualityNameFromValue(newQuality);
+					if (!paused) {
+						player.qualitiesButton.querySelector('button').innerHTML = newQuality;
 						media.pause();
-						media.setSrc(src.src);
-						media.load();
-            media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
+						t.updateVideoSource(media, qualityMap, newQuality);
+						media.setSrc(qualityMap.get(newQuality)[0].src)
+						media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
+						media.play()
 						media.addEventListener('canplay', canPlayAfterSourceSwitchHandler);
 					}
-				}
 			});
 		}
-
 		for (let i = 0, total = labels.length; i < total; i++) {
 			labels[i].addEventListener('click',  function () {
 				const
@@ -206,6 +195,74 @@ Object.assign(MediaElementPlayer.prototype, {
 				player.qualitiesButton.remove();
 			}
 		}
+	},
+
+	/**
+	 * Populate the source map
+	 * @param map the map the quality source is being added
+	 * @param key the key to the quality source (value stored in data-quality)
+	 * @param value the the video.source tag
+	 */
+	addValueToKey(map, key, value) {
+		if (map.has(key)) {
+			map.get(key).push(value);
+		} else {
+			map.set(key, []);
+			map.get(key).push(value);
+		}
+	},
+
+	/**
+	 * Set the source tag for the mejs player
+	 * @param parent the mejs player
+	 * @param map the map containing the video quality source tags
+	 * @param key the user selected quality
+	 */
+	updateVideoSource (media, map, key) {
+		this.cleanMediaSource(media);
+		let sources = map.get(key);
+		for (let i = 0; i < media.children.length; i++) {
+			let mediaNode = media.children[i];
+			if (mediaNode.tagName === 'VIDEO') {
+				sources.forEach(function (sourceElement) {
+					mediaNode.appendChild(sourceElement);
+				});
+			}
+		}
+	},
+
+	/**
+	 * Remove all the source tag for the mejs player
+	 * @param player the mejs player
+	 */
+	cleanMediaSource(media) {
+		for (let i = 0; i < media.children.length; i++) {
+			let mediaNode = media.children[i];
+			if (mediaNode.tagName === 'VIDEO') {
+				while (mediaNode.firstChild) {
+					mediaNode.removeChild(mediaNode.firstChild);
+				}
+			}
+		}
+	},
+
+	/**
+	 * Search a map for a value key pair stored at a specified index
+	 * @param map the map being searched
+	 * @param index the index of the requested key value pair
+	 * @returns {{key, value}} a key: value: object
+	 */
+	getMapIndex(map, index) {
+		let counter = 0;
+		let keyValue = {};
+		map.forEach(function(value, key) {
+
+			if (counter === index) {
+				keyValue.key = key;
+				keyValue.value = value;
+			}
+			counter ++;
+		});
+		return keyValue;
 	}
 });
-
