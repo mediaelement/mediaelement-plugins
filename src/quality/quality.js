@@ -162,9 +162,9 @@ Object.assign(MediaElementPlayer.prototype, {
 						player.qualitiesButton.querySelector('button').innerHTML = newQuality;
 						media.pause();
 						t.updateVideoSource(media, qualityMap, newQuality);
-						media.setSrc(qualityMap.get(newQuality)[0].src)
+						media.setSrc(qualityMap.get(newQuality)[0].src);
 						media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
-						media.play()
+						media.play();
 						media.addEventListener('canplay', function canPlayAfterSourceSwitchHandler() {
 							media.setCurrentTime(currentTime);
 							media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
@@ -186,6 +186,9 @@ Object.assign(MediaElementPlayer.prototype, {
 		selector.addEventListener('keydown', (e) => {
 			e.stopPropagation();
 		});
+		const defaultSource = document.getElementById(`${t.id}-qualities-${defaultValue}`);
+		media.setSrc(qualityMap.get(defaultValue)[0].src);
+		media.load();
 	},
 
 	/**
