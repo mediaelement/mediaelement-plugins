@@ -96,7 +96,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			qualityMap.forEach(function (value, key) {
 				if (key !== 'map_keys_1') {
 					const
-							src  = value[0],
+							src = value[0],
 							quality = key,
 							inputId = `${t.id}-qualities-${quality}`
 					;
