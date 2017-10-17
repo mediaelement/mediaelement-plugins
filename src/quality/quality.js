@@ -37,7 +37,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		const
 				t = this,
 				children = t.mediaFiles ? t.mediaFiles : t.node.children,
-				qualityMap = new Map();
+				qualityMap = new Map()
 		;
 
 		for (let i = 0, total = children.length; i < total; i++) {
