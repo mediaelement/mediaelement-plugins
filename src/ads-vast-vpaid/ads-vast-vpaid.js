@@ -354,7 +354,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (t.media.canPlayType(type) !== '' || /(no|false)/i.test(t.media.canPlayType(type))) {
 
 					// Execute JS files if found
-					if (mediaFile.getAttribute('type') === 'application/javascript') {
+					if (type === 'application/javascript') {
 						const
 							script = document.createElement('script'),
 							firstScriptTag = document.getElementsByTagName('script')[0]
@@ -365,11 +365,11 @@ Object.assign(MediaElementPlayer.prototype, {
 
 					}
 					// Avoid Flash
-					else if (mediaFile.getAttribute('delivery') !== 'application/x-shockwave-flash') {
+					else if (type !== 'application/x-shockwave-flash') {
 						adTag.mediaFiles.push({
 							id: mediaFile.getAttribute('id'),
 							delivery: mediaFile.getAttribute('delivery'),
-							type: mediaFile.getAttribute('type'),
+							type: type,
 							bitrate: mediaFile.getAttribute('bitrate'),
 							width: mediaFile.getAttribute('width'),
 							height: mediaFile.getAttribute('height'),

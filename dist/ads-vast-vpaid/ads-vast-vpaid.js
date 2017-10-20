@@ -271,17 +271,17 @@ Object.assign(MediaElementPlayer.prototype, {
 				    type = mediaFile.getAttribute('type');
 
 				if (t.media.canPlayType(type) !== '' || /(no|false)/i.test(t.media.canPlayType(type))) {
-					if (mediaFile.getAttribute('type') === 'application/javascript') {
+					if (type === 'application/javascript') {
 						var script = document.createElement('script'),
 						    firstScriptTag = document.getElementsByTagName('script')[0];
 
 						script.src = mediaFile.textContent.trim();
 						firstScriptTag.parentNode.insertBefore(script, firstScriptTag);
-					} else if (mediaFile.getAttribute('delivery') !== 'application/x-shockwave-flash') {
+					} else if (type !== 'application/x-shockwave-flash') {
 							adTag.mediaFiles.push({
 								id: mediaFile.getAttribute('id'),
 								delivery: mediaFile.getAttribute('delivery'),
-								type: mediaFile.getAttribute('type'),
+								type: type,
 								bitrate: mediaFile.getAttribute('bitrate'),
 								width: mediaFile.getAttribute('width'),
 								height: mediaFile.getAttribute('height'),
