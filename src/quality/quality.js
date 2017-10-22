@@ -66,8 +66,13 @@ Object.assign(MediaElementPlayer.prototype, {
 				getQualityNameFromValue = (value) => {
 					let label;
 					if (value === 'auto') {
+						const keyExist = t.keyExist(qualityMap, value);
+						if (keyExist) {
+							label = value;
+						} else {
 							let keyValue = t.getMapIndex(qualityMap, 0);
 							label = keyValue.key;
+						}
 					} else {
 						label = value;
 					}
@@ -88,20 +93,25 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.addControlElement(player.qualitiesButton, 'qualities');
 
+		media.setSrc(qualityMap.get(defaultValue)[0].src); // ensure the default sources to set to play 
+		media.load();
+
 			qualityMap.forEach(function (value, key) {
-				const
-						src     = value[0],
-						quality = key,
-						inputId = `${t.id}-qualities-${quality}`
-				;
-				player.qualitiesButton.querySelector('ul').innerHTML += `<li class="${t.options.classPrefix}qualities-selector-list-item">` +
-						`<input class="${t.options.classPrefix}qualities-selector-input" type="radio" name="${t.id}_qualities"` +
-							`disabled="disabled" value="${quality}" id="${inputId}"  ` +
-							`${(quality === defaultValue ? ' checked="checked"' : '')}/>` +
-						`<label for="${inputId}" class="${t.options.classPrefix}qualities-selector-label` +
-							`${(quality === defaultValue ? ` ${t.options.classPrefix}qualities-selected` : '')}">` +
-							`${src.title || quality}</label>` +
-						`</li>`;
+				if (key !== 'map_keys_1') {
+					const
+							src = value[0],
+							quality = key,
+							inputId = `${t.id}-qualities-${quality}`
+					;
+					player.qualitiesButton.querySelector('ul').innerHTML += `<li class="${t.options.classPrefix}qualities-selector-list-item">` +
+							`<input class="${t.options.classPrefix}qualities-selector-input" type="radio" name="${t.id}_qualities"` +
+								`disabled="disabled" value="${quality}" id="${inputId}"  ` +
+								`${(quality === defaultValue ? ' checked="checked"' : '')}/>` +
+							`<label for="${inputId}" class="${t.options.classPrefix}qualities-selector-label` +
+								`${(quality === defaultValue ? ` ${t.options.classPrefix}qualities-selected` : '')}">` +
+								`${src.title || quality}</label>` +
+							`</li>`;
+				}
 			});
 		const
 			inEvents = ['mouseenter', 'focusin'],
@@ -149,21 +159,20 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				let currentTime = media.currentTime;
 
-				const paused = media.paused,
-							canPlayAfterSourceSwitchHandler = () => {
-											media.setCurrentTime(currentTime);
-											media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
-							}
-				;
+				const paused = media.paused;
 
 					if (!paused) {
 						player.qualitiesButton.querySelector('button').innerHTML = newQuality;
 						media.pause();
 						t.updateVideoSource(media, qualityMap, newQuality);
-						media.setSrc(qualityMap.get(newQuality)[0].src)
+						media.setSrc(qualityMap.get(newQuality)[0].src);
+						media.load();
 						media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
-						media.play()
-						media.addEventListener('canplay', canPlayAfterSourceSwitchHandler);
+						media.play();
+						media.addEventListener('canplay', function canPlayAfterSourceSwitchHandler() {
+							media.setCurrentTime(currentTime);
+							media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
+						});
 					}
 			});
 		}
@@ -181,6 +190,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		selector.addEventListener('keydown', (e) => {
 			e.stopPropagation();
 		});
+		media.setSrc(qualityMap.get(defaultValue)[0].src);
 	},
 
 	/**
@@ -204,6 +214,11 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param value the the video.source tag
 	 */
 	addValueToKey(map, key, value) {
+		if (map.has('map_keys_1')) {
+			map.get('map_keys_1').push(key.toLowerCase());
+		} else {
+			map.set('map_keys_1', []);
+		}
 		if (map.has(key)) {
 			map.get(key).push(value);
 		} else {
@@ -253,7 +268,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @returns {{key, value}} a key: value: object
 	 */
 	getMapIndex(map, index) {
-		let counter = 0;
+		let counter = -1;
 		let keyValue = {};
 		map.forEach(function(value, key) {
 
@@ -264,5 +279,16 @@ Object.assign(MediaElementPlayer.prototype, {
 			counter ++;
 		});
 		return keyValue;
+	},
+
+	/**
+	 * Returns flag for whether or not a given key exist in a give map
+	 * @param map the map being searched
+	 * @param searchKey the map searching being searched
+	 * @param qualityMapKeys array containing the
+	 * @returns {boolean}
+	 */
+	keyExist(map, searchKey) {
+		return -1 < map.get('map_keys_1').indexOf(searchKey.toLowerCase());
 	}
 });
