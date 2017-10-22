@@ -58,7 +58,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.cleanquality(player);
 
 		const
-			qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-quality'),
+			qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-chooser'),
 			getQualityNameFromValue = (value) => {
 				let label;
 				if (value === 'auto') {
