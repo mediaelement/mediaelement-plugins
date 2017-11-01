@@ -17,6 +17,7 @@
 <div id="container">
 
     <h1>Playlist Plugin</h1>
+    <p><a href="index.html">Back to Main</a></p>
 
     <p>This plugin allows the creation of a video/audio playlist.</p>
 
@@ -90,67 +91,67 @@
     <h2>API</h2>
     <table>
         <thead>
-        <tr>
-            <th>Parameter</th>
-            <th>Type</th>
-            <th>Default</th>
-            <th>Description</th>
-        </tr>
+            <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Default</th>
+                <th>Description</th>
+            </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>playlist</td>
-            <td>array</td>
-            <td>[]</td>
-            <td>List to be played; the array consists in a series of objects that MUST include the <i>src</i> and <i>title</i> attributes; other possible items: `data-thumbnail`, `type`, `description`. <strong>If its empty, it will search for all the <i>source</i> elements within the video/audio tags</strong></td>
-        </tr>
-        <tr>
-            <td>showPlaylist</td>
-            <td>boolean</td>
-            <td>true</td>
-            <td>Whether or not to display the playlist; if so, a button to toggle the playlist will be displayed</td>
-        </tr>
-        <tr>
-            <td>autoClosePlaylist</td>
-            <td>boolean</td>
-            <td>false</td>
-            <td>If set to <i>true</i>, the playlist container will hide once user selects an item</td>
-        </tr>
-        <tr>
-            <td>prevText</td>
-            <td>string</td>
-            <td>null</td>
-            <td>Title for Previous button for WARIA purposes</td>
-        </tr>
-        <tr>
-            <td>nextText</td>
-            <td>string</td>
-            <td>null</td>
-            <td>Title for Next button for WARIA purposes</td>
-        <tr>
-            <td>loopText</td>
-            <td>string</td>
-            <td>null</td>
-            <td>Title for Loop button for WARIA purposes</td>
-        </tr>
-        <tr>
-            <td>shuffleText</td>
-            <td>string</td>
-            <td>null</td>
-            <td>Title for Shuffle button for WARIA purposes</td>
-        </tr>
-        <tr>
-            <td>playlistTitle</td>
-            <td>string</td>
-            <td>null</td>
-            <td>Title for Playlist button for WARIA purposes</td>
-        </tr>
-        <tr>
-            <td>currentMessage</td>
-            <td>string</td>
-            <td>null</td>
-            <td>Message ONLY for audio, prepended to the <i>title</i> of media (i.e., <i>Now playing</i>)</td>
-        </tr>
+            <tr>
+                <td>playlist</td>
+                <td>array</td>
+                <td>[]</td>
+                <td>List to be played; the array consists in a series of objects that MUST include the <i>src</i> and <i>title</i> attributes; other possible items: `data-thumbnail`, `type`, `description`. <strong>If its empty, it will search for all the <i>source</i> elements within the video/audio tags</strong></td>
+            </tr>
+            <tr>
+                <td>showPlaylist</td>
+                <td>boolean</td>
+                <td>true</td>
+                <td>Whether or not to display the playlist; if so, a button to toggle the playlist will be displayed</td>
+            </tr>
+            <tr>
+                <td>autoClosePlaylist</td>
+                <td>boolean</td>
+                <td>false</td>
+                <td>If set to <i>true</i>, the playlist container will hide once user selects an item</td>
+            </tr>
+            <tr>
+                <td>prevText</td>
+                <td>string</td>
+                <td>null</td>
+                <td>Title for Previous button for WARIA purposes</td>
+            </tr>
+            <tr>
+                <td>nextText</td>
+                <td>string</td>
+                <td>null</td>
+                <td>Title for Next button for WARIA purposes</td>
+            <tr>
+                <td>loopText</td>
+                <td>string</td>
+                <td>null</td>
+                <td>Title for Loop button for WARIA purposes</td>
+            </tr>
+            <tr>
+                <td>shuffleText</td>
+                <td>string</td>
+                <td>null</td>
+                <td>Title for Shuffle button for WARIA purposes</td>
+            </tr>
+            <tr>
+                <td>playlistTitle</td>
+                <td>string</td>
+                <td>null</td>
+                <td>Title for Playlist button for WARIA purposes</td>
+            </tr>
+            <tr>
+                <td>currentMessage</td>
+                <td>string</td>
+                <td>null</td>
+                <td>Message ONLY for audio, prepended to the <i>title</i> of media (i.e., <i>Now playing</i>)</td>
+            </tr>
         </tbody>
     </table>
 </div>
@@ -161,15 +162,8 @@
 	var mediaElements = document.querySelectorAll('video, audio');
 
 	for (var i = 0, total = mediaElements.length; i < total; i++) {
-
-	    var features = ['prevtrack', 'playpause', 'nexttrack', 'current', 'progress', 'duration', 'volume', 'playlist', 'shuffle', 'loop'];
-
 		new MediaElementPlayer(mediaElements[i], {
-			// This is needed to make Jump Forward to work correctly
-			pluginPath: 'https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/',
-			shimScriptAccess: 'always',
-			autoRewind: false,
-			features: features,
+			features: ['prevtrack', 'playpause', 'nexttrack', 'current', 'progress', 'duration', 'volume', 'playlist', 'shuffle', 'loop', 'fullscreen'],
 		});
 	}
 </script>
