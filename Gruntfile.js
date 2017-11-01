@@ -58,7 +58,7 @@ module.exports = function (grunt) {
 					'dist/source-chooser/source-chooser.js': 'src/source-chooser/source-chooser.js',
 					'dist/speed/speed.js': 'src/speed/speed.js',
 					'dist/stop/stop.js': 'src/stop/stop.js',
-					'dist/viewview/vrview.js': 'src/vrview/vrview.js',
+					'dist/vrview/vrview.js': 'src/vrview/vrview.js',
 				},
 				options: {
 					plugin: [
