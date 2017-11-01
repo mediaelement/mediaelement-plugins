@@ -11,46 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelementplayer.css">
     <link rel="stylesheet" href="../dist/vrview/vrview.css">
-    <style>
-        #container {
-            padding: 0 20px 50px;
-            max-width: 800px;
-        }
-        .footnote {
-            font-size: 0.7em;
-        }
-        table {
-            border-collapse: collapse;
-            max-width: 750px;
-        }
-        th, td {
-            border-bottom: 1px solid #ddd;
-            text-align: center;
-            width: 120px;
-        }
-        th {
-            background-color: #000;
-            color: white;
-        }
-        a{
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-            -ms-word-break: break-all;
-            word-break: break-all;
-            word-break: break-word;
-            -ms-hyphens: auto;
-            -moz-hyphens: auto;
-            -webkit-hyphens: auto;
-            hyphens: auto;
-        }
-        td:last-child {
-            width: 400px;
-            text-align: left;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2
-        }
-    </style>
+    <link rel="stylesheet" href="demo.css">
 </head>
 <body>
     <div id="container">
@@ -83,29 +44,33 @@
                     <td>vrPath</td>
                     <td>string</td>
                     <td><i>empty</i></td>
-                    <td>Path to load Google VRView library; by default, it will try to load <a href="https://googlevr.github.io/vrview/build/vrview.min.js">https://googlevr.github.io/vrview/build/vrview.min.js</a> by default <sup>1</sup></td>
+                    <td>Path to load Google VRView library; by default, it will try to load <a href="https://googlevr.github.io/vrview/build/vrview.min.js">https://googlevr.github.io/vrview/build/vrview.min.js</a> <sup>1</sup></td>
                 </tr>
                 <tr>
                     <td>vrIsStereo</td>
                     <td>boolean</td>
                     <td>true</td>
                     <td>Indicates whether the content at the image or video URL is stereo or not</td>
-                </tr><tr>
+                </tr>
+                <tr>
                     <td>vrIsAutopanOff</td>
                     <td>boolean</td>
                     <td>true</td>
                     <td>When true, disables the autopan introduction on desktop</td>
-                </tr><tr>
+                </tr>
+                <tr>
                     <td>vrDebug</td>
                     <td>boolean</td>
                     <td>false</td>
                     <td>When `true`, turns on debug features like rendering hotspots ad showing the FPS meter</td>
-                </tr><tr>
+                </tr>
+                <tr>
                     <td>vrDefaultYaw</td>
                     <td>number</td>
                     <td>0</td>
                     <td>Numeric angle in degrees of the initial heading for the 360° content. By default, the camera points at the center of the underlying image</td>
-                </tr><tr>
+                </tr>
+                <tr>
                     <td>vrIsYawOnly</td>
                     <td>boolean</td>
                     <td>false</td>
