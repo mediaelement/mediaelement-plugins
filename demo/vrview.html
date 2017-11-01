@@ -14,6 +14,10 @@
     <style>
         #container {
             padding: 0 20px 50px;
+            max-width: 800px;
+        }
+        .footnote {
+            font-size: 0.7em;
         }
         table {
             border-collapse: collapse;
@@ -79,7 +83,7 @@
                     <td>vrPath</td>
                     <td>string</td>
                     <td><i>empty</i></td>
-                    <td>Path to load Google VRView library; by default, it will try to load <a href="https://storage.googleapis.com/vrview/2.0/build/vrview.min.js">https://storage.googleapis.com/vrview/2.0/build/vrview.min.js</a> by default</td>
+                    <td>Path to load Google VRView library; by default, it will try to load <a href="https://googlevr.github.io/vrview/build/vrview.min.js">https://googlevr.github.io/vrview/build/vrview.min.js</a> by default <sup>1</sup></td>
                 </tr>
                 <tr>
                     <td>vrIsStereo</td>
@@ -109,6 +113,7 @@
                 </tr>
             </tbody>
         </table>
+        <p class="footnote"><sub>1</sub> Per <a href="https://github.com/googlevr/vrview">https://github.com/googlevr/vrview</a>, file location may change in the future, so keep that in mind. <i>vrPath</i> element can help with this task.</p>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelement-and-player.min.js"></script>
@@ -126,7 +131,6 @@
 			    shimScriptAccess: 'always',
 			    autoRewind: false,
 			    features: features,
-                vrPath: 'https://googlevr.github.io/vrview/build/vrview.min.js',
 		    });
 	    }
     </script>

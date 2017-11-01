@@ -52,7 +52,7 @@ const VrAPI = {
 				let done = false;
 
 				settings.options.path = typeof settings.options.path === 'string' ?
-					settings.options.path : 'https://storage.googleapis.com/vrview/2.0/build/vrview.min.js';
+					settings.options.path : 'https://googlevr.github.io/vrview/build/vrview.min.js';
 
 				script.src = settings.options.path;
 
