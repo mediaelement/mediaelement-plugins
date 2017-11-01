@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MediaElement.js 3.0 - audio/video unification library</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelementplayer.css">
+    <link rel="stylesheet" href="../dist/vrview/vrview.css">
+    <style>
+        #container {
+            padding: 0 20px 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="players">
+
+        <h3>Video Player</h3>
+
+        <div class="media-wrapper">
+            <video id="player1" width="640" height="360" controls preload="none">
+                <source src="http://googlevr.github.io/vrview/examples/video/congo_2048.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelement-and-player.min.js"></script>
+    <script src="../dist/vrview/vrview.js"></script>
+    <script>
+	    var mediaElements = document.querySelectorAll('video, audio');
+
+	    for (var i = 0, total = mediaElements.length; i < total; i++) {
+
+	    	var features = ['playpause', 'current', 'progress', 'duration', 'volume', 'vrview'];
+
+		    new MediaElementPlayer(mediaElements[i], {
+			    // This is needed to make Jump Forward to work correctly
+			    pluginPath: 'https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/',
+			    shimScriptAccess: 'always',
+			    autoRewind: false,
+			    features: features,
+                vrPath: 'https://googlevr.github.io/vrview/build/vrview.min.js',
+		    });
+	    }
+    </script>
+</body>
+</html>
