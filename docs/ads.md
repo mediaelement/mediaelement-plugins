@@ -7,6 +7,11 @@ This plugin, with the [VAST/VPAID](ads-vast.md) plugin, manages the displaying o
 It will fire the proper events depending of the nature of the Ads type (`vast` or `vpaid`) and takes care of the manipulation
 of the user's experience in general.
 
+## Keyword to use it
+```javascript
+features: [..., 'ads']
+```
+
 ## API
 
 Parameter | Type | Default | Description

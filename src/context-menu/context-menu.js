@@ -1,9 +1,9 @@
 'use strict';
 
 // Translations (English required)
-mejs.i18n.en["mejs.fullscreen-off"] = "Turn off Fullscreen";
-mejs.i18n.en["mejs.fullscreen-on"] = "Go Fullscreen";
-mejs.i18n.en["mejs.download-video"] = "Download Video";
+mejs.i18n.en['mejs.fullscreen-off'] = 'Turn off Fullscreen';
+mejs.i18n.en['mejs.fullscreen-on'] = 'Go Fullscreen';
+mejs.i18n.en['mejs.download-video'] = 'Download Video';
 
 /*
  * ContextMenu
@@ -74,6 +74,10 @@ Object.assign(MediaElementPlayer.prototype, {
 	contextMenuTimeout: null,
 
 	buildcontextmenu (player) {
+
+		if (!player.isVideo) {
+			return;
+		}
 
 		// create context menu
 		if (!document.querySelector(`.${player.options.classPrefix}contextmenu`)) {

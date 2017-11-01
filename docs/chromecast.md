@@ -15,16 +15,30 @@ The following snippet shows the `data-cast-*` attributes needed to achieve Chrom
        poster="/path/to/poster.jpg">
     <source src="/path/to/media.mp4" type="video/mp4">
 </video>
+
+<audio id="player2" preload="none" controls
+       data-cast-title="[Your title]"
+       data-cast-description="[Your optional description]"
+       data-cast-poster="/path/to/poster.jpg">
+    <source src="/path/to/media.mp3" type="audio/mp3">
+</video>
 ```
 
-The `poster` attribute is not required as well, but most of the media players use a static image when media is being broadcast in Chromecast, 
-so **it is recommended its use**.
+The `poster` or `data-cast-poster` attributes are not required as well, but most of the media players use a static image when media is being broadcast in Chromecast, 
+so **it is recommended their use**.
+
+`data-cast-poster` is meant for **audio only** since `poster` is not supported natively for audio tag.
 
 Chromecast **ONLY** accepts **MP4, HLS and M(PEG)-DASH** formats. 
 
 Also, a page can contain **ONLY ONE** sender; otherwise, an error indicating that `cast-button` has been registered will be logged.
 
 To avoid that, [this link](https://jsfiddle.net/Luuwnjfm/24/) shows a way to get away with it if you have to render your player dynamically.
+
+## Keyword to use it
+```javascript
+features: [..., 'chromecast']
+```
 
 ## API
 

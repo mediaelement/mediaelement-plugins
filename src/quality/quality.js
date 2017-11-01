@@ -8,7 +8,7 @@
  */
 
 // Translations (English required)
-mejs.i18n.en["mejs.quality-chooser"] = "Quality Chooser";
+mejs.i18n.en['mejs.quality-chooser'] = 'Quality Chooser';
 
 // Feature configuration
 Object.assign(mejs.MepDefaults, {
@@ -55,10 +55,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		t.clearquality(player);
+		t.cleanquality(player);
 
 		const
-			qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-quality'),
+			qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-chooser'),
 			getQualityNameFromValue = (value) => {
 				let label;
 				if (value === 'auto') {
@@ -67,7 +67,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				} else {
 					label = value;
 				}
-				
+
 				return label;
 			},
 			defaultValue = getQualityNameFromValue(t.options.defaultQuality)
@@ -121,8 +121,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		for (let i = 0, total = outEvents.length; i < total; i++) {
-			selector.addEventListener(outEvents[i], function () {
-				mejs.Utils.addClass(this, `${t.options.classPrefix}offscreen`);
+			player.qualitiesButton.addEventListener(outEvents[i], () => {
+				mejs.Utils.addClass(selector, `${t.options.classPrefix}offscreen`);
 			});
 		}
 
@@ -171,6 +171,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						media.pause();
 						media.setSrc(src.src);
 						media.load();
+            media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
 						media.addEventListener('canplay', canPlayAfterSourceSwitchHandler);
 					}
 				}
@@ -199,7 +200,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Always has to be prefixed with `clean` and the name that was used in MepDefaults.features list
 	 * @param {MediaElementPlayer} player
 	 */
-	clearquality (player)  {
+	cleanquality (player)  {
 		if (player) {
 			if (player.qualitiesButton) {
 				player.qualitiesButton.remove();

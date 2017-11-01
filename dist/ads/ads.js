@@ -11,8 +11,8 @@
  */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
 
-mejs.i18n.en["mejs.ad-skip"] = "Skip ad";
-mejs.i18n.en["mejs.ad-skip-info"] = ["Skip in 1 second", "Skip in %1 seconds"];
+mejs.i18n.en['mejs.ad-skip'] = 'Skip ad';
+mejs.i18n.en['mejs.ad-skip-info'] = ['Skip in 1 second', 'Skip in %1 seconds'];
 
 Object.assign(mejs.MepDefaults, {
 	adsPrerollMediaUrl: [],
@@ -47,19 +47,19 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		player.adsLayer = document.createElement('div');
-		player.adsLayer.className = t.options.classPrefix + "layer " + t.options.classPrefix + "overlay " + t.options.classPrefix + "ads";
-		player.adsLayer.innerHTML = "<a href=\"#\" target=\"_blank\"></a>" + ("<div class=\"" + t.options.classPrefix + "ads-skip-block\">") + ("<span class=\"" + t.options.classPrefix + "ads-skip-message\"></span>") + ("<span class=\"" + t.options.classPrefix + "ads-skip-button\">" + mejs.i18n.t('mejs.ad-skip') + "</span>") + "</div>";
+		player.adsLayer.className = t.options.classPrefix + 'layer ' + t.options.classPrefix + 'overlay ' + t.options.classPrefix + 'ads';
+		player.adsLayer.innerHTML = '<a href="#" target="_blank"></a>' + ('<div class="' + t.options.classPrefix + 'ads-skip-block">') + ('<span class="' + t.options.classPrefix + 'ads-skip-message"></span>') + ('<span class="' + t.options.classPrefix + 'ads-skip-button">' + mejs.i18n.t('mejs.ad-skip') + '</span>') + '</div>';
 		player.adsLayer.style.display = 'none';
 
-		layers.insertBefore(player.adsLayer, layers.querySelector("." + t.options.classPrefix + "overlay-play"));
+		layers.insertBefore(player.adsLayer, layers.querySelector('.' + t.options.classPrefix + 'overlay-play'));
 
 		player.adsLayer.querySelector('a').addEventListener('click', t.adsAdClick.bind(t));
 
-		player.adsSkipBlock = player.adsLayer.querySelector("." + t.options.classPrefix + "ads-skip-block");
+		player.adsSkipBlock = player.adsLayer.querySelector('.' + t.options.classPrefix + 'ads-skip-block');
 		player.adsSkipBlock.style.display = 'none';
-		player.adsSkipMessage = player.adsLayer.querySelector("." + t.options.classPrefix + "ads-skip-message");
+		player.adsSkipMessage = player.adsLayer.querySelector('.' + t.options.classPrefix + 'ads-skip-message');
 		player.adsSkipMessage.style.display = 'none';
-		player.adsSkipButton = player.adsLayer.querySelector("." + t.options.classPrefix + "ads-skip-button");
+		player.adsSkipButton = player.adsLayer.querySelector('.' + t.options.classPrefix + 'ads-skip-button');
 		player.adsSkipButton.addEventListener('click', t.adsSkipClick.bind(t));
 
 		t.adsMediaTryingToStartProxy = t.adsMediaTryingToStart.bind(t);
@@ -68,6 +68,13 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.adsPrerollUpdateProxy = t.adsPrerollUpdate.bind(t);
 		t.adsPrerollVolumeProxy = t.adsPrerollVolume.bind(t);
 		t.adsPrerollEndedProxy = t.adsPrerollEnded.bind(t);
+
+		t.media.addEventListener('rendererready', function () {
+			var iframe = t.media.querySelector('iframe');
+			if (iframe) {
+				iframe.style.display = 'none';
+			}
+		});
 
 		t.media.addEventListener('play', t.adsMediaTryingToStartProxy);
 		t.media.addEventListener('playing', t.adsMediaTryingToStartProxy);
@@ -99,22 +106,22 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.media.addEventListener('volumechange', t.adsPrerollVolumeProxy);
 
 		if (t.options.indexPreroll === 0) {
-			t.adsCurrentMediaUrl = t.media.getSrc();
+			t.adsCurrentMediaUrl = t.media.originalNode.src;
 			t.adsCurrentMediaDuration = t.duration;
 		}
 
 		t.setSrc(t.options.adsPrerollMediaUrl[t.options.indexPreroll]);
 		t.load();
 
-		var controlElements = t.container.querySelector("." + t.options.classPrefix + "controls").children;
+		var controlElements = t.container.querySelector('.' + t.options.classPrefix + 'controls').children;
 		for (var i = 0, total = controlElements.length; i < total; i++) {
 			var target = controlElements[i],
 			    button = target.querySelector('button');
-			if (button && !mejs.Utils.hasClass(target, t.options.classPrefix + "playpause-button") && !mejs.Utils.hasClass(target, t.options.classPrefix + "chromecast-button")) {
+			if (button && !mejs.Utils.hasClass(target, t.options.classPrefix + 'playpause-button') && !mejs.Utils.hasClass(target, t.options.classPrefix + 'chromecast-button')) {
 				button.disabled = true;
 				target.style.pointerEvents = 'none';
-			} else if (target.querySelector("." + t.options.classPrefix + "time-slider")) {
-				target.querySelector("." + t.options.classPrefix + "time-slider").style.pointerEvents = 'none';
+			} else if (target.querySelector('.' + t.options.classPrefix + 'time-slider')) {
+				target.querySelector('.' + t.options.classPrefix + 'time-slider').style.pointerEvents = 'none';
 			}
 		}
 
@@ -136,9 +143,9 @@ Object.assign(MediaElementPlayer.prototype, {
 			newDuration = t.adsCurrentMediaDuration;
 		}
 
-		if (t.controls.querySelector("." + t.options.classPrefix + "duration")) {
+		if (t.controls.querySelector('.' + t.options.classPrefix + 'duration')) {
 			setTimeout(function () {
-				t.controls.querySelector("." + t.options.classPrefix + "duration").innerHTML = mejs.Utils.secondsToTimeCode(newDuration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
+				t.controls.querySelector('.' + t.options.classPrefix + 'duration').innerHTML = mejs.Utils.secondsToTimeCode(newDuration, t.options.alwaysShowHours, t.options.showTimecodeFrameCount, t.options.framesPerSecond, t.options.secondsDecimalLength);
 			}, 250);
 		}
 
@@ -217,7 +224,12 @@ Object.assign(MediaElementPlayer.prototype, {
 		}, 0);
 	},
 	adRestoreMainMedia: function adRestoreMainMedia() {
-		var t = this;
+		var t = this,
+		    iframe = t.media.querySelector('iframe');
+
+		if (iframe) {
+			iframe.style.display = '';
+		}
 
 		t.setSrc(t.adsCurrentMediaUrl);
 		setTimeout(function () {
@@ -225,15 +237,15 @@ Object.assign(MediaElementPlayer.prototype, {
 			t.play();
 		}, 10);
 
-		var controlElements = t.container.querySelector("." + t.options.classPrefix + "controls").children;
+		var controlElements = t.container.querySelector('.' + t.options.classPrefix + 'controls').children;
 		for (var i = 0, total = controlElements.length; i < total; i++) {
 			var target = controlElements[i],
 			    button = target.querySelector('button');
-			if (button && !mejs.Utils.hasClass(target, t.options.classPrefix + "playpause-button")) {
+			if (button && !mejs.Utils.hasClass(target, t.options.classPrefix + 'playpause-button')) {
 				target.style.pointerEvents = 'auto';
 				button.disabled = false;
-			} else if (target.querySelector("." + t.options.classPrefix + "time-slider")) {
-				target.querySelector("." + t.options.classPrefix + "time-slider").style.pointerEvents = 'auto';
+			} else if (target.querySelector('.' + t.options.classPrefix + 'time-slider')) {
+				target.querySelector('.' + t.options.classPrefix + 'time-slider').style.pointerEvents = 'auto';
 			}
 		}
 
@@ -291,7 +303,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		var img = new Image(),
 		    rnd = Math.round(Math.random() * 100000);
 
-		img.src = "" + url + (~url.indexOf('?') ? '&' : '?') + "random" + rnd + "=" + rnd;
+		img.src = '' + url + (~url.indexOf('?') ? '&' : '?') + 'random' + rnd + '=' + rnd;
 		img.loaded = function () {
 			img = null;
 		};

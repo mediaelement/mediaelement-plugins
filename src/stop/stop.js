@@ -8,7 +8,7 @@
  */
 
 // Translations (English required)
-mejs.i18n.en["mejs.stop"] = "Stop";
+mejs.i18n.en['mejs.stop'] = 'Stop';
 
 // Feature configuration
 Object.assign(mejs.MepDefaults, {

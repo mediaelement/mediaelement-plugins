@@ -15,6 +15,11 @@ The following snippet shows the proper HTML to activate the postroll functionali
 
 The `link` tag's `rel` attribute **must be `postroll` always**.
 
+## Keyword to use it
+```javascript
+features: [..., 'postroll']
+```
+
 ## API
 
 Parameter | Type | Default | Description

@@ -6,6 +6,11 @@ This plugin creates a loop button in the control bar to turn on/off the loop eff
 
 This button mimics the HTML5's `loop` attribute in the `video`/`audio` tags.
 
+## Keyword to use it
+```javascript
+features: [..., 'loop']
+```
+
 ## API
 
 Parameter | Type | Default | Description

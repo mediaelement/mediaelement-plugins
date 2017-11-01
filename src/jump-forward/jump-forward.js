@@ -7,7 +7,7 @@
  */
 
 // Translations (English required)
-mejs.i18n.en["mejs.time-jump-forward"] = ["Jump forward 1 second", "Jump forward %1 seconds"];
+mejs.i18n.en['mejs.time-jump-forward'] = ['Jump forward 1 second', 'Jump forward %1 seconds'];
 
 Object.assign(mejs.MepDefaults, {
 	/**

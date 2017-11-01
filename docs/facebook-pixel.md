@@ -6,6 +6,11 @@ This plugin enables [Facebook Pixel](https://developers.facebook.com/docs/facebo
 
 It requires previous configuration on Pixel to send events properly.
 
+## Keyword to use it
+```javascript
+features: [..., 'facebookpixel']
+```
+
 ## API 
 
 Parameter | Type | Default | Description

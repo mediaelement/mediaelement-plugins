@@ -6,6 +6,11 @@ This plugin creates a button to rewind media a specific number of seconds.
 
 It will work even when media is not being played initially.
 
+## Keyword to use it
+```javascript
+features: [..., 'skipback']
+```
+
 ## API
 
 Parameter | Type | Default | Description

@@ -220,9 +220,10 @@ export default class ChromecastPlayer {
 			mediaInfo.metadata.subtitle = t.media.originalNode.getAttribute('data-cast-description');
 		}
 
-		if (t.media.originalNode.getAttribute('poster')) {
+		if (t.media.originalNode.getAttribute('poster') || t.media.originalNode.getAttribute('data-cast-poster')) {
+			const poster = t.media.originalNode.getAttribute('poster') || t.media.originalNode.getAttribute('data-cast-poster');
 			mediaInfo.metadata.images = [
-				{'url': mejs.Utils.absolutizeUrl(t.media.originalNode.getAttribute('poster'))}
+				{'url': mejs.Utils.absolutizeUrl(poster)}
 			];
 		}
 

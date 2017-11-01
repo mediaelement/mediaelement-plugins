@@ -10,6 +10,11 @@ By default, it creates the following actions:
 * Turn on/off mute
 * Download media
 
+## Keyword to use it
+```javascript
+features: [..., 'contextmenu']
+```
+
 ## API 
 
 Parameter | Type | Default | Description

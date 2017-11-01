@@ -6,8 +6,8 @@
  */
 
 // Translations (English required)
-mejs.i18n.en["mejs.ad-skip"] = "Skip ad";
-mejs.i18n.en["mejs.ad-skip-info"] = ["Skip in 1 second", "Skip in %1 seconds"];
+mejs.i18n.en['mejs.ad-skip'] = 'Skip ad';
+mejs.i18n.en['mejs.ad-skip-info'] = ['Skip in 1 second', 'Skip in %1 seconds'];
 
 Object.assign(mejs.MepDefaults, {
 	/**
@@ -104,6 +104,13 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.adsPrerollVolumeProxy = t.adsPrerollVolume.bind(t);
 		t.adsPrerollEndedProxy = t.adsPrerollEnded.bind(t);
 
+		// If an iframe is the main source, hide it to give priority to video tag
+		t.media.addEventListener('rendererready', () => {
+			var iframe = t.media.querySelector('iframe');
+			if (iframe) {
+				iframe.style.display = 'none';
+			}
+		});
 		// check for start
 		t.media.addEventListener('play', t.adsMediaTryingToStartProxy);
 		t.media.addEventListener('playing', t.adsMediaTryingToStartProxy);
@@ -140,7 +147,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		// change URLs to the preroll ad. Only save the video to be shown on first
 		// ad showing.
 		if (t.options.indexPreroll === 0) {
-			t.adsCurrentMediaUrl = t.media.getSrc();
+			t.adsCurrentMediaUrl = t.media.originalNode.src;
 			t.adsCurrentMediaDuration = t.duration;
 		}
 
@@ -281,14 +288,20 @@ Object.assign(MediaElementPlayer.prototype, {
 	},
 
 	adRestoreMainMedia ()  {
-		const t = this;
+		const
+			t = this,
+			iframe = t.media.querySelector('iframe')
+		;
+
+		if (iframe) {
+			iframe.style.display = '';
+		}
 
 		t.setSrc(t.adsCurrentMediaUrl);
 		setTimeout(() => {
 			t.load();
 			t.play();
 		}, 10);
-
 
 		// turn on controls to restore original media
 		const controlElements = t.container.querySelector(`.${t.options.classPrefix}controls`).children;

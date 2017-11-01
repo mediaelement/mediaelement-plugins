@@ -4,6 +4,11 @@
 
 This plugin creates a button that allows the user to play media at different speed rates.
 
+## Keyword to use it
+```javascript
+features: [..., 'speed']
+```
+
 ## API
 
 Parameter | Type | Default | Description

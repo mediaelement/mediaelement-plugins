@@ -1,5 +1,28 @@
 ### Version History
 
+*X.X.X (??/??/??)*
+
+* Fixed typo on `Playlist` plugin that caused error on Edge, removed `disabled` attribute on each item and fixed workflow to autoplay next element @rafa8626
+* Fixed issue when mouse leave from `Quality` button, its selector does not hide (https://github.com/mediaelement/mediaelement-plugins/pull/89) @meathill
+* Fixed typo in `Quality` plugin translation @rafa8626
+
+*2.4.0 (2017/08/09)*
+
+* Added missing translations and removed Brazilian Portuguese to favor Portuguese @rafa8626
+* Sorted alphabetically plugins name on README (https://github.com/mediaelement/mediaelement-plugins/pull/77) @isantolin
+* Integrated `Playlist` plugin @rafa8626
+* Added support for audio play on `Chromecast` @rafa8626
+* Integrated `Google Tag Manager` plugin @rafa8626
+* Fixed typos on methods used when player is destroyed @rafa8626
+
+*2.3.1 (2017/07/22)*
+
+* Added missing workflow to avoid loading multiple times same source on `Chromecast` plugin and added code to end session correctly @rafa8626
+* Fixed issues on `Ads` plugin when using iframe renderers with it @rafa8626
+* Fixed issue with `Context Menu` plugin to only be used on video media @rafa8626
+* Fixed height on `Speed` plugin to display speed rates properly on audio tag @rafa8626
+* Updated README file @rafa8626
+
 *2.3.0 (2017/06/26)*
 
 * Integrated `Facebook Pixel` plugin (https://github.com/mediaelement/mediaelement-plugins/pull/58) @isantolin

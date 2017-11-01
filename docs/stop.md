@@ -7,6 +7,11 @@ must implement his own mechanism to resume since the reference to the original s
 
 If a `stop` method is detected, the button will fire its functionality.
 
+## Keyword to use it
+```javascript
+features: [..., 'stop']
+```
+
 ## API
 
 Parameter | Type | Default | Description

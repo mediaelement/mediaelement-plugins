@@ -7,7 +7,7 @@
  */
 
 // Translations (English required)
-mejs.i18n.en["mejs.time-skip-back"] = ["Skip back 1 second", "Skip back %1 seconds"];
+mejs.i18n.en['mejs.time-skip-back'] = ['Skip back 1 second', 'Skip back %1 seconds'];
 
 // Feature configuration
 Object.assign(mejs.MepDefaults, {

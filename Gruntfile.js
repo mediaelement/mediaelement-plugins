@@ -51,6 +51,7 @@ module.exports = function (grunt) {
 					'dist/loop/loop.js': 'src/loop/loop.js',
 					'dist/markers/markers.js': 'src/markers/markers.js',
 					'dist/postroll/postroll.js': 'src/postroll/postroll.js',
+					'dist/playlist/playlist.js': 'src/playlist/playlist.js',
 					'dist/preview/preview.js': 'src/preview/preview.js',
 					'dist/quality/quality.js': 'src/quality/quality.js',
 					'dist/skip-back/skip-back.js': 'src/skip-back/skip-back.js',
@@ -103,7 +104,7 @@ module.exports = function (grunt) {
 					processors: [
 						// Add vendor prefixes.
 						require('autoprefixer')({
-							browsers: 'last 5 versions, ie > 8, ios > 7, android > 3'
+							browsers: 'last 5 versions, ie > 10, ios > 7, android > 3'
 						})
 					]
 				},
@@ -114,6 +115,7 @@ module.exports = function (grunt) {
 					'dist/context-menu/context-menu.css': 'src/context-menu/context-menu.css',
 					'dist/jump-forward/jump-forward.css': 'src/jump-forward/jump-forward.css',
 					'dist/loop/loop.css': 'src/loop/loop.css',
+					'dist/playlist/playlist.css': 'src/playlist/playlist.css',
 					'dist/postroll/postroll.css': 'src/postroll/postroll.css',
 					'dist/quality/quality.css': 'src/quality/quality.css',
 					'dist/skip-back/skip-back.css': 'src/skip-back/skip-back.css',
@@ -141,6 +143,7 @@ module.exports = function (grunt) {
 					'dist/context-menu/context-menu.min.css': 'dist/context-menu/context-menu.css',
 					'dist/jump-forward/jump-forward.min.css': 'dist/jump-forward/jump-forward.css',
 					'dist/loop/loop.min.css': 'dist/loop/loop.css',
+					'dist/playlist/playlist.min.css': 'dist/playlist/playlist.css',
 					'dist/postroll/postroll.min.css': 'dist/postroll/postroll.css',
 					'dist/quality/quality.min.css': 'dist/quality/quality.css',
 					'dist/skip-back/skip-back.min.css': 'dist/skip-back/skip-back.css',

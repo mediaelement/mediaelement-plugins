@@ -8,6 +8,11 @@ to send media events, such as `play`, `pause`, `ended`, etc.
 It requires Google Analytics configuration to send events properly. For more information, check 
 [Set up Analytics tracking](https://support.google.com/analytics/answer/1008080?hl=en).
 
+## Keyword to use it
+```javascript
+features: [..., 'googleanalytics']
+```
+
 ## API
 
 Parameter | Type | Default | Description

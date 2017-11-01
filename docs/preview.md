@@ -4,6 +4,11 @@
 
 This plugin allows the creation of a preview effect on videos: playing on hover and with possibility of mute/fade-in/fade-out its audio.
 
+## Keyword to use it
+```javascript
+features: [..., 'preview']
+```
+
 ## API
 
 Parameter | Type | Default | Description
