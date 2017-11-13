@@ -198,6 +198,7 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 * [Speed](docs/speed.md)
 * [Stop](docs/stop.md)
 * [VAST/VPAID](docs/ads-vast.md)
+* [VRView](docs/vrview.md)
 
 # Changelog
 

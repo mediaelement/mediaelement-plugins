@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MediaElement.js 3.0 - VRView Plugin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelementplayer.css">
+    <link rel="stylesheet" href="../dist/vrview/vrview.css">
+    <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+    <div id="container">
+
+        <h1>VRView Plugin</h1>
+        <p><a href="index.html">Back to Main</a></p>
+
+        <p>This plugin allows the interaction of <a href="https://developers.google.com/vr/concepts/vrview-web">Google's VRView</a> to watch 360 videos.</p>
+
+        <p><strong>NOTE: Google VRView only supports MP4, M(PEG)-DASH and HLS streaming.</strong></p>
+
+        <h2>Video Player</h2>
+        <div class="media-wrapper">
+            <video id="player1" width="750" height="421" controls preload="none">
+                <source src="http://googlevr.github.io/vrview/examples/video/congo_2048.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <h2>API</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Type</th>
+                    <th>Default</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>vrPath</td>
+                    <td>string</td>
+                    <td><i>empty</i></td>
+                    <td>Path to load Google VRView library; by default, it will try to load <a href="https://googlevr.github.io/vrview/build/vrview.min.js">https://googlevr.github.io/vrview/build/vrview.min.js</a> <sup>1</sup></td>
+                </tr>
+                <tr>
+                    <td>vrIsStereo</td>
+                    <td>boolean</td>
+                    <td>true</td>
+                    <td>Indicates whether the content at the image or video URL is stereo or not</td>
+                </tr>
+                <tr>
+                    <td>vrIsAutopanOff</td>
+                    <td>boolean</td>
+                    <td>true</td>
+                    <td>When true, disables the autopan introduction on desktop</td>
+                </tr>
+                <tr>
+                    <td>vrDebug</td>
+                    <td>boolean</td>
+                    <td>false</td>
+                    <td>When `true`, turns on debug features like rendering hotspots ad showing the FPS meter</td>
+                </tr>
+                <tr>
+                    <td>vrDefaultYaw</td>
+                    <td>number</td>
+                    <td>0</td>
+                    <td>Numeric angle in degrees of the initial heading for the 360° content. By default, the camera points at the center of the underlying image</td>
+                </tr>
+                <tr>
+                    <td>vrIsYawOnly</td>
+                    <td>boolean</td>
+                    <td>false</td>
+                    <td>When `true`, prevents roll and pitch. This is intended for stereo panoramas</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="footnote"><sub>1</sub> Per <a href="https://github.com/googlevr/vrview">https://github.com/googlevr/vrview</a>, file location may change in the future, so keep that in mind. <i>vrPath</i> element can help with this task.</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelement-and-player.min.js"></script>
+    <script src="../dist/vrview/vrview.js"></script>
+    <script>
+	    new MediaElementPlayer('player1', {
+            features: ['playpause', 'current', 'progress', 'duration', 'volume', 'vrview']
+        });
+    </script>
+</body>
+</html>

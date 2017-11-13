@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MediaElement.js 3.0 - Multiple Plugins (1)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelementplayer.css">
+    <link rel="stylesheet" href="../dist/context-menu/context-menu.css">
+    <link rel="stylesheet" href="../dist/loop/loop.css">
+    <link rel="stylesheet" href="../dist/stop/stop.css">
+    <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div id="container">
+
+    <h1>Context Menu/Loop/Stop</h1>
+    <p><a href="index.html">Back to Main</a></p>
+
+    <h2>Video Player</h2>
+    <div class="media-wrapper">
+        <video id="player1" width="750" height="421" controls preload="none">
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/BigBuckBunny.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <h2>Context Menu</h2>
+
+    <p>This plugin disabled the default context menu, and generates a custom one when performing mouse left click.</p>
+
+    <p>By default, it creates the following actions:</p>
+    <ul>
+        <li>Turn on/off fullscreen</li>
+        <li>Turn on/off mute</li>
+        <li>Download media</li>
+    </ul>
+    <h3>API</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Parameter</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>contextMenuItems</td>
+            <td>array</td>
+            <td>[]</td>
+            <td>An array of objects with format <i>{ render (player) { }, click (player) {} }</i> to render and perform click menu items, or <i>{ isSeparator: true }</i> to separate items</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Loop</h2>
+
+    <p>This plugin creates a loop button in the control bar to turn on/off the loop effect. If activated, it will restart media once it finishes.</p>
+
+    <p>This button mimics the HTML5's <i>loop</i> attribute in the <i>video</i>/<i>audio</i> tags.</p>
+
+    <h3>API</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Parameter</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>loopText</td>
+            <td>string</td>
+            <td>null</td>
+            <td>Title for Loop button for WARIA purposes when loop feature is activated</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Stop</h2>
+
+    <p>This plugin enables a Stop button in the control bar, which basically pauses media and loads an empty source.</p>
+
+    <p>Once this is done, user must implement his own mechanism to resume since the reference to the original source will get lost.</p>
+
+    <p>If a <i>stop</i> method is detected, the button will fire its functionality.</p>
+
+    <h3>API</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Parameter</th>
+            <th>Type</th>
+            <th>Default</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>stopText</td>
+            <td>string</td>
+            <td>null</td>
+            <td>Title for Stop button for WARIA purposes</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelement-and-player.min.js"></script>
+<script src="../dist/context-menu/context-menu.js"></script>
+<script src="../dist/loop/loop.js"></script>
+<script src="../dist/stop/stop.js"></script>
+<script>
+	var mediaElements = document.querySelectorAll('video, audio');
+
+	for (var i = 0, total = mediaElements.length; i < total; i++) {
+
+		var features = ['playpause', 'current', 'progress', 'duration', 'volume', 'loop', 'stop', 'contextmenu', 'fullscreen'];
+
+		new MediaElementPlayer(mediaElements[i], {
+			autoRewind: false,
+			features: features,
+		});
+	}
+</script>
+</body>
+</html>

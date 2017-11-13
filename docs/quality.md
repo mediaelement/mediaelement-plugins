@@ -15,4 +15,4 @@ features: [..., 'quality']
 Parameter | Type | Default | Description
 ------ | --------- | ------- | --------
 defaultQuality | string | `null` | Initial media quality; if `null`, it will take the first available source
-qualityText | string | `null` | Title for Qualities button for WARIA purposes
+qualityText | string | `null` | Title for Quality button for WARIA purposes

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MediaElement.js 3.0 - Markers Plugin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelementplayer.css">
+    <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div id="container">
+
+    <h1>Markers Plugin</h1>
+    <p><a href="index.html">Back to Main</a></p>
+
+    <p>This plugin allows you to create Visual Cues in the progress time rail.</p>
+
+    <p>Also, allows you to register a custom callback function that will be triggered every time the media reaches a marker.</p>
+
+    <p>The <i>MediaElementPlayer</i> object and media's current time should be passed to the registered callback function.</p>
+
+    <p>The marker color is configurable.</p>
+
+    <h2>Video Player</h2>
+
+    <div class="media-wrapper">
+        <video id="player1" width="750" height="421" controls preload="none">
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/BigBuckBunny.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <h2>API</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Default</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>markerColor</td>
+                <td>string</td>
+                <td>#E9BC3D</td>
+                <td> Specify the color of marker in hexadecimal code</td>
+            </tr>
+            <tr>
+                <td>markerWidth</td>
+                <td>number</td>
+                <td>1</td>
+                <td>Specify the width of marker in pixels</td>
+            </tr>
+            <tr>
+                <td>markers</td>
+                <td>array</td>
+                <td>[]</td>
+                <td>List of numbers to specify marker times in seconds</td>
+            </tr>
+            <tr>
+                <td>markerCallback</td>
+                <td>function</td>
+                <td>function(media, time) {}</td>
+                <td>Callback function invoked when a marker position is reached</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelement-and-player.min.js"></script>
+<script src="../dist/markers/markers.js"></script>
+<script>
+	var mediaElements = document.querySelectorAll('video, audio');
+
+	for (var i = 0, total = mediaElements.length; i < total; i++) {
+		new MediaElementPlayer(mediaElements[i], {
+			markers: [3, 45, 360],
+            markerColor: '#00FF00',
+            markerWidth: 3,
+            markerCallback: function (media, time) {
+            	alert('You reached ' + Math.round(time) + ' seconds');
+            },
+			features: ['playpause', 'current', 'progress', 'duration', 'volume', 'fullscreen', 'markers'],
+		});
+	}
+</script>
+</body>
+</html>

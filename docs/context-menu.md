@@ -19,4 +19,4 @@ features: [..., 'contextmenu']
 
 Parameter | Type | Default | Description
 ------ | --------- | ------- | --------
-contextMenuItems | array |  | An array of objects with format `{ render (player) { }, click (player) {} }` to render and perform click menu items, or `{ isSeparator: true }` to separate items
+contextMenuItems | array | `[]` | An array of objects with format `{ render (player) { }, click (player) {} }` to render and perform click menu items, or `{ isSeparator: true }` to separate items
