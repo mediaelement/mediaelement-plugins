@@ -141,8 +141,8 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			if (e.target === t.container || e.target.closest('.' + t.options.classPrefix + 'container')) {
 				mouseOver = true;
-				t.container.querySelector('.' + t.options.classPrefix + 'overlay-loading').parentNode.style.display = 'block';
-
+				t.container.querySelector('.' + t.options.classPrefix + 'overlay-loading').parentNode.style.display = 'flex';
+				t.container.querySelector('.' + t.options.classPrefix + 'overlay-play').style.display = 'none';
 				if (t.media.paused) {
 					timeout = setTimeout(function () {
 						if (mouseOver) {
