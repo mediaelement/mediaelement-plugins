@@ -14,15 +14,18 @@
         body{
             margin: 0;
         }
+        img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+        }
+        p {
+            margin: 0 15px;
+        }
         .wrapper{
             min-height: 100vh;
-            background: #ccc;
             display: flex;
             flex-direction: column;
-        }
-        .header, .footer{
-            background: #666;
-            color: #fff;
         }
         .header {
             padding: 0 15px;
@@ -33,7 +36,6 @@
         .content {
             display: flex;
             flex: 1;
-            background: #999;
             color: #000;
         }
         .columns{
@@ -43,17 +45,14 @@
         .main{
             flex: 1;
             order: 2;
-            background: #eee;
         }
         .sidebar-first{
             width: 33%;
-            background: #ccc;
             order: 1;
         }
         .sidebar-second{
             width: 33%;
             order: 3;
-            background: #ddd;
         }
         ul {
             list-style: none;
@@ -67,7 +66,7 @@
 <body>
     <div class="wrapper">
         <header class="header">
-            <h1>MediaElement.js - Plugins</h1>
+            <h1><img src="https://cloud.githubusercontent.com/assets/910829/22357262/e6cf32b4-e404-11e6-876b-59afa009f65c.png"></h1>
             <p>Following is the list of examples of the available plugins for MediaElement player</p>
         </header>
         <section class="content">
