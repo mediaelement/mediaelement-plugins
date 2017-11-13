@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MediaElement.js 3.0 - Playlist Plugin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelementplayer.css">
+    <link rel="stylesheet" href="../dist/playlist/playlist.css">
+    <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div id="container">
+
+    <h1>Playlist Plugin</h1>
+    <p><a href="index.html">Back to Main</a></p>
+
+    <p>This plugin allows the creation of a video/audio playlist.</p>
+
+    <h2>Video Player</h2>
+
+    <div class="media-wrapper">
+        <video id="player1" width="750" height="421" controls preload="none"
+               data-cast-title="Big Buck Bunny"
+               data-cast-description="Big Buck Bunny is now even more a world standard for video standards"
+               poster="http://mediaelementjs.com/images/big_buck_bunny.jpg">
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/BigBuckBunny.mp4" data-playlist-thumbnail="http://mediaelementjs.com/images/big_buck_bunny.jpg"
+                    title="Big Buck Bunny" data-playlist-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum justo arcu. Vestibulum commodo lacus bibendum sollicitudin commodo." type="video/mp4">
+            <source src="http://www.streambox.fr/playlists/test_001/stream.m3u8" title="Hls.js Demo" data-playlist-description="Curabitur et malesuada arcu. Praesent hendrerit, quam vel pellentesque aliquam, metus felis mattis velit, quis varius metus diam vitae diam. Integer ante massa, tempor in accumsan eu, sodales in lectus." type="application/x-mpegURL">
+            <source src="http://la2.indexcom.com/me/flv/guqin.flv" title="Guqin - Ghost" type="video/flv">
+        </video>
+    </div>
+
+    <h2>Audio Player</h2>
+
+    <div class="media-wrapper">
+        <audio id="player2" preload="none" controls width="750"
+               data-cast-title="Jazz Example"
+               data-cast-description="This is a description for audio only"
+               data-cast-poster="http://mediaelementjs.com/images/big_buck_bunny.jpg">
+            <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3" title="Jazz Example" data-playlist-thumbnail="http://mediaelementjs.com/images/big_buck_bunny.jpg" data-playlist-description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vestibulum justo arcu. Vestibulum commodo lacus bibendum sollicitudin commodo.">
+            <source src="https://api.soundcloud.com/tracks/323195515/stream?client_id=95f22ed54a5c297b1c41f72d713623ef" type="audio/mp3" title="Soundcloud rocks!" data-playlist-description="Curabitur et malesuada arcu. Praesent hendrerit, quam vel pellentesque aliquam, metus felis mattis velit, quis varius metus diam vitae diam. Integer ante massa, tempor in accumsan eu, sodales in lectus.">
+            <source src="rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st/mp3:fake_empire-cbr" type="rtmp/video" title="Playing RTMP audio...">
+        </audio>
+    </div>
+
+    <h2>Components</h2>
+    <p>The following table describes the components that can be used with this plugin, and the keyword to be used on the <i>features</i> array configuration.</p>
+    <table>
+        <thead>
+        <tr>
+            <th>Component</th>
+            <th>Keyword</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Playlist</td>
+            <td>playlist</td>
+            <td>REQUIRED; The main plugin that builds the playlist</td>
+         </tr>
+        <tr>
+            <td>Previous Track</td>
+            <td>prevtrack</td>
+            <td>OPTIONAL; Control to go to the previous playlist item</td>
+        </tr>
+        <tr>
+            <td>Next Track</td>
+            <td>nexttrack</td>
+            <td>OPTIONAL; Control to go to the next playlist item</td>
+        </tr>
+        <tr>
+            <td>Loop</td>
+            <td>loop</td>
+            <td>OPTIONAL; Control to loop the current media</td>
+        </tr>
+        <tr>
+            <td>Shuffle</td>
+            <td>shuffle</td>
+            <td>OPTIONAL; Control to shuffle the playlist <sup>1</sup></td>
+        </tr>
+        </tbody>
+    </table>
+    <p class="footnote"><sub>1</sub> If you plan to use the <i>Loop</i> component, it is strongly recommended NOT to use the standalone version of Loop included in the project.</p>
+
+    <h2>API</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Default</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>playlist</td>
+                <td>array</td>
+                <td>[]</td>
+                <td>List to be played; the array consists in a series of objects that MUST include the <i>src</i> and <i>title</i> attributes; other possible items: `data-thumbnail`, `type`, `description`. <strong>If its empty, it will search for all the <i>source</i> elements within the video/audio tags</strong></td>
+            </tr>
+            <tr>
+                <td>showPlaylist</td>
+                <td>boolean</td>
+                <td>true</td>
+                <td>Whether or not to display the playlist; if so, a button to toggle the playlist will be displayed</td>
+            </tr>
+            <tr>
+                <td>autoClosePlaylist</td>
+                <td>boolean</td>
+                <td>false</td>
+                <td>If set to <i>true</i>, the playlist container will hide once user selects an item</td>
+            </tr>
+            <tr>
+                <td>prevText</td>
+                <td>string</td>
+                <td>null</td>
+                <td>Title for Previous button for WARIA purposes</td>
+            </tr>
+            <tr>
+                <td>nextText</td>
+                <td>string</td>
+                <td>null</td>
+                <td>Title for Next button for WARIA purposes</td>
+            </tr>
+            <tr>
+                <td>loopText</td>
+                <td>string</td>
+                <td>null</td>
+                <td>Title for Loop button for WARIA purposes</td>
+            </tr>
+            <tr>
+                <td>shuffleText</td>
+                <td>string</td>
+                <td>null</td>
+                <td>Title for Shuffle button for WARIA purposes</td>
+            </tr>
+            <tr>
+                <td>playlistTitle</td>
+                <td>string</td>
+                <td>null</td>
+                <td>Title for Playlist button for WARIA purposes</td>
+            </tr>
+            <tr>
+                <td>currentMessage</td>
+                <td>string</td>
+                <td>null</td>
+                <td>Message ONLY for audio, prepended to the <i>title</i> of media (i.e., <i>Now playing</i>)</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelement-and-player.min.js"></script>
+<script src="../dist/playlist/playlist.js"></script>
+<script>
+	var mediaElements = document.querySelectorAll('video, audio');
+
+	for (var i = 0, total = mediaElements.length; i < total; i++) {
+		new MediaElementPlayer(mediaElements[i], {
+			features: ['prevtrack', 'playpause', 'nexttrack', 'current', 'progress', 'duration', 'volume', 'playlist', 'shuffle', 'loop', 'fullscreen'],
+		});
+	}
+</script>
+</body>
+</html>
