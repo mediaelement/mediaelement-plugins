@@ -1,10 +1,12 @@
 ### Version History
 
-*X.X.X (??/??/??)*
+*2.5.0 (2017/11/17)*
 
 * Fixed typo on `Playlist` plugin that caused error on Edge, removed `disabled` attribute on each item and fixed workflow to autoplay next element @rafa8626
 * Fixed issue when mouse leave from `Quality` button, its selector does not hide (https://github.com/mediaelement/mediaelement-plugins/pull/89) @meathill
-* Fixed typo in `Quality` plugin translation @rafa8626
+* Fixed typo in `Quality`, `Stop` and `Preview` plugins @rafa8626
+* Added multiple demo files for plugins @rafa8626
+* Integrated `VRView` plugin @rafa8626
 
 *2.4.0 (2017/08/09)*
 
