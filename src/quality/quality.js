@@ -35,9 +35,9 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	buildquality (player, controls, layers, media) {
 		const
-				t = this,
-				children = t.mediaFiles ? t.mediaFiles : t.node.children,
-				qualityMap = new Map()
+			t = this,
+			children = t.mediaFiles ? t.mediaFiles : t.node.children,
+			qualityMap = new Map()
 		;
 
 		for (let i = 0, total = children.length; i < total; i++) {
@@ -62,23 +62,23 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.cleanquality(player);
 
 		const
-				qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-quality'),
-				getQualityNameFromValue = (value) => {
-					let label;
-					if (value === 'auto') {
-						const keyExist = t.keyExist(qualityMap, value);
-						if (keyExist) {
-							label = value;
-						} else {
-							let keyValue = t.getMapIndex(qualityMap, 0);
-							label = keyValue.key;
-						}
-					} else {
-						label = value;
-					}
-					return label;
-				},
-				defaultValue = getQualityNameFromValue(t.options.defaultQuality)
+			qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-quality'),
+			getQualityNameFromValue = (value) => {
+			let label;
+			if (value === 'auto') {
+				const keyExist = t.keyExist(qualityMap, value);
+				if (keyExist) {
+					label = value;
+				} else {
+					let keyValue = t.getMapIndex(qualityMap, 0);
+					label = keyValue.key;
+				}
+			} else {
+				label = value;
+			}
+			return label;
+		},
+		defaultValue = getQualityNameFromValue(t.options.defaultQuality)
 		;
 
 		// Get initial quality
@@ -89,30 +89,30 @@ Object.assign(MediaElementPlayer.prototype, {
 			`aria-label="${qualityTitle}" tabindex="0">${defaultValue}</button>` +
 			`<div class="${t.options.classPrefix}qualities-selector ${t.options.classPrefix}offscreen">` +
 			`<ul class="${t.options.classPrefix}qualities-selector-list"></ul>` +
-		`</div>`;
+			`</div>`;
 
 		t.addControlElement(player.qualitiesButton, 'qualities');
 
 		media.setSrc(qualityMap.get(defaultValue)[0].src); // ensure the default sources to set to play 
 		media.load();
 
-			qualityMap.forEach(function (value, key) {
-				if (key !== 'map_keys_1') {
-					const
-							src = value[0],
-							quality = key,
-							inputId = `${t.id}-qualities-${quality}`
-					;
-					player.qualitiesButton.querySelector('ul').innerHTML += `<li class="${t.options.classPrefix}qualities-selector-list-item">` +
-							`<input class="${t.options.classPrefix}qualities-selector-input" type="radio" name="${t.id}_qualities"` +
-								`disabled="disabled" value="${quality}" id="${inputId}"  ` +
-								`${(quality === defaultValue ? ' checked="checked"' : '')}/>` +
-							`<label for="${inputId}" class="${t.options.classPrefix}qualities-selector-label` +
-								`${(quality === defaultValue ? ` ${t.options.classPrefix}qualities-selected` : '')}">` +
-								`${src.title || quality}</label>` +
-							`</li>`;
-				}
-			});
+		qualityMap.forEach(function (value, key) {
+			if (key !== 'map_keys_1') {
+				const
+					src = value[0],
+					quality = key,
+					inputId = `${t.id}-qualities-${quality}`
+				;
+				player.qualitiesButton.querySelector('ul').innerHTML += `<li class="${t.options.classPrefix}qualities-selector-list-item">` +
+					`<input class="${t.options.classPrefix}qualities-selector-input" type="radio" name="${t.id}_qualities"` +
+					`disabled="disabled" value="${quality}" id="${inputId}"  ` +
+					`${(quality === defaultValue ? ' checked="checked"' : '')}/>` +
+					`<label for="${inputId}" class="${t.options.classPrefix}qualities-selector-label` +
+					`${(quality === defaultValue ? ` ${t.options.classPrefix}qualities-selected` : '')}">` +
+					`${src.title || quality}</label>` +
+					`</li>`;
+			}
+		});
 		const
 			inEvents = ['mouseenter', 'focusin'],
 			outEvents = ['mouseleave', 'focusout'],
@@ -126,15 +126,15 @@ Object.assign(MediaElementPlayer.prototype, {
 		for (let i = 0, total = inEvents.length; i < total; i++) {
 			player.qualitiesButton.addEventListener(inEvents[i], () => {
 				mejs.Utils.removeClass(selector, `${t.options.classPrefix}offscreen`);
-				selector.style.height = `${selector.querySelector('ul').offsetHeight}px`;
-				selector.style.top = `${(-1 * parseFloat(selector.offsetHeight))}px`;
-			});
+			selector.style.height = `${selector.querySelector('ul').offsetHeight}px`;
+			selector.style.top = `${(-1 * parseFloat(selector.offsetHeight))}px`;
+		});
 		}
 
 		for (let i = 0, total = outEvents.length; i < total; i++) {
 			player.qualitiesButton.addEventListener(outEvents[i], () => {
 				mejs.Utils.addClass(selector, `${t.options.classPrefix}offscreen`);
-			});
+		});
 		}
 
 		for (let i = 0, total = radios.length; i < total; i++) {
@@ -161,19 +161,19 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				const paused = media.paused;
 
-					if (!paused) {
-						player.qualitiesButton.querySelector('button').innerHTML = newQuality;
-						media.pause();
-						t.updateVideoSource(media, qualityMap, newQuality);
-						media.setSrc(qualityMap.get(newQuality)[0].src);
-						media.load();
-						media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
-						media.play();
-						media.addEventListener('canplay', function canPlayAfterSourceSwitchHandler() {
-							media.setCurrentTime(currentTime);
-							media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
-						});
-					}
+				if (!paused) {
+					player.qualitiesButton.querySelector('button').innerHTML = newQuality;
+					media.pause();
+					t.updateVideoSource(media, qualityMap, newQuality);
+					media.setSrc(qualityMap.get(newQuality)[0].src);
+					media.load();
+					media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
+					media.play();
+					media.addEventListener('canplay', function canPlayAfterSourceSwitchHandler() {
+						media.setCurrentTime(currentTime);
+						media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
+					});
+				}
 			});
 		}
 		for (let i = 0, total = labels.length; i < total; i++) {
@@ -189,7 +189,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		//Allow up/down arrow to change the selected radio without changing the volume.
 		selector.addEventListener('keydown', (e) => {
 			e.stopPropagation();
-		});
+	});
 		media.setSrc(qualityMap.get(defaultValue)[0].src);
 	},
 
