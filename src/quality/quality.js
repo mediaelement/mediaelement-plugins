@@ -161,19 +161,21 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				const paused = media.paused;
 
+				player.qualitiesButton.querySelector('button').innerHTML = newQuality;
 				if (!paused) {
-					player.qualitiesButton.querySelector('button').innerHTML = newQuality;
 					media.pause();
-					t.updateVideoSource(media, qualityMap, newQuality);
-					media.setSrc(qualityMap.get(newQuality)[0].src);
-					media.load();
-					media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
-					media.play();
-					media.addEventListener('canplay', function canPlayAfterSourceSwitchHandler () {
-						media.setCurrentTime(currentTime);
-						media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
-					});
 				}
+				t.updateVideoSource(media, qualityMap, newQuality);
+				media.setSrc(qualityMap.get(newQuality)[0].src);
+				media.load();
+				media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
+				if (!paused) {
+					media.play();
+				}
+				media.addEventListener('canplay', function canPlayAfterSourceSwitchHandler () {
+					media.setCurrentTime(currentTime);
+					media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
+				});
 			});
 		}
 		for (let i = 0, total = labels.length; i < total; i++) {

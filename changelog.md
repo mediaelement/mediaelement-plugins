@@ -8,6 +8,7 @@
 * Added multiple demo files for plugins @rafa8626
 * Integrated `VRView` plugin @rafa8626
 * Update to allow video quality grouping for browser fallback media type (https://github.com/mediaelement/mediaelement-plugins/pull/93) @Gungrave223
+* Fixed issue when changing quality when media is paused @rafa8626
 
 *2.4.0 (2017/08/09)*
 
