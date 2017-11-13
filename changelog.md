@@ -7,6 +7,7 @@
 * Fixed typo in `Quality`, `Stop` and `Preview` plugins @rafa8626
 * Added multiple demo files for plugins @rafa8626
 * Integrated `VRView` plugin @rafa8626
+* Update to allow video quality grouping for browser fallback media type (https://github.com/mediaelement/mediaelement-plugins/pull/93) @Gungrave223
 
 *2.4.0 (2017/08/09)*
 
