@@ -3,33 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>MediaElement.js 3.0 - Playlist Plugin</title>
+    <title>MediaElement.js 3.0 - Multiple Plugins (2)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelementplayer.css">
-    <link rel="stylesheet" href="../dist/playlist/playlist.css">
+    <link rel="stylesheet" href="../dist/jump-forward/jump-forward.css">
+    <link rel="stylesheet" href="../dist/skip-back/skip-back.css">
+    <link rel="stylesheet" href="../dist/speed/speed.css">
     <link rel="stylesheet" href="demo.css">
 </head>
 <body>
     <div id="container">
 
         <h1>Jump Forward/Skip Backward/Speed Plugins</h1>
-
-        <p>This plugin allows the interaction of <a href="https://developers.google.com/vr/concepts/vrview-web">Google's VRView</a> to watch 360 videos.</p>
-
-        <p><strong>NOTE: Google VRView only supports MP4, M(PEG)-DASH and HLS streaming.</strong></p>
+        <p><a href="index.html">Back to Main</a></p>
 
         <h2>Video Player</h2>
         <div class="media-wrapper">
             <video id="player1" width="750" height="421" controls preload="none">
-                <source src="http://googlevr.github.io/vrview/examples/video/congo_2048.mp4" type="video/mp4">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/BigBuckBunny.mp4" type="video/mp4">
             </video>
         </div>
 
-        <h2>API</h2>
+        <h2>Jump Forward</h2>
+
+        <p>This plugin creates a button to forward media a specific number of seconds.</p>
+
+        <p>It will work even when media is not being played initially.</p>
+        <h3>API</h3>
         <table>
             <thead>
                 <tr>
@@ -41,69 +45,104 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>playlist</td>
-                    <td>array</td>
-                    <td>[]</td>
-                    <td>List to be played; the array consists in a series of objects that MUST include the <i>src</i> and <i>title</i> attributes; other possible items: `data-thumbnail`, `type`, `description`. <strong>If its empty, it will search for all the <i>source</i> elements within the video/audio tags</strong></td>
+                    <td>jumpForwardInterval</td>
+                    <td>number</td>
+                    <td>30</td>
+                    <td>Seconds to jump forward media</td>
                 </tr>
                 <tr>
-                    <td>showPlaylist</td>
-                    <td>boolean</td>
-                    <td>true</td>
-                    <td>Whether or not to display the playlist; if so, a button to toggle the playlist will be displayed</td>
-                </tr>
-                <tr>
-                    <td>autoClosePlaylist</td>
-                    <td>boolean</td>
-                    <td>false</td>
-                    <td>If set to <i>true</i>, the playlist container will hide once user selects an item</td>
-                </tr>
-                <tr>
-                    <td>prevText</td>
+                    <td>jumpForwardText</td>
                     <td>string</td>
                     <td>null</td>
-                    <td>Title for Previous button for WARIA purposes</td>
+                    <td>Title for Jump Forward button for WARIA purposes</td>
                 </tr>
-                <tr>
-                    <td>nextText</td>
-                    <td>string</td>
-                    <td>null</td>
-                    <td>Title for Next button for WARIA purposes</td>
-                <tr>
-                    <td>loopText</td>
-                    <td>string</td>
-                    <td>null</td>
-                    <td>Title for Loop button for WARIA purposes</td>
-                </tr>
-                <tr>
-                    <td>shuffleText</td>
-                    <td>string</td>
-                    <td>null</td>
-                    <td>Title for Shuffle button for WARIA purposes</td>
-                </tr>
-                <tr>
-                    <td>playlistTitle</td>
-                    <td>string</td>
-                    <td>null</td>
-                    <td>Title for Playlist button for WARIA purposes</td>
-                </tr>
-                <tr>
-                    <td>currentMessage</td>
-                    <td>string</td>
-                    <td>null</td>
-                    <td>Message ONLY for audio, prepended to the <i>title</i> of media (i.e., <i>Now playing</i>)</td>
-                </tr>
+            </tbody>
+        </table>
+
+        <h2>Skip Backward</h2>
+
+        <p>This plugin creates a button to rewind media a specific number of seconds.</p>
+
+        <p>It will work even when media is not being played initially.</p>
+
+        <h3>API</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Default</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>skipBackInterval</td>
+                <td>number</td>
+                <td>30</td>
+                <td>Seconds to skip back media</td>
+            </tr>
+            <tr>
+                <td>skipBackText</td>
+                <td>string</td>
+                <td>null</td>
+                <td>Title for Skip Back button for WARIA purposes</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2>Speed</h2>
+
+        <p>This plugin creates a button that allows the user to play media at different speed rates.</p>
+
+        <h3>API</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Default</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>speeds</td>
+                <td>array</td>
+                <td>['1.50', '1.25', '1.00', '0.75']</td>
+                <td>Enable speeding media; accounts for strings or objects like <i>[{name: 'Slow', value: '0.75'}, {name: 'Normal', value: '1.00'}, ...]</i></td>
+            </tr>
+            <tr>
+                <td>defaultSpeed</td>
+                <td>number</td>
+                <td>1.00</td>
+                <td>Initial speed of media</td>
+            </tr>
+            <tr>
+                <td>speedChar</td>
+                <td>string</td>
+                <td>x</td>
+                <td>Character used to stop speeding media</td>
+            </tr>
+            <tr>
+                <td>speedText</td>
+                <td>string</td>
+                <td>null</td>
+                <td>Title for Speed button for WARIA purposes</td>
+            </tr>
             </tbody>
         </table>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelement-and-player.min.js"></script>
-    <script src="../dist/playlist/playlist.js"></script>
+    <script src="../dist/jump-forward/jump-forward.js"></script>
+    <script src="../dist/skip-back/skip-back.js"></script>
+    <script src="../dist/speed/speed.js"></script>
     <script>
 	    var mediaElements = document.querySelectorAll('video, audio');
 
 	    for (var i = 0, total = mediaElements.length; i < total; i++) {
 
-		    var features = ['playpause', 'current', 'progress', 'duration', 'volume', 'jumpforward', 'skipbackward', 'speed', 'fullscreen'];
+		    var features = ['playpause', 'current', 'progress', 'duration', 'volume', 'skipback', 'jumpforward', 'speed', 'fullscreen'];
 
 		    new MediaElementPlayer(mediaElements[i], {
 			    autoRewind: false,

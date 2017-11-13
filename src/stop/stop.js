@@ -48,6 +48,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (!media.paused) {
 					media.pause();
 				}
+
 				media.setSrc('');
 				media.load();
 
@@ -56,9 +57,11 @@ Object.assign(MediaElementPlayer.prototype, {
 				mejs.Utils.addClass(playButton, `${t.options.classPrefix}play`);
 
 				// It will throw an error trying to load an empty source, so remove it since it's expected
-				t.container.querySelector('.me_cannotplay').remove();
-				layers.querySelector(`.${t.options.classPrefix}overlay-error`).parentNode.style.display = 'none';
-				layers.querySelector(`.${t.options.classPrefix}overlay-error`).remove();
+				if (t.container.querySelector(`.${t.options.classPrefix}cannotplay`)) {
+					t.container.querySelector(`.${t.options.classPrefix}cannotplay`).remove();
+					layers.querySelector(`.${t.options.classPrefix}overlay-error`).parentNode.style.display = 'none';
+					layers.querySelector(`.${t.options.classPrefix}overlay-error`).remove();
+				}
 			}
 
 			const event = mejs.Utils.createEvent('timeupdate', media);

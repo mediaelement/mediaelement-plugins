@@ -3,107 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>MediaElement.js 3.0 - Playlist Plugin</title>
+    <title>MediaElement.js 3.0 - Chromecast Plugin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelementplayer.css">
-    <link rel="stylesheet" href="../dist/playlist/playlist.css">
+    <link rel="stylesheet" href="../dist/chromecast/chromecast.css">
     <link rel="stylesheet" href="demo.css">
 </head>
 <body>
     <div id="container">
 
-        <h1>VRView Plugin</h1>
+        <h1>Chromecast Plugin</h1>
+        <p><a href="index.html">Back to Main</a></p>
 
-        <p>This plugin allows the interaction of <a href="https://developers.google.com/vr/concepts/vrview-web">Google's VRView</a> to watch 360 videos.</p>
-
-        <p><strong>NOTE: Google VRView only supports MP4, M(PEG)-DASH and HLS streaming.</strong></p>
+        <p>This plugin uses version 3.2 of Chromecast to take advantage of <a href="https://developers.google.com/cast/docs/developers">Google Cast Framework</a>, and creates a button to start/stop streaming.</p>
 
         <h2>Video Player</h2>
         <div class="media-wrapper">
             <video id="player1" width="750" height="421" controls preload="none">
-                <source src="http://googlevr.github.io/vrview/examples/video/congo_2048.mp4" type="video/mp4">
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/BigBuckBunny.mp4" type="video/mp4">
             </video>
         </div>
+
+        <p>In order to get the most of this plugin, some elements must be placed in the video/audio tag.</p>
+
+        <p>The following snippet shows the <i>data-cast-*</i> attributes needed to achieve Chromecast best experience, <strong>even when they are not required</strong>.</p>
+
+        <pre data-lang="HTML">
+        <code>
+&lt;video width="640" height="360" preload="none"
+data-cast-title="[Your title]"
+data-cast-description="[Your optional description]"
+poster="/path/to/poster.jpg"&gt;
+
+    &lt;source src="/path/to/media.mp4" type="video/mp4"&gt;
+
+&lt;/video&gt;
+
+&lt;audio preload="none" controls
+    data-cast-title="[Your title]"
+    data-cast-description="[Your optional description]"
+    data-cast-poster="/path/to/poster.jpg"&gt;
+
+    &lt;source src="/path/to/media.mp3" type="audio/mp3"&gt;
+
+&lt;/audio&gt;
+        </code>
+        </pre>
+
+        <p>The <i>poster</i> or <i>data-cast-poster</i> attributes are not required as well, but most of the media players use a static image when media is being broadcast in Chromecast,
+            so <strong>it is recommended their use</strong>.</p>
+
+        <p><i>data-cast-poster</i> is meant for <strong>audio only</strong> since <i>poster</i> is not supported natively for audio tag.</p>
+
+        <p>Chromecast <strong>ONLY</strong> accepts <strong>MP4, HLS and M(PEG)-DASH</strong> formats.</p>
+
+        <p>Also, a page can contain <strong>ONLY ONE</strong> sender; otherwise, an error indicating that <i>cast-button</i> has been registered will be logged.</p>
+
+        <p>To avoid that, <a href="https://jsfiddle.net/Luuwnjfm/24/">this link</a> shows a way to get away with it if you have to render your player dynamically.</p>
 
         <h2>API</h2>
         <table>
             <thead>
-                <tr>
-                    <th>Parameter</th>
-                    <th>Type</th>
-                    <th>Default</th>
-                    <th>Description</th>
-                </tr>
+            <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Default</th>
+                <th>Description</th>
+            </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>playlist</td>
-                    <td>array</td>
-                    <td>[]</td>
-                    <td>List to be played; the array consists in a series of objects that MUST include the <i>src</i> and <i>title</i> attributes; other possible items: `data-thumbnail`, `type`, `description`. <strong>If its empty, it will search for all the <i>source</i> elements within the video/audio tags</strong></td>
-                </tr>
-                <tr>
-                    <td>showPlaylist</td>
-                    <td>boolean</td>
-                    <td>true</td>
-                    <td>Whether or not to display the playlist; if so, a button to toggle the playlist will be displayed</td>
-                </tr>
-                <tr>
-                    <td>autoClosePlaylist</td>
-                    <td>boolean</td>
-                    <td>false</td>
-                    <td>If set to <i>true</i>, the playlist container will hide once user selects an item</td>
-                </tr>
-                <tr>
-                    <td>prevText</td>
-                    <td>string</td>
-                    <td>null</td>
-                    <td>Title for Previous button for WARIA purposes</td>
-                </tr>
-                <tr>
-                    <td>nextText</td>
-                    <td>string</td>
-                    <td>null</td>
-                    <td>Title for Next button for WARIA purposes</td>
-                <tr>
-                    <td>loopText</td>
-                    <td>string</td>
-                    <td>null</td>
-                    <td>Title for Loop button for WARIA purposes</td>
-                </tr>
-                <tr>
-                    <td>shuffleText</td>
-                    <td>string</td>
-                    <td>null</td>
-                    <td>Title for Shuffle button for WARIA purposes</td>
-                </tr>
-                <tr>
-                    <td>playlistTitle</td>
-                    <td>string</td>
-                    <td>null</td>
-                    <td>Title for Playlist button for WARIA purposes</td>
-                </tr>
-                <tr>
-                    <td>currentMessage</td>
-                    <td>string</td>
-                    <td>null</td>
-                    <td>Message ONLY for audio, prepended to the <i>title</i> of media (i.e., <i>Now playing</i>)</td>
-                </tr>
+            <tr>
+                <td>castTitle</td>
+                <td>string</td>
+                <td>null</td>
+                <td>Chromecast button title for WARIA purposes</td>
+            </tr>
+            <tr>
+                <td>castAppId</td>
+                <td>string</td>
+                <td>null</td>
+                <td>Chromecast Application ID; if <i>null</i> is provided, it will default to <i>chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID</i></td>
+            </tr>
+            <tr>
+                <td>castPolicy</td>
+                <td>string</td>
+                <td>origin</td>
+                <td>Chromecast default policy: <i>origin</i> (by default, auto connect from same appId and page origin), <i>tab</i> (auto connect from same appId, page origin, and tab) and <i>page</i> (no auto connect)</td>
+            </tr>
+            <tr>
+                <td>castEnableTracks</td>
+                <td>boolean</td>
+                <td>false</td>
+                <td>Whether to load tracks or not through Chromecast. In order to process tracks correctly, <i>tracks</i> feature must be enable on the player configuration and CORS <strong>MUST</strong> be setup correctly. Read <a href="https://developers.google.com/cast/docs/player">this link</a> for more information</td>
+            </tr>
+            <tr>
+                <td>castIsLive</td>
+                <td>boolean</td>
+                <td>false</td>
+                <td>Whether the current media is a live stream or not</td>
+            </tr>
             </tbody>
         </table>
+
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelement-and-player.min.js"></script>
-    <script src="../dist/playlist/playlist.js"></script>
+    <script src="../dist/chromecast/chromecast.js"></script>
     <script>
 	    var mediaElements = document.querySelectorAll('video, audio');
 
 	    for (var i = 0, total = mediaElements.length; i < total; i++) {
 
-		    var features = ['prevtrack', 'playpause', 'nexttrack', 'current', 'progress', 'duration', 'volume', 'playlist', 'shuffle', 'loop'];
+		    var features = ['playpause', 'current', 'progress', 'duration', 'volume', 'chromecast', 'fullscreen'];
 
 		    new MediaElementPlayer(mediaElements[i], {
 			    // This is needed to make Jump Forward to work correctly

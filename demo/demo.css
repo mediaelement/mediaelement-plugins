@@ -36,3 +36,23 @@ td:last-child {
 tr:nth-child(even) {
     background-color: #f2f2f2
 }
+pre {
+    white-space: pre-wrap;
+    tab-size: 2;
+    background: black;
+    color: white;
+    max-width: 750px;
+}
+pre[data-lang]::before {
+    content: attr(data-lang);
+    display: block;
+    background-color: #FFA500;
+    background-image: -webkit-linear-gradient(top, #FFA500, #D67E21);
+    background-image: linear-gradient(to bottom, #FFA500, #D67E21);
+    padding: 10px;
+}
+code {
+    font-family: "Courier New", Courier, monospace;
+    padding: 10px 20px;
+    display: inline-block;
+}
