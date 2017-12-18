@@ -1,9 +1,14 @@
 ### Version History
 
-*X.X.X (??/??/??)*
+*2.5.0 (2017/11/17)*
 
 * Fixed typo on `Playlist` plugin that caused error on Edge, removed `disabled` attribute on each item and fixed workflow to autoplay next element @rafa8626
-* Fixed issue when mouse leave from Quality button, its selector does not hide (https://github.com/mediaelement/mediaelement-plugins/pull/89) @meathill
+* Fixed issue when mouse leave from `Quality` button, its selector does not hide (https://github.com/mediaelement/mediaelement-plugins/pull/89) @meathill
+* Fixed typo in `Quality`, `Stop` and `Preview` plugins @rafa8626
+* Added multiple demo files for plugins @rafa8626
+* Integrated `VRView` plugin @rafa8626
+* Update to allow video quality grouping for browser fallback media type (https://github.com/mediaelement/mediaelement-plugins/pull/93) @Gungrave223
+* Fixed issue when changing quality when media is paused @rafa8626
 
 *2.4.0 (2017/08/09)*
 
@@ -44,6 +49,7 @@
 *2.2.1 (2017/05/16)*
 
 * Fixed issues in Safari related to `Source Chooser` plugin @rafa8626
+* Integrated `VRView` plugin @rafa8626
 * Added `babel-preset-env` to optimize bundles based on supported browsers @rafa8626
 * Fixed issues with `Speed` and `Source chooser` related to their menu options (https://github.com/mediaelement/mediaelement-plugins/pull/41) @lebanggit
 * Expanded demo file with `Ads` and `VAST/VPAID` plugins @rafa8626

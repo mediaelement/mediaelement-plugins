@@ -118,12 +118,12 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (t.playingAds && t.adsManager) {
 				t.adsManager.pause();
 				t.playingAds = false;
-				event = mejs.Utils.createEvent('pause', t.media);
+				//event = mejs.Utils.createEvent('pause', t.media);
 
 			} else if (t.adsManager) {
 				t.adsManager.resume();
 				t.playingAds = true;
-				event = mejs.Utils.createEvent('play', t.media);
+				//event = mejs.Utils.createEvent('play', t.media);
 			}
 			t.media.dispatchEvent(event);
 		}
