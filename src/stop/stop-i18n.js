@@ -33,6 +33,9 @@ if (mejs.i18n.ja !== undefined) {
 if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.stop'] = '중지';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.stop'] = 'Berhenti';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.stop'] = 'Hou op';
 }
