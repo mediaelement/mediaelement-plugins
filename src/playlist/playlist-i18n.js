@@ -77,6 +77,13 @@ if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.playlist-loop'] = '고리';
 	mejs.i18n.ko['mejs.playlist-shuffle'] = '혼합';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.playlist'] = 'Senarai main';
+	mejs.i18n.ms['mejs.playlist-prev'] = 'Sebelum';
+	mejs.i18n.ms['mejs.playlist-next'] = 'Selepas';
+	mejs.i18n.ms['mejs.playlist-loop'] = 'Ulang senarai';
+	mejs.i18n.ms['mejs.playlist-shuffle'] = 'Kocok senarai';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.playlist'] = 'Afspeellijst';
 	mejs.i18n.nl['mejs.playlist-prev'] = 'Voorgaand';
