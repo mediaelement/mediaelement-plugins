@@ -34,7 +34,7 @@ if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.time-jump-forward'] = '%1 초 앞으로 뛰어 오르십시오';
 }
 if (mejs.i18n.ms !== undefined) {
-	mejs.i18n.ms['mejs.time-jump-forward'] = 'Lompat %1 saat ke depan';
+	mejs.i18n.ms['mejs.time-jump-forward'] = 'Lompat masa %1 saat';
 }
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.time-jump-forward'] = '%1 seconden vooruit springen';
