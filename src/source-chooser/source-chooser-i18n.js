@@ -33,6 +33,9 @@ if (mejs.i18n.ja !== undefined) {
 if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.source-chooser']= '소스 선택기';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.source-chooser']= 'Pilih sumber';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.source-chooser']= 'Bronkeuze';
 }
