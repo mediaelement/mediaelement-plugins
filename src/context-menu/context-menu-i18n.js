@@ -55,6 +55,11 @@ if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.fullscreen-on'] = '전체화면 가기';
 	mejs.i18n.ko['mejs.download-video'] = '비디오 다운로드';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.fullscreen-off'] = 'Keluar dari mod skrin penuh';
+	mejs.i18n.ms['mejs.fullscreen-on'] = 'Masuk ke mod skrin penuh';
+	mejs.i18n.ms['mejs.download-video'] = 'Muat turun video';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.fullscreen-off'] = 'Volledig scherm uitschakelen';
 	mejs.i18n.nl['mejs.fullscreen-on'] = 'Volledig scherm';
