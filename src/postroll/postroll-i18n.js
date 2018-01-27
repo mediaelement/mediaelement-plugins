@@ -33,6 +33,9 @@ if (mejs.i18n.ja !== undefined) {
 if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.close'] = '종료';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.close'] = 'Tutup';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.close'] = 'Sluiten';
 }
