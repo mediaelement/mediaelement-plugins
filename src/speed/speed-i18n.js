@@ -33,6 +33,9 @@ if (mejs.i18n.ja !== undefined) {
 if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.speed-rate'] = '속도 속도';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.speed-rate'] = 'Kelajuan';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.speed-rate'] = 'Snelheidsgraad';
 }
