@@ -33,6 +33,9 @@ if (mejs.i18n.ja !== undefined) {
 if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.time-skip-back'] = '%1초 를 뒤로 건너뛰세요';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.time-skip-back'] = 'Undur masa %1 saat';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.time-skip-back'] = ['Sla 1 seconde terug', 'Sla %1 seconden terug'];
 }
