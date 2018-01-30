@@ -21,37 +21,45 @@ Object.assign(mejs.MepDefaults, {
 
 Object.assign(MediaElementPlayer.prototype, {
 	buildquality: function buildquality(player, controls, layers, media) {
-
 		var t = this,
-		    qualities = [],
-		    children = t.mediaFiles ? t.mediaFiles : t.node.children;
+		    children = t.mediaFiles ? t.mediaFiles : t.node.children,
+		    qualityMap = new Map();
 
 		for (var i = 0, total = children.length; i < total; i++) {
-			var s = children[i];
+			var mediaNode = children[i];
+			var quality = mediaNode instanceof HTMLElement ? mediaNode.getAttribute('data-quality') : mediaNode['data-quality'];
 
 			if (t.mediaFiles) {
-				qualities.push(s);
-			} else if (s.nodeName === 'SOURCE') {
-				qualities.push(s);
+				var source = document.createElement('source');
+				source.src = mediaNode['src'];
+				source.type = mediaNode['type'];
+
+				t.addValueToKey(qualityMap, quality, source);
+			} else if (mediaNode.nodeName === 'SOURCE') {
+				t.addValueToKey(qualityMap, quality, mediaNode);
 			}
 		}
 
-		if (qualities.length <= 1) {
+		if (qualityMap.size <= 1) {
 			return;
 		}
 
 		t.cleanquality(player);
 
-		var qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-chooser'),
+		var qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-quality'),
 		    getQualityNameFromValue = function getQualityNameFromValue(value) {
 			var label = void 0;
 			if (value === 'auto') {
-				var src = qualities[0];
-				label = src instanceof HTMLElement ? src.getAttribute('data-quality') : src['data-quality'];
+				var keyExist = t.keyExist(qualityMap, value);
+				if (keyExist) {
+					label = value;
+				} else {
+					var keyValue = t.getMapIndex(qualityMap, 0);
+					label = keyValue.key;
+				}
 			} else {
 				label = value;
 			}
-
 			return label;
 		},
 		    defaultValue = getQualityNameFromValue(t.options.defaultQuality);
@@ -62,83 +70,80 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.addControlElement(player.qualitiesButton, 'qualities');
 
-		for (var _i = 0, _total = qualities.length; _i < _total; _i++) {
-			var src = qualities[_i],
-			    quality = src instanceof HTMLElement ? src.getAttribute('data-quality') : src['data-quality'],
-			    inputId = t.id + '-qualities-' + quality;
+		media.setSrc(qualityMap.get(defaultValue)[0].src);
+		media.load();
 
-			player.qualitiesButton.querySelector('ul').innerHTML += '<li class="' + t.options.classPrefix + 'qualities-selector-list-item">' + ('<input class="' + t.options.classPrefix + 'qualities-selector-input" type="radio" name="' + t.id + '_qualities"') + ('disabled="disabled" value="' + quality + '" id="' + inputId + '"  ') + ((quality === defaultValue ? ' checked="checked"' : '') + '/>') + ('<label for="' + inputId + '" class="' + t.options.classPrefix + 'qualities-selector-label') + ((quality === defaultValue ? ' ' + t.options.classPrefix + 'qualities-selected' : '') + '">') + ((src.title || quality) + '</label>') + '</li>';
-		}
-
+		qualityMap.forEach(function (value, key) {
+			if (key !== 'map_keys_1') {
+				var src = value[0],
+				    _quality = key,
+				    inputId = t.id + '-qualities-' + _quality;
+				player.qualitiesButton.querySelector('ul').innerHTML += '<li class="' + t.options.classPrefix + 'qualities-selector-list-item">' + ('<input class="' + t.options.classPrefix + 'qualities-selector-input" type="radio" name="' + t.id + '_qualities"') + ('disabled="disabled" value="' + _quality + '" id="' + inputId + '"  ') + ((_quality === defaultValue ? ' checked="checked"' : '') + '/>') + ('<label for="' + inputId + '" class="' + t.options.classPrefix + 'qualities-selector-label') + ((_quality === defaultValue ? ' ' + t.options.classPrefix + 'qualities-selected' : '') + '">') + ((src.title || _quality) + '</label>') + '</li>';
+			}
+		});
 		var inEvents = ['mouseenter', 'focusin'],
 		    outEvents = ['mouseleave', 'focusout'],
 		    radios = player.qualitiesButton.querySelectorAll('input[type="radio"]'),
 		    labels = player.qualitiesButton.querySelectorAll('.' + t.options.classPrefix + 'qualities-selector-label'),
 		    selector = player.qualitiesButton.querySelector('.' + t.options.classPrefix + 'qualities-selector');
 
-		for (var _i2 = 0, _total2 = inEvents.length; _i2 < _total2; _i2++) {
-			player.qualitiesButton.addEventListener(inEvents[_i2], function () {
+		for (var _i = 0, _total = inEvents.length; _i < _total; _i++) {
+			player.qualitiesButton.addEventListener(inEvents[_i], function () {
 				mejs.Utils.removeClass(selector, t.options.classPrefix + 'offscreen');
 				selector.style.height = selector.querySelector('ul').offsetHeight + 'px';
 				selector.style.top = -1 * parseFloat(selector.offsetHeight) + 'px';
 			});
 		}
 
-		for (var _i3 = 0, _total3 = outEvents.length; _i3 < _total3; _i3++) {
-			player.qualitiesButton.addEventListener(outEvents[_i3], function () {
+		for (var _i2 = 0, _total2 = outEvents.length; _i2 < _total2; _i2++) {
+			player.qualitiesButton.addEventListener(outEvents[_i2], function () {
 				mejs.Utils.addClass(selector, t.options.classPrefix + 'offscreen');
 			});
 		}
 
-		for (var _i4 = 0, _total4 = radios.length; _i4 < _total4; _i4++) {
-			var radio = radios[_i4];
+		for (var _i3 = 0, _total3 = radios.length; _i3 < _total3; _i3++) {
+			var radio = radios[_i3];
 			radio.disabled = false;
-			radio.addEventListener('click', function () {
+			radio.addEventListener('change', function () {
 				var self = this,
 				    newQuality = self.value;
 
 				var selected = player.qualitiesButton.querySelectorAll('.' + t.options.classPrefix + 'qualities-selected');
-				for (var _i5 = 0, _total5 = selected.length; _i5 < _total5; _i5++) {
-					mejs.Utils.removeClass(selected[_i5], t.options.classPrefix + 'qualities-selected');
+				for (var _i4 = 0, _total4 = selected.length; _i4 < _total4; _i4++) {
+					mejs.Utils.removeClass(selected[_i4], t.options.classPrefix + 'qualities-selected');
 				}
 
 				self.checked = true;
 				var siblings = mejs.Utils.siblings(self, function (el) {
 					return mejs.Utils.hasClass(el, t.options.classPrefix + 'qualities-selector-label');
 				});
-				for (var j = 0, _total6 = siblings.length; j < _total6; j++) {
+				for (var j = 0, _total5 = siblings.length; j < _total5; j++) {
 					mejs.Utils.addClass(siblings[j], t.options.classPrefix + 'qualities-selected');
 				}
 
 				var currentTime = media.currentTime;
 
-				var paused = media.paused,
-				    canPlayAfterSourceSwitchHandler = function canPlayAfterSourceSwitchHandler() {
-					if (!paused) {
-						media.setCurrentTime(currentTime);
-						media.play();
-					}
-					media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
-				};
+				var paused = media.paused;
 
-				for (var _i6 = 0, _total7 = qualities.length; _i6 < _total7; _i6++) {
-					var _src = qualities[_i6],
-					    _quality = _src instanceof HTMLElement ? _src.getAttribute('data-quality') : _src['data-quality'];
-
-					if (_quality === newQuality) {
-						player.qualitiesButton.querySelector('button').innerHTML = _src.title || getQualityNameFromValue(newQuality);
-						media.pause();
-						media.setSrc(_src.src);
-						media.load();
-						media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
-						media.addEventListener('canplay', canPlayAfterSourceSwitchHandler);
-					}
+				player.qualitiesButton.querySelector('button').innerHTML = newQuality;
+				if (!paused) {
+					media.pause();
 				}
+				t.updateVideoSource(media, qualityMap, newQuality);
+				media.setSrc(qualityMap.get(newQuality)[0].src);
+				media.load();
+				media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
+				if (!paused) {
+					media.play();
+				}
+				media.addEventListener('canplay', function canPlayAfterSourceSwitchHandler() {
+					media.setCurrentTime(currentTime);
+					media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
+				});
 			});
 		}
-
-		for (var _i7 = 0, _total8 = labels.length; _i7 < _total8; _i7++) {
-			labels[_i7].addEventListener('click', function () {
+		for (var _i5 = 0, _total6 = labels.length; _i5 < _total6; _i5++) {
+			labels[_i5].addEventListener('click', function () {
 				var radio = mejs.Utils.siblings(this, function (el) {
 					return el.tagName === 'INPUT';
 				})[0],
@@ -150,6 +155,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		selector.addEventListener('keydown', function (e) {
 			e.stopPropagation();
 		});
+		media.setSrc(qualityMap.get(defaultValue)[0].src);
 	},
 	cleanquality: function cleanquality(player) {
 		if (player) {
@@ -157,6 +163,62 @@ Object.assign(MediaElementPlayer.prototype, {
 				player.qualitiesButton.remove();
 			}
 		}
+	},
+	addValueToKey: function addValueToKey(map, key, value) {
+		if (map.has('map_keys_1')) {
+			map.get('map_keys_1').push(key.toLowerCase());
+		} else {
+			map.set('map_keys_1', []);
+		}
+		if (map.has(key)) {
+			map.get(key).push(value);
+		} else {
+			map.set(key, []);
+			map.get(key).push(value);
+		}
+	},
+	updateVideoSource: function updateVideoSource(media, map, key) {
+		this.cleanMediaSource(media);
+		var sources = map.get(key);
+
+		var _loop = function _loop(i) {
+			var mediaNode = media.children[i];
+			if (mediaNode.tagName === 'VIDEO') {
+				sources.forEach(function (sourceElement) {
+					mediaNode.appendChild(sourceElement);
+				});
+			}
+		};
+
+		for (var i = 0; i < media.children.length; i++) {
+			_loop(i);
+		}
+	},
+	cleanMediaSource: function cleanMediaSource(media) {
+		for (var i = 0; i < media.children.length; i++) {
+			var _mediaNode = media.children[i];
+			if (_mediaNode.tagName === 'VIDEO') {
+				while (_mediaNode.firstChild) {
+					_mediaNode.removeChild(_mediaNode.firstChild);
+				}
+			}
+		}
+	},
+	getMapIndex: function getMapIndex(map, index) {
+		var counter = -1;
+		var keyValue = {};
+		map.forEach(function (value, key) {
+
+			if (counter === index) {
+				keyValue.key = key;
+				keyValue.value = value;
+			}
+			counter++;
+		});
+		return keyValue;
+	},
+	keyExist: function keyExist(map, searchKey) {
+		return -1 < map.get('map_keys_1').indexOf(searchKey.toLowerCase());
 	}
 });
 

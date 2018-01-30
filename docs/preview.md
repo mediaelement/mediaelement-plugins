@@ -13,6 +13,7 @@ features: [..., 'preview']
 
 Parameter | Type | Default | Description
 ------ | --------- | ------- | --------
+previewMode | boolean | `false` | Media starts playing when users mouse hovers on it, and resets when leaving player area
 muteOnPreviewMode | boolean | `true` | When playing in preview mode, turn on/off sound
 fadeInAudioStart | number | `0` | If `fadeInAudioInterval` is set, time when it starts fading in
 fadeInAudioInterval | number | `0` | When playing media, time interval to fade in audio (must be greater than zero)

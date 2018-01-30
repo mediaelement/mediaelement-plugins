@@ -77,23 +77,23 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 
 		const
-			qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-quality'),
+			qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-chooser'),
 			getQualityNameFromValue = (value) => {
-			let label;
-			if (value === 'auto') {
-				const keyExist = t.keyExist(qualityMap, value);
-				if (keyExist) {
-					label = value;
+				let label;
+				if (value === 'auto') {
+					const keyExist = t.keyExist(qualityMap, value);
+					if (keyExist) {
+						label = value;
+					} else {
+						let keyValue = t.getMapIndex(qualityMap, 0);
+						label = keyValue.key;
+					}
 				} else {
-					let keyValue = t.getMapIndex(qualityMap, 0);
-					label = keyValue.key;
+					label = value;
 				}
-			} else {
-				label = value;
-			}
-			return label;
-		},
-		defaultValue = getQualityNameFromValue(t.options.defaultQuality)
+				return label;
+			},
+			defaultValue = getQualityNameFromValue(t.options.defaultQuality)
 		;
 		currentQuality = defaultValue;
 
@@ -101,7 +101,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		player.qualitiesButton = document.createElement('div');
 		player.qualitiesButton.className = `${t.options.classPrefix}button ${t.options.classPrefix}qualities-button`;
-		player.qualitiesButton.innerHTML =`<button type="button" aria-controls="${t.id}" title="${qualityTitle}" ` +
+		player.qualitiesButton.innerHTML = `<button type="button" aria-controls="${t.id}" title="${qualityTitle}" ` +
 			`aria-label="${qualityTitle}" tabindex="0">${defaultValue}</button>` +
 			`<div class="${t.options.classPrefix}qualities-selector ${t.options.classPrefix}offscreen">` +
 			`<ul class="${t.options.classPrefix}qualities-selector-list"></ul>` +
@@ -153,7 +153,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		for (let i = 0, total = radios.length; i < total; i++) {
 			const radio = radios[i];
 			radio.disabled = false;
-			radio.addEventListener('change', function() {
+			radio.addEventListener('change', function () {
 				const
 					self = this,
 					newQuality = self.value
@@ -175,23 +175,25 @@ Object.assign(MediaElementPlayer.prototype, {
 
 				const paused = media.paused;
 
+				player.qualitiesButton.querySelector('button').innerHTML = newQuality;
 				if (!paused) {
-					player.qualitiesButton.querySelector('button').innerHTML = newQuality;
 					media.pause();
-					t.updateVideoSource(media, qualityMap, newQuality);
-					media.setSrc(qualityMap.get(newQuality)[0].src);
-					media.load();
-					media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
-					media.play();
-					media.addEventListener('canplay', function canPlayAfterSourceSwitchHandler() {
-						media.setCurrentTime(currentTime);
-						media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
-					});
 				}
+				t.updateVideoSource(media, qualityMap, newQuality);
+				media.setSrc(qualityMap.get(newQuality)[0].src);
+				media.load();
+				media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
+				if (!paused) {
+					media.play();
+				}
+				media.addEventListener('canplay', function canPlayAfterSourceSwitchHandler () {
+					media.setCurrentTime(currentTime);
+					media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
+				});
 			});
 		}
 		for (let i = 0, total = labels.length; i < total; i++) {
-			labels[i].addEventListener('click',  function () {
+			labels[i].addEventListener('click', function () {
 				const
 					radio = mejs.Utils.siblings(this, (el) => el.tagName === 'INPUT')[0],
 					event = mejs.Utils.createEvent('click', radio)
@@ -212,7 +214,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Always has to be prefixed with `clean` and the name that was used in MepDefaults.features list
 	 * @param {MediaElementPlayer} player
 	 */
-	cleanquality (player)  {
+	cleanquality (player) {
 		if (player) {
 			if (player.qualitiesButton) {
 				player.qualitiesButton.remove();
@@ -222,11 +224,11 @@ Object.assign(MediaElementPlayer.prototype, {
 
 	/**
 	 * Populate the source map
-	 * @param map the map the quality source is being added
-	 * @param key the key to the quality source (value stored in data-quality)
-	 * @param value the the video.source tag
+	 * @param {Map} map the map the quality source is being added
+	 * @param {String} key the key to the quality source (value stored in data-quality)
+	 * @param {String} value the the video.source tag
 	 */
-	addValueToKey(map, key, value) {
+	addValueToKey (map, key, value) {
 		if (map.has('map_keys_1')) {
 			map.get('map_keys_1').push(key);
 		} else {
@@ -242,9 +244,9 @@ Object.assign(MediaElementPlayer.prototype, {
 
 	/**
 	 * Set the source tag for the mejs player
-	 * @param media the mejs media
-	 * @param map the map containing the video quality source tags
-	 * @param key the user selected quality
+	 * @param {MediaElement} media
+	 * @param {Map} map the map containing the video quality source tags
+	 * @param {String} key the user selected quality
 	 */
 	updateVideoSource (media, map, key) {
 		this.cleanMediaSource(media);
@@ -261,9 +263,9 @@ Object.assign(MediaElementPlayer.prototype, {
 
 	/**
 	 * Remove all the source tag for the mejs player
-	 * @param media the mejs media
+	 * @param {MediaElement} media
 	 */
-	cleanMediaSource(media) {
+	cleanMediaSource (media) {
 		for (let i = 0; i < media.children.length; i++) {
 			let mediaNode = media.children[i];
 			if (mediaNode.tagName === 'VIDEO') {
@@ -276,29 +278,29 @@ Object.assign(MediaElementPlayer.prototype, {
 
 	/**
 	 * Search a map for a value key pair stored at a specified index
-	 * @param map the map being searched
-	 * @param index the index of the requested key value pair
-	 * @returns {{key, value}} a key: value: object
+	 * @param {Map} map the map being searched
+	 * @param {Number} index the index of the requested key value pair
+	 * @return {Object} a key:value object
 	 */
-	getMapIndex(map, index) {
+	getMapIndex (map, index) {
 		let counter = -1;
 		let keyValue = {};
-		map.forEach(function(value, key) {
+		map.forEach(function (value, key) {
 
 			if (counter === index) {
 				keyValue.key = key;
 				keyValue.value = value;
 			}
-			counter ++;
+			counter++;
 		});
 		return keyValue;
 	},
 
 	/**
 	 * Returns flag for whether or not a given key exist in a give map
-	 * @param map the map being searched
-	 * @param searchKey the map searching being searched
-	 * @returns {boolean}
+	 * @param {Map} map the map being searched
+	 * @param {String} searchKey the map searching being searched
+	 * @return {boolean}
 	 */
 	keyExist(map, searchKey) {
 		return -1 < map.get('map_keys_1').indexOf(searchKey);
