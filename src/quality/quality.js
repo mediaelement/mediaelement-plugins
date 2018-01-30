@@ -302,7 +302,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {String} searchKey the map searching being searched
 	 * @return {boolean}
 	 */
-	keyExist(map, searchKey) {
+	keyExist (map, searchKey) {
 		return -1 < map.get('map_keys_1').indexOf(searchKey);
 	}
 });
