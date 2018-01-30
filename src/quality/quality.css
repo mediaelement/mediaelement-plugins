@@ -9,8 +9,9 @@
     color: #fff;
     font-size: 11px;
     line-height: normal;
-    margin: 11px 0 0;
+    margin: 9px 0 0;
     width: 36px;
+    font-weight: 700;
 }
 
 .mejs__qualities-selector,

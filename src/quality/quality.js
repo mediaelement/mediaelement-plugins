@@ -61,6 +61,21 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.cleanquality(player);
 
+		let
+			currentQuality = '',
+			sourceIndex = 0
+		;
+
+		media.addEventListener('error', function(e) {
+			if (e.message === 'No renderer found' &&
+				qualityMap.get(currentQuality).length > sourceIndex + 1 ) {
+				sourceIndex = sourceIndex + 1;
+				const nextSource = qualityMap.get(currentQuality)[sourceIndex].src;
+				media.setSrc(nextSource); // ensure the default sources to set to play
+				media.load();
+			}
+		});
+
 		const
 			qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-quality'),
 			getQualityNameFromValue = (value) => {
@@ -80,6 +95,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		},
 		defaultValue = getQualityNameFromValue(t.options.defaultQuality)
 		;
+		currentQuality = defaultValue;
 
 		// Get initial quality
 
@@ -92,9 +108,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			`</div>`;
 
 		t.addControlElement(player.qualitiesButton, 'qualities');
-
-		media.setSrc(qualityMap.get(defaultValue)[0].src); // ensure the default sources to set to play 
-		media.load();
 
 		qualityMap.forEach(function (value, key) {
 			if (key !== 'map_keys_1') {
@@ -126,15 +139,15 @@ Object.assign(MediaElementPlayer.prototype, {
 		for (let i = 0, total = inEvents.length; i < total; i++) {
 			player.qualitiesButton.addEventListener(inEvents[i], () => {
 				mejs.Utils.removeClass(selector, `${t.options.classPrefix}offscreen`);
-			selector.style.height = `${selector.querySelector('ul').offsetHeight}px`;
-			selector.style.top = `${(-1 * parseFloat(selector.offsetHeight))}px`;
-		});
+				selector.style.height = `${selector.querySelector('ul').offsetHeight}px`;
+				selector.style.top = `${(-1 * parseFloat(selector.offsetHeight))}px`;
+			});
 		}
 
 		for (let i = 0, total = outEvents.length; i < total; i++) {
 			player.qualitiesButton.addEventListener(outEvents[i], () => {
 				mejs.Utils.addClass(selector, `${t.options.classPrefix}offscreen`);
-		});
+			});
 		}
 
 		for (let i = 0, total = radios.length; i < total; i++) {
@@ -145,6 +158,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					self = this,
 					newQuality = self.value
 				;
+				currentQuality = newQuality;
 
 				const selected = player.qualitiesButton.querySelectorAll(`.${t.options.classPrefix}qualities-selected`);
 				for (let i = 0, total = selected.length; i < total; i++) {
@@ -189,8 +203,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		//Allow up/down arrow to change the selected radio without changing the volume.
 		selector.addEventListener('keydown', (e) => {
 			e.stopPropagation();
-	});
-		media.setSrc(qualityMap.get(defaultValue)[0].src);
+		});
 	},
 
 	/**
@@ -215,7 +228,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	addValueToKey(map, key, value) {
 		if (map.has('map_keys_1')) {
-			map.get('map_keys_1').push(key.toLowerCase());
+			map.get('map_keys_1').push(key);
 		} else {
 			map.set('map_keys_1', []);
 		}
@@ -229,7 +242,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 	/**
 	 * Set the source tag for the mejs player
-	 * @param parent the mejs player
+	 * @param media the mejs media
 	 * @param map the map containing the video quality source tags
 	 * @param key the user selected quality
 	 */
@@ -248,7 +261,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 	/**
 	 * Remove all the source tag for the mejs player
-	 * @param player the mejs player
+	 * @param media the mejs media
 	 */
 	cleanMediaSource(media) {
 		for (let i = 0; i < media.children.length; i++) {
@@ -285,10 +298,9 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Returns flag for whether or not a given key exist in a give map
 	 * @param map the map being searched
 	 * @param searchKey the map searching being searched
-	 * @param qualityMapKeys array containing the
 	 * @returns {boolean}
 	 */
 	keyExist(map, searchKey) {
-		return -1 < map.get('map_keys_1').indexOf(searchKey.toLowerCase());
+		return -1 < map.get('map_keys_1').indexOf(searchKey);
 	}
 });
