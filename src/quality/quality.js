@@ -23,6 +23,10 @@ Object.assign(mejs.MepDefaults, {
 	/**
 	 * @type {boolean}
 	 */
+	autoGenerate: false,
+	/**
+	 * @type {boolean}
+	 */
 	autoDash: false,
 	/**
 	 * @type {boolean}
@@ -50,7 +54,12 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		for (let i = 0, total = children.length; i < total; i++) {
 			const mediaNode = children[i];
-			const quality = mediaNode instanceof HTMLElement ? mediaNode.getAttribute('data-quality') : mediaNode['data-quality'];
+			let quality = mediaNode instanceof HTMLElement ? mediaNode.getAttribute('data-quality') : mediaNode['data-quality'];
+
+			if (quality === 'undefined') {
+				quality = 'Auto';
+				t.options.autoGenerate = true;
+			}
 
 			if (t.mediaFiles) {
 				const source = document.createElement('source');
@@ -85,21 +94,21 @@ Object.assign(MediaElementPlayer.prototype, {
 		media.addEventListener('loadedmetadata', function () {
 			if (!!media.hlsPlayer) {
 				const levels = media.hlsPlayer.levels;
-				if (qualityMap.size <= 2 && levels.length > 1) {
+				if (t.options.autoGenerate && levels.length > 1) {
 					levels.forEach(function (level) {
-						var height = level.height;
-                        var quality = t.getQualityFromHeight(height);
+						const height = level.height;
+                        const quality = t.getQualityFromHeight(height);
 						t.addValueToKey(qualityMap, quality, '');
 					});
 					t.options.autoHLS = true;
 					t.generateQualityButton(t, player, media, qualityMap, currentQuality);
 				}
 			} else if (!!media.dashPlayer) {
-				var bitrates = media.dashPlayer.getBitrateInfoListFor("video");
-				if (qualityMap.size <= 2 && bitrates.length > 1) {
+				const bitrates = media.dashPlayer.getBitrateInfoListFor("video");
+				if (t.options.autoGenerate && bitrates.length > 1) {
 					bitrates.forEach(function (level) {
-						var height = level.height;
-						var quality = t.getQualityFromHeight(height);
+						const height = level.height;
+						const quality = t.getQualityFromHeight(height);
 						t.addValueToKey(qualityMap, quality, '');
 					});
 					t.options.autoDash = true;
@@ -346,7 +355,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	switchDashQuality (player, media) {
         const radios = player.qualitiesButton.querySelectorAll('input[type="radio"]');
-        for (var index = 0; index < radios.length; index++) {
+        for (let index = 0; index < radios.length; index++) {
             if (radios[index].checked) {
                 if (index === 0 ) {
                     media.dashPlayer.setAutoSwitchQuality(true);
@@ -365,7 +374,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
     switchHLSQuality (player, media) {
 		const radios = player.qualitiesButton.querySelectorAll('input[type="radio"]');
-        for (var index = 0; index < radios.length; index++) {
+        for (let index = 0; index < radios.length; index++) {
             if (radios[index].checked) {
                 if (index === 0 ) {
                     media.hlsPlayer.currentLevel = -1;
