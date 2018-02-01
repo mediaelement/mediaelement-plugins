@@ -19,7 +19,15 @@ Object.assign(mejs.MepDefaults, {
 	/**
 	 * @type {String}
 	 */
-	qualityText: null
+	qualityText: null,
+	/**
+	 * @type {boolean}
+	 */
+	autoDash: false,
+	/**
+	 * @type {boolean}
+	 */
+	autoHLS: false
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -59,8 +67,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			return;
 		}
 
-		t.cleanquality(player);
-
 		let
 			currentQuality = '',
 			sourceIndex = 0
@@ -76,6 +82,37 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		});
 
+		media.addEventListener('loadedmetadata', function () {
+			if (!!media.hlsPlayer) {
+				const levels = media.hlsPlayer.levels;
+				if (qualityMap.size <= 2 && levels.length > 1) {
+					levels.forEach(function (level) {
+						var height = level.height;
+                        var quality = t.getQualityFromHeight(height);
+						t.addValueToKey(qualityMap, quality, '');
+					});
+					t.options.autoHLS = true;
+					t.generateQualityButton(t, player, media, qualityMap, currentQuality);
+				}
+			} else if (!!media.dashPlayer) {
+				var bitrates = media.dashPlayer.getBitrateInfoListFor("video");
+				if (qualityMap.size <= 2 && bitrates.length > 1) {
+					bitrates.forEach(function (level) {
+						var height = level.height;
+						var quality = t.getQualityFromHeight(height);
+						t.addValueToKey(qualityMap, quality, '');
+					});
+					t.options.autoDash = true;
+					t.generateQualityButton(t, player, media, qualityMap, currentQuality);
+				}
+			}
+		});
+
+		t.generateQualityButton(t, player, media, qualityMap, currentQuality);
+	},
+	generateQualityButton (t, player, media, qualityMap, currentQuality) {
+		t.cleanquality(player);
+
 		const
 			qualityTitle = mejs.Utils.isString(t.options.qualityText) ? t.options.qualityText : mejs.i18n.t('mejs.quality-chooser'),
 			getQualityNameFromValue = (value) => {
@@ -88,6 +125,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						let keyValue = t.getMapIndex(qualityMap, 0);
 						label = keyValue.key;
 					}
+					label = label.charAt(0).toUpperCase() + label.slice(1);
 				} else {
 					label = value;
 				}
@@ -111,6 +149,10 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		qualityMap.forEach(function (value, key) {
 			if (key !== 'map_keys_1') {
+				if (key === 'auto') {
+                    key = key.charAt(0).toUpperCase() + key.slice(1);
+                }
+
 				const
 					src = value[0],
 					quality = key,
@@ -154,42 +196,33 @@ Object.assign(MediaElementPlayer.prototype, {
 			const radio = radios[i];
 			radio.disabled = false;
 			radio.addEventListener('change', function () {
-				const
-					self = this,
-					newQuality = self.value
-				;
-				currentQuality = newQuality;
+				if (t.options.autoDash) {
+					t.updateQualityButton(this, player, currentQuality);
+					t.switchDashQuality(player, media);
+				} else if (t.options.autoHLS) {
+					t.updateQualityButton(this, player, currentQuality);
+					t.switchHLSQuality(player, media);
+				} else {
+					t.updateQualityButton(this, player, currentQuality);
 
-				const selected = player.qualitiesButton.querySelectorAll(`.${t.options.classPrefix}qualities-selected`);
-				for (let i = 0, total = selected.length; i < total; i++) {
-					mejs.Utils.removeClass(selected[i], `${t.options.classPrefix}qualities-selected`);
+					let currentTime = media.currentTime;
+					const paused = media.paused;
+
+					if (!paused) {
+						media.pause();
+					}
+					t.updateVideoSource(media, qualityMap, currentQuality);
+					media.setSrc(qualityMap.get(currentQuality)[0].src);
+					media.load();
+					media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
+					if (!paused) {
+						media.play();
+					}
+					media.addEventListener('canplay', function canPlayAfterSourceSwitchHandler () {
+						media.setCurrentTime(currentTime);
+						media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
+					});
 				}
-
-				self.checked = true;
-				const siblings = mejs.Utils.siblings(self, (el) => mejs.Utils.hasClass(el, `${t.options.classPrefix}qualities-selector-label`));
-				for (let j = 0, total = siblings.length; j < total; j++) {
-					mejs.Utils.addClass(siblings[j], `${t.options.classPrefix}qualities-selected`);
-				}
-
-				let currentTime = media.currentTime;
-
-				const paused = media.paused;
-
-				player.qualitiesButton.querySelector('button').innerHTML = newQuality;
-				if (!paused) {
-					media.pause();
-				}
-				t.updateVideoSource(media, qualityMap, newQuality);
-				media.setSrc(qualityMap.get(newQuality)[0].src);
-				media.load();
-				media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
-				if (!paused) {
-					media.play();
-				}
-				media.addEventListener('canplay', function canPlayAfterSourceSwitchHandler () {
-					media.setCurrentTime(currentTime);
-					media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
-				});
 			});
 		}
 		for (let i = 0, total = labels.length; i < total; i++) {
@@ -304,5 +337,89 @@ Object.assign(MediaElementPlayer.prototype, {
 	 */
 	keyExist (map, searchKey) {
 		return -1 < map.get('map_keys_1').indexOf(searchKey);
-	}
+	},
+
+	/**
+	 * Responsible for switching the video source when quality source was auto created from dash manifest
+	 * @param {MediaElementPlayer} player
+	 * @param {MediaElement} media
+	 */
+	switchDashQuality (player, media) {
+        const radios = player.qualitiesButton.querySelectorAll('input[type="radio"]');
+        for (var index = 0; index < radios.length; index++) {
+            if (radios[index].checked) {
+                if (index === 0 ) {
+                    media.dashPlayer.setAutoSwitchQuality(true);
+                } else {
+                    media.dashPlayer.setAutoSwitchQuality(false);
+                    media.dashPlayer.setQualityFor("video", index - 1);
+                }
+            }
+        }
+    },
+
+	/**
+	 * Responsible for switching the video source when quality source was auto created from hls manifest
+	 * @param {MediaElementPlayer} player
+	 * @param {MediaElement} media
+	 */
+    switchHLSQuality (player, media) {
+		const radios = player.qualitiesButton.querySelectorAll('input[type="radio"]');
+        for (var index = 0; index < radios.length; index++) {
+            if (radios[index].checked) {
+                if (index === 0 ) {
+                    media.hlsPlayer.currentLevel = -1;
+                } else {
+                    media.hlsPlayer.currentLevel = index - 1;
+                }
+            }
+        }
+    },
+
+    /**
+	 * Responsible for switching the video source when quality source was auto created from dash manifest
+	 * @param {Element} self the check quality radio button
+	 * @param {MediaElementPlayer} player
+	 * @param {String} currentQuality the label for the current quality selection
+	 */
+    updateQualityButton (self, player, currentQuality) {
+    	const t = this;
+        const
+            newQuality = self.value
+        ;
+        currentQuality = newQuality;
+
+        const selected = player.qualitiesButton.querySelectorAll(`.${t.options.classPrefix}qualities-selected`);
+        for (let i = 0, total = selected.length; i < total; i++) {
+            mejs.Utils.removeClass(selected[i], `${t.options.classPrefix}qualities-selected`);
+        }
+
+        self.checked = true;
+        const siblings = mejs.Utils.siblings(self, (el) => mejs.Utils.hasClass(el, `${t.options.classPrefix}qualities-selector-label`));
+        for (let j = 0, total = siblings.length; j < total; j++) {
+            mejs.Utils.addClass(siblings[j], `${t.options.classPrefix}qualities-selected`);
+        }
+
+        player.qualitiesButton.querySelector('button').innerHTML = newQuality;
+    },
+
+    /**
+    * Returns the quality represnetaion base on the height of the loaded video
+    * @param {Number} height the pixel height of the video
+    **/
+    getQualityFromHeight (height) {
+    	if (height >= 4320) {
+    		return "8K UHD";
+    	} else if (height >= 2160) {
+    		return "UHD";
+    	} else if (height >= 1440) {
+    		return "QHD";
+    	} else if (height >= 1080) {
+    		return "FHD";
+    	} else if (height >= 720) {
+    		return "HD";
+    	} else {
+    		return "SD";
+    	}
+    }
 });
