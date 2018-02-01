@@ -97,7 +97,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (t.options.autoGenerate && levels.length > 1) {
 					levels.forEach(function (level) {
 						const height = level.height;
-                        const quality = t.getQualityFromHeight(height);
+						const quality = t.getQualityFromHeight(height);
 						t.addValueToKey(qualityMap, quality, '');
 					});
 					t.options.autoHLS = true;
@@ -134,7 +134,6 @@ Object.assign(MediaElementPlayer.prototype, {
 						let keyValue = t.getMapIndex(qualityMap, 0);
 						label = keyValue.key;
 					}
-					label = label.charAt(0).toUpperCase() + label.slice(1);
 				} else {
 					label = value;
 				}
@@ -158,10 +157,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		qualityMap.forEach(function (value, key) {
 			if (key !== 'map_keys_1') {
-				if (key === 'auto') {
-                    key = key.charAt(0).toUpperCase() + key.slice(1);
-                }
-
 				const
 					src = value[0],
 					quality = key,
@@ -354,81 +349,81 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {MediaElement} media
 	 */
 	switchDashQuality (player, media) {
-        const radios = player.qualitiesButton.querySelectorAll('input[type="radio"]');
-        for (let index = 0; index < radios.length; index++) {
-            if (radios[index].checked) {
-                if (index === 0 ) {
-                    media.dashPlayer.setAutoSwitchQuality(true);
-                } else {
-                    media.dashPlayer.setAutoSwitchQuality(false);
-                    media.dashPlayer.setQualityFor("video", index - 1);
-                }
-            }
-        }
-    },
+		const radios = player.qualitiesButton.querySelectorAll('input[type="radio"]');
+		for (let index = 0; index < radios.length; index++) {
+			if (radios[index].checked) {
+				if (index === 0 ) {
+					media.dashPlayer.setAutoSwitchQuality(true);
+				} else {
+					media.dashPlayer.setAutoSwitchQuality(false);
+					media.dashPlayer.setQualityFor("video", index - 1);
+				}
+			}
+		}
+	},
 
 	/**
 	 * Responsible for switching the video source when quality source was auto created from hls manifest
 	 * @param {MediaElementPlayer} player
 	 * @param {MediaElement} media
 	 */
-    switchHLSQuality (player, media) {
+	switchHLSQuality (player, media) {
 		const radios = player.qualitiesButton.querySelectorAll('input[type="radio"]');
-        for (let index = 0; index < radios.length; index++) {
-            if (radios[index].checked) {
-                if (index === 0 ) {
-                    media.hlsPlayer.currentLevel = -1;
-                } else {
-                    media.hlsPlayer.currentLevel = index - 1;
-                }
-            }
-        }
-    },
+		for (let index = 0; index < radios.length; index++) {
+			if (radios[index].checked) {
+				if (index === 0 ) {
+					media.hlsPlayer.currentLevel = -1;
+				} else {
+					media.hlsPlayer.currentLevel = index - 1;
+				}
+			}
+		}
+	},
 
-    /**
+	/**
 	 * Responsible for switching the video source when quality source was auto created from dash manifest
 	 * @param {Element} self the check quality radio button
 	 * @param {MediaElementPlayer} player
 	 * @param {String} currentQuality the label for the current quality selection
 	 */
-    updateQualityButton (self, player, currentQuality) {
-    	const t = this;
-        const
-            newQuality = self.value
-        ;
-        currentQuality = newQuality;
+	updateQualityButton (self, player, currentQuality) {
+		const t = this;
+		const
+			newQuality = self.value
+		;
+		currentQuality = newQuality;
 
-        const selected = player.qualitiesButton.querySelectorAll(`.${t.options.classPrefix}qualities-selected`);
-        for (let i = 0, total = selected.length; i < total; i++) {
-            mejs.Utils.removeClass(selected[i], `${t.options.classPrefix}qualities-selected`);
-        }
+		const selected = player.qualitiesButton.querySelectorAll(`.${t.options.classPrefix}qualities-selected`);
+		for (let i = 0, total = selected.length; i < total; i++) {
+			mejs.Utils.removeClass(selected[i], `${t.options.classPrefix}qualities-selected`);
+		}
 
-        self.checked = true;
-        const siblings = mejs.Utils.siblings(self, (el) => mejs.Utils.hasClass(el, `${t.options.classPrefix}qualities-selector-label`));
-        for (let j = 0, total = siblings.length; j < total; j++) {
-            mejs.Utils.addClass(siblings[j], `${t.options.classPrefix}qualities-selected`);
-        }
+		self.checked = true;
+		const siblings = mejs.Utils.siblings(self, (el) => mejs.Utils.hasClass(el, `${t.options.classPrefix}qualities-selector-label`));
+		for (let j = 0, total = siblings.length; j < total; j++) {
+			mejs.Utils.addClass(siblings[j], `${t.options.classPrefix}qualities-selected`);
+		}
 
-        player.qualitiesButton.querySelector('button').innerHTML = newQuality;
-    },
+		player.qualitiesButton.querySelector('button').innerHTML = newQuality;
+	},
 
-    /**
-    * Returns the quality represnetaion base on the height of the loaded video
-    * @param {Number} height the pixel height of the video
-    **/
-    getQualityFromHeight (height) {
-    	if (height >= 4320) {
-    		return "8K UHD";
-    	} else if (height >= 2160) {
-    		return "UHD";
-    	} else if (height >= 1440) {
-    		return "QHD";
-    	} else if (height >= 1080) {
-    		return "FHD";
-    	} else if (height >= 720) {
-    		return "HD";
-    	} else {
-    		return "SD";
-    	}
-    }
+	/**
+	* Returns the quality represnetaion base on the height of the loaded video
+	* @param {Number} height the pixel height of the video
+	**/
+	getQualityFromHeight (height) {
+		if (height >= 4320) {
+			return "8K UHD";
+		} else if (height >= 2160) {
+			return "UHD";
+		} else if (height >= 1440) {
+			return "QHD";
+		} else if (height >= 1080) {
+			return "FHD";
+		} else if (height >= 720) {
+			return "HD";
+		} else {
+			return "SD";
+		}
+	}
 });
