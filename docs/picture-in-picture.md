@@ -2,7 +2,7 @@
 
 ## Overview
 
-This feature allows you to view a video in **macOS** outside of the viewport. It uses the official picture in picture mode through WebKit JS.
+This feature allows you to view a video in **macOS/IOS** outside of the viewport. It uses the official picture in picture mode through WebKit JS.
 
 ## Note
 
@@ -20,6 +20,6 @@ features: [..., "pictureInPicture"],
 
 Parameter | Type | Default | Description
 ------ | ------ | ------ | ------
-standartScaleEnd | boolean |   true` | video goes back to 'standart scale' at the end of the video
+standartScaleEnd | boolean |   `true` | video goes back to 'standart scale' at the end of the video
 picInPicScaleStart | boolean | `false` | starts picture in picture mode at the beginning of the video
 picInPicTitle | string | `null` | alternative button title
