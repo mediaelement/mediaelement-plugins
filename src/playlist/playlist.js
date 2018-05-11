@@ -101,7 +101,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						currentItem.innerHTML += `<img tabindex="-1" src="${player.playlist[player.currentPlaylistItem]['data-playlist-thumbnail']}">`;
 					}
 
-					currentItem.innerHTML += `<p>${player.options.currentMessage} <span class="${player.options.classPrefix}playlist-current-title">${player.playlist[player.currentPlaylistItem].title}</span>`;
+					currentItem.innerHTML += `<p>${player.options.currentMessage || ''} <span class="${player.options.classPrefix}playlist-current-title">${player.playlist[player.currentPlaylistItem].title}</span>`;
 					if (typeof player.playlist[player.currentPlaylistItem].description !== 'undefined') {
 						currentItem.innerHTML += ` - <span class="${player.options.classPrefix}playlist-current-description">${player.playlist[player.currentPlaylistItem].description}</span>`;
 					}
