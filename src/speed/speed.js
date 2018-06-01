@@ -191,6 +191,39 @@ Object.assign(MediaElementPlayer.prototype, {
 			});
 		}
 
+		t.options.keyActions.push({
+			/*
+			 * Need to listen for both because keyActions dispatches
+			 * based on e.which || e.keyCode instead of e.key, so we
+			 * get the same value for comma as for less than.
+			 */
+			keys: [60, 188], // "<" & ","
+			action: (player, media, key, event) => {
+				if (event.key != '<')
+					return;
+
+				for (let i = 0; i < radios.length - 1; i++) {
+					if (radios[i].checked) {
+						const nextRadio = radios[i+1];
+						nextRadio.dispatchEvent(mejs.Utils.createEvent('click', nextRadio));
+					}
+				}
+			}
+		}, {
+			keys: [62, 190], // ">" & "."
+			action: (player, media, key, event) => {
+				if (event.key != '>')
+					return;
+
+				for (let i = 1; i < radios.length; i++) {
+					if (radios[i].checked) {
+						const prevRadio = radios[i-1];
+						prevRadio.dispatchEvent(mejs.Utils.createEvent('click', prevRadio));
+					}
+				}
+			}
+		});
+
 		//Allow up/down arrow to change the selected radio without changing the volume.
 		player.speedSelector.addEventListener('keydown', (e) => {
 			e.stopPropagation();
