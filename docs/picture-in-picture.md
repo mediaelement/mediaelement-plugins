@@ -2,15 +2,16 @@
 
 ## Overview
 
-This feature allows you to view a video in **macOS/IOS** outside of the viewport. It uses the official picture in picture mode through WebKit JS.
+This feature allows you to view a video outside of the browsers viewport.
+Also know as **Picture-In-Picture** or PiP
 
 ## Note
 
-+ This feature only works with safari 10 or later
-+ to start picture in picture mode at the beginning of the video some of the video content has to be buffered
-   + use preload=`auto` to start buffering at the beginning of the video
++ This feature only works with safari 10 or later, chrome 68 or later
 
-## Keyword to use it
+
+## Keyword
+
 ```javascript
 features: [..., "pictureInPicture"],
 ...
@@ -20,6 +21,5 @@ features: [..., "pictureInPicture"],
 
 Parameter | Type | Default | Description
 ------ | ------ | ------ | ------
-standartScaleEnd | boolean |   `true` | video goes back to 'standart scale' at the end of the video
-picInPicScaleStart | boolean | `false` | starts picture in picture mode at the beginning of the video
+standartScaleEnd | boolean |   `true` | video goes back to 'standart scale' (back to viewport) at the end of the video
 picInPicTitle | string | `null` | alternative button title
