@@ -4,8 +4,7 @@
  * Picture in picture
  *
  *
- * This feature is exposed by Webkit JS and is used in safari 11 to
- * display **video** content outside of the viewport in macOS/IOS
+ * This feature is currently supported by safari 11 and chrome canary (68)
  *
  * Univream - 2018
  */
@@ -19,12 +18,6 @@ Object.assign(mejs.MepDefaults, {
 	  * @type {Bool} standartScaleEnd - Rezooms the video back into the video elment at the End
 	  */
 	  standartScaleEnd: true,
-
-     /**
-	  * @type {Bool} picInPicScaleStart - Makes it possible to start the video in PiP-mode
-	  */
-	  picInPicScaleStart: false,
-
 
     /**
 	  * @type {?String} picInPicTitle - Sets the hovertitle of the PiP button
@@ -52,44 +45,58 @@ Object.assign(MediaElementPlayer.prototype, {
 				video = t.node
       ;
 
+			// define inner button attributes
+			button.setAttribute('type', 'button');
+			button.setAttribute('id', 'picture-in-picture-button');
+			button.setAttribute('title',
+			t.options.picInPicTitle == null ? mejs.i18n.t('mejs.picture-in-pictureText') : t.options.picInPicTitle);
+			buttonWrapper.className = `${t.options.classPrefix}button ${t.options.classPrefix}picture-in-picture-button`;
+
+			buttonWrapper.appendChild(button);
+
       if(video instanceof HTMLVideoElement) {
 
-				// define inner button attributes
-       	button.setAttribute('type', 'button');
-				button.setAttribute('id', 'picture-in-picture-button');
-				button.setAttribute('title',
-				t.options.picInPicTitle == null ? mejs.i18n.t('mejs.picture-in-pictureText') : t.options.picInPicTitle);
-       	buttonWrapper.className = `${t.options.classPrefix}button ${t.options.classPrefix}picture-in-picture-button`;
+				if(document.pictureInPictureEnabled && !video.disablePictureInPicture) {
+					// works currently only in chrome 68 (6/14/2018)
+					button.addEventListener('click', () => {
+						if(!document.pictureInPictureElement) {
+							video.requestPictureInPicture()
+							.catch(error => {
+								alert("An error occured while requesting PiP: " + error);
+							});
+						}
+						else {
+							document.exitPictureInPicture()
+							.catch(error => {
+								alert("An error occured while exiting PiP: " + error);
+							})
+						}
+					});
 
-        buttonWrapper.appendChild(button);
-
-				// for more info https://developer.apple.com/documentation/webkitjs/adding_picture_in_picture_to_your_safari_media_controls?language=javascript
-        if (video.webkitSupportsPresentationMode && typeof video.webkitSetPresentationMode === "function") {
+					if(t.options.standartScaleEnd) {
+						video.addEventListener('ended', function () {
+							document.exitPictureInPicture();
+						});
+	      	}
+				}
+        else if (video.webkitSupportsPresentationMode && typeof video.webkitSetPresentationMode === "function") {
+					// for more info https://developer.apple.com/documentation/webkitjs/adding_picture_in_picture_to_your_safari_media_controls?language=javascript
         	// Toggle PiP when the user clicks the button.
         	button.addEventListener("click", function(event) {
         		video.webkitSetPresentationMode(video.webkitPresentationMode === "picture-in-picture" ? "inline" : "picture-in-picture");
         	});
-        } else {
-        	return;
+
+	      	if(t.options.standartScaleEnd) {
+						video.addEventListener('ended', function () {
+	          	video.webkitSetPresentationMode("inline");
+						});
+	      	}
         }
+				else {
+					return;
+				}
 
-      	if(t.options.picInPicScaleStart) {
-					// makes sure that this is a onetime toggle
-					let changedMode = false;
-        	video.addEventListener('play', function() {
-						if(!changedMode) {
-							video.webkitSetPresentationMode("picture-in-picture");
-							changedMode = true;
-						}
-        	});
-      	}
-
-      	if(t.options.standartScaleEnd) {
-					video.addEventListener('ended', function () {
-          	video.webkitSetPresentationMode("inline");
-					});
-      	}
-      	t.addControlElement(button, 'pictureInPicture');
+				t.addControlElement(buttonWrapper, 'pictureInPicture');
 			}
   	}
 });
