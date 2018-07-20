@@ -19,11 +19,11 @@ module.exports = function (grunt) {
 		watch: {
 			scripts: {
 				files: ['src/**/*.js', 'test/core/*.js'],
-				tasks: ['eslint', 'browserify', 'concat', 'uglify', 'copy:translation']
+				tasks: ['eslint', 'browserify', 'concat', 'uglify', 'copy']
 			},
 			stylesheet: {
 				files: ['src/**/*.css', 'src/css/**/*.png', 'src/css/**/*.svg'],
-				tasks: ['postcss', 'copy:build']
+				tasks: ['postcss', 'copy']
 			}
 		},
 
@@ -40,6 +40,7 @@ module.exports = function (grunt) {
 		browserify: {
 			dist: {
 				files: {
+					'dist/a11y/a11y.js': 'src/a11y/a11y.js',
 					'dist/ads/ads.js': 'src/ads/ads.js',
 					'dist/ads-vast-vpaid/ads-vast-vpaid.js': 'src/ads-vast-vpaid/ads-vast-vpaid.js',
 					'dist/airplay/airplay.js': 'src/airplay/airplay.js',
@@ -110,6 +111,7 @@ module.exports = function (grunt) {
 					]
 				},
 				files: {
+					'dist/a11y/a11y.css': 'src/a11y/a11y.css',
 					'dist/ads/ads.css': 'src/ads/ads.css',
 					'dist/airplay/airplay.css': 'src/airplay/airplay.css',
 					'dist/chromecast/chromecast.css': 'src/chromecast/chromecast.css',
@@ -138,6 +140,7 @@ module.exports = function (grunt) {
 					]
 				},
 				files: {
+					'dist/a11y/a11y.min.css': 'dist/a11y/a11y.css',
 					'dist/ads/ads.min.css': 'dist/ads/ads.css',
 					'dist/airplay/airplay.min.css': 'dist/airplay/airplay.css',
 					'dist/chromecast/chromecast.min.css': 'dist/chromecast/chromecast.css',
@@ -154,7 +157,6 @@ module.exports = function (grunt) {
 					'dist/vrview/vrview.min.css': 'dist/vrview/vrview.css'
 				}
 			},
-
 		},
 		copy: {
 			main: {
