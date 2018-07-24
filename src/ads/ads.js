@@ -280,7 +280,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				t.adsStartPreroll();
 			} else {
 				const event = mejs.Utils.createEvent('mejsprerollfinished', t.container);
-     		t.container.dispatchEvent(event);
+				t.container.dispatchEvent(event);
 				t.adRestoreMainMedia();
 			}
 
