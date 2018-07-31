@@ -38,26 +38,22 @@
             flex: 1;
             color: #000;
         }
-        .columns{
-            display: flex;
-            flex:1;
-        }
         .main{
             flex: 1;
             order: 2;
         }
-        .sidebar-first{
-            width: 33%;
-            order: 1;
-        }
-        .sidebar-second{
-            width: 33%;
-            order: 3;
-        }
         ul {
+            box-sizing: border-box;
+            display: flex;
+            padding: 0 30px;
+            width: 100%;
+            flex-wrap: wrap;
             list-style: none;
         }
         li {
+            box-sizing: border-box;
+            flex: 0 0 auto;
+            width: 33%;
             padding: 5px;
         }
     </style>
@@ -70,31 +66,21 @@
             <p>Following is the list of examples of the available plugins for MediaElement player</p>
         </header>
         <section class="content">
-            <div class="columns">
-                <main class="main">
-                    <ul>
-                        <li><a href="multiple1.html">Context Menu/Loop/Stop</a></li>
-                        <li><a href="playlist.html">Playlist</a></li>
-                        <li><a href="quality.html">Quality</a></li>
-                    </ul>
-                </main>
-                <aside class="sidebar-first">
-                    <ul>
-                        <li><a href="airplay.html">AirPlay</a></li>
-                        <li><a href="multiple2.html">Jump Forward/Skip Backward/Speed</a></li>
-                        <li><a href="postroll.html">Postroll</a></li>
-                    </ul>
-                </aside>
-
-                <aside class="sidebar-second">
-                    <ul>
-                        <li><a href="chromecast.html">Chromecast</a></li>
-                        <li><a href="markers.html">Markers</a></li>
-                        <li><a href="preview.html">Preview</a></li>
-                        <li><a href="vrview.html">VRView</a></li>
-                    </ul>
-                </aside>
-            </div>
+            <main class="main">
+                <ul>
+                    <li><a href="a11y.html">A11y</a></li>
+                    <li><a href="airplay.html">AirPlay</a></li>
+                    <li><a href="chromecast.html">Chromecast</a></li>
+                    <li><a href="markers.html">Markers</a></li>
+                    <li><a href="multiple1.html">Context Menu/Loop/Stop</a></li>
+                    <li><a href="multiple2.html">Jump Forward/Skip Backward/Speed</a></li>
+                    <li><a href="playlist.html">Playlist</a></li>
+                    <li><a href="postroll.html">Postroll</a></li>
+                    <li><a href="preview.html">Preview</a></li>
+                    <li><a href="quality.html">Quality</a></li>
+                    <li><a href="vrview.html">VRView</a></li>
+                </ul>
+            </main>
         </section>
         <footer class="footer"></footer>
     </div>
