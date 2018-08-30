@@ -133,7 +133,9 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		for (let i = 0, total = outEvents.length; i < total; i++) {
 			player.qualitiesButton.addEventListener(outEvents[i], () => {
-				mejs.Utils.addClass(selector, `${t.options.classPrefix}offscreen`);
+				setTimeout(() => {
+					mejs.Utils.addClass(selector, `${t.options.classPrefix}offscreen`);
+				}, 50);
 			});
 		}
 
