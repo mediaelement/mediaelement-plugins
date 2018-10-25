@@ -7,19 +7,19 @@ Also know as **Picture-In-Picture** or PiP
 
 ## Note
 
-+ This feature only works with safari 10 or later, chrome 68 or later
++ This is not a W3C standard though it supported by chrome (70 or later) and Safari (10 or later)
 
 
 ## Keyword
 
 ```javascript
-features: [..., "pictureInPicture"],
-...
+$("video").mediaelementplayer({
+    features: [...,  'pictureInPicture']
+});
 ```
 
 ## API
 
 Parameter | Type | Default | Description
------- | ------ | ------ | ------
-standartScaleEnd | boolean |   `true` | video goes back to 'standart scale' (back to viewport) at the end of the video
-picInPicTitle | string | `null` | alternative button title
+------ | ------ | ------ | ------
+PiPTitle |string |`null` |alternative button title
