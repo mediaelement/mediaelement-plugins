@@ -106,11 +106,11 @@ if (mejs.i18n.ro !== undefined) {
 	mejs.i18n.ca['mejs.playlist-shuffle'] = 'Amesteca';
 }
 if (mejs.i18n.ru !== undefined) {
-	mejs.i18n.ru['mejs.playlist'] = 'плейлист';
-	mejs.i18n.ru['mejs.playlist-prev'] = 'предыдущий';
-	mejs.i18n.ru['mejs.playlist-next'] = 'следующий';
-	mejs.i18n.ru['mejs.playlist-loop'] = 'петля';
-	mejs.i18n.ru['mejs.playlist-shuffle'] = 'шарканье';
+	mejs.i18n.ru['mejs.playlist'] = 'Плейлист';
+	mejs.i18n.ru['mejs.playlist-prev'] = 'Предыдущий';
+	mejs.i18n.ru['mejs.playlist-next'] = 'Пледующий';
+	mejs.i18n.ru['mejs.playlist-loop'] = 'Повторять';
+	mejs.i18n.ru['mejs.playlist-shuffle'] = 'Перемешать';
 }
 if (mejs.i18n.sk !== undefined) {
 	mejs.i18n.sk['mejs.playlist'] = 'Playlist';
