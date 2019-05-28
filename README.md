@@ -44,8 +44,8 @@ For example, if you want to install `Speed` plugin do the following:
 <script src="/path/to/dist/speed/speed-i18n.js"></script>
 <script>
     var player = new MediaElementPlayer('playerId', {
-    	defaultSpeed: 0.75,
-    	// other configuration elements
+        defaultSpeed: 0.75,
+        // other configuration elements
     });
 </script>
 ```
