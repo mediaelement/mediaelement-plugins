@@ -199,6 +199,7 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 * [Stop](docs/stop.md)
 * [VAST/VPAID](docs/ads-vast.md)
 * [VRView](docs/vrview.md)
+* [Snapshot](https://github.com/Codecsocean/mediaelement-snapshot)
 
 # Changelog
 
