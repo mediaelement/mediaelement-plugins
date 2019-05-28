@@ -1,0 +1,9 @@
+.mejs__snapshot-button > button,
+.mejs-snapshot-button > button {
+    background: url('snapshot.png') no-repeat 0 -1px;
+    background-size: contain;
+    color: #fff;
+    font-size: 8px;
+    line-height: normal;
+    position: relative;
+}
