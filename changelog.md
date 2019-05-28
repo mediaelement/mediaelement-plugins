@@ -1,5 +1,9 @@
 ### Version History
 
+*2.5.1 (2019/05/28)*
+
+* Add snapshot plugin
+
 *2.5.0 (2017/11/17)*
 
 * Fixed typo on `Playlist` plugin that caused error on Edge, removed `disabled` attribute on each item and fixed workflow to autoplay next element @rafa8626

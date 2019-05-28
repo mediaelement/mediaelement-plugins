@@ -44,8 +44,8 @@ For example, if you want to install `Speed` plugin do the following:
 <script src="/path/to/dist/speed/speed-i18n.js"></script>
 <script>
     var player = new MediaElementPlayer('playerId', {
-    	defaultSpeed: 0.75,
-    	// other configuration elements
+        defaultSpeed: 0.75,
+        // other configuration elements
     });
 </script>
 ```
@@ -197,6 +197,7 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 * [Source Chooser](docs/source-chooser.md)
 * [Speed](docs/speed.md)
 * [Stop](docs/stop.md)
+* [Snapshot](docs/snapshot.md)
 * [VAST/VPAID](docs/ads-vast.md)
 * [VRView](docs/vrview.md)
 
