@@ -133,6 +133,13 @@ if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.playlist-loop'] = 'Slinga';
 	mejs.i18n.sv['mejs.playlist-shuffle'] = 'Blanda';
 }
+if (mejs.i18n.tr !== undefined) {
+    mejs.i18n.tr['mejs.playlist'] = 'Oynatma Listesi';
+    mejs.i18n.tr['mejs.playlist-prev'] = 'Önceki';
+    mejs.i18n.tr['mejs.playlist-next'] = 'Sonraki';
+    mejs.i18n.tr['mejs.playlist-loop'] = 'Döngü';
+    mejs.i18n.tr['mejs.playlist-shuffle'] = 'Karıştır';
+}
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.playlist'] = 'Плейлист';
 	mejs.i18n.uk['mejs.playlist-prev'] = 'Попередній';

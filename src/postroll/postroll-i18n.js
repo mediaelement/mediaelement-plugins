@@ -57,6 +57,9 @@ if (mejs.i18n.sk !== undefined) {
 if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.close'] = 'Stäng';
 }
+if (mejs.i18n.tr !== undefined) {
+    mejs.i18n.tr['mejs.close'] = 'Kapat';
+}
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.close'] = 'Закрити';
 }

@@ -54,6 +54,9 @@ if (mejs.i18n.sk !== undefined) {
 if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.snapshot'] = ['Hoppa tillbaka 1 sekund', 'Hoppa tillbaka %1 sekunder'];
 }
+if (mejs.i18n.tr !== undefined) {
+    mejs.i18n.tr['mejs.snapshot'] = ['1 saniye geri atla', '%1 saniye geri atla'];
+}
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.snapshot'] = ['Перейти назад на %1 секунду', 'Перейти назад на %1 секунди', 'Перейти назад на %1 секунд'];
 }
