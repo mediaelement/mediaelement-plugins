@@ -76,9 +76,9 @@ if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.ad-skip'] = 'Hoppa över reklam';
 	mejs.i18n.sv['mejs.ad-skip-info'] = ['Hoppa in 1 second', 'Hoppa in %1 sekunder'];
 }
-if (mejs.i18n.de !== undefined) {
-    mejs.i18n.de['mejs.ad-skip'] = 'Werbung überspringen';
-    mejs.i18n.de['mejs.ad-skip-info'] = ['Überspringen in 1 Sekunde', 'Überspringen in %1 Sekunden'];
+if (mejs.i18n.tr !== undefined) {
+    mejs.i18n.tr['mejs.ad-skip'] = 'Werbung überspringen';
+    mejs.i18n.tr['mejs.ad-skip-info'] = ['Überspringen in 1 Sekunde', 'Überspringen in %1 Sekunden'];
 }
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.ad-skip'] = 'Пропустити рекламу';
