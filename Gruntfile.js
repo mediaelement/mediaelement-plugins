@@ -59,6 +59,7 @@ module.exports = function (grunt) {
 					'dist/speed/speed.js': 'src/speed/speed.js',
 					'dist/stop/stop.js': 'src/stop/stop.js',
 					'dist/vrview/vrview.js': 'src/vrview/vrview.js',
+					'dist/markersrolls/markersrolls.js': 'src/markersrolls/markersrolls.js',
 				},
 				options: {
 					plugin: [

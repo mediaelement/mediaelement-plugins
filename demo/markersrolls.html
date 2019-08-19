@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MediaElement.js 3.0 - Markers Plugin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelementplayer.css">
+    <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div id="container">
+
+    <h1>Markers Rolls Plugin</h1>
+    <p><a href="index.html">Back to Main</a></p>
+
+    <p>Based in Markers and Postroll plugins.</p>
+
+    <p>
+        This plugin allows you to create Visual Cues in the progress time rail and inject HTML content in these markers.
+        The HTML content will be displayed every time the media reaches a marker.
+    </p>
+
+    <p>Every marker answer to a URL to inject the content in the video player when the marker position is reached.</p>
+
+    <p>Color for markers are configurable.</p>
+
+    <h2>Video Player</h2>
+
+    <div class="media-wrapper">
+        <video id="player1" width="750" height="421" controls preload="none">
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/BigBuckBunny.mp4"
+                    type="video/mp4">
+        </video>
+    </div>
+
+    <h2>API</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Default</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>markersRollsColor</td>
+                <td>string</td>
+                <td>#E9BC3D</td>
+                <td> Specify the color of marker in hexadecimal code</td>
+            </tr>
+            <tr>
+                <td>markersRollsWidth</td>
+                <td>number</td>
+                <td>1</td>
+                <td>Specify the width of marker in pixels</td>
+            </tr>
+            <tr>
+                <td>markersRolls</td>
+                <td>object</td>
+                <td>{}</td>
+                <td>List of markers. Specifying the time in seconds and an URL to show.</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelement-and-player.min.js"></script>
+<script src="../dist/markersrolls/markersrolls.js"></script>
+<script>
+	var mediaElements = document.querySelectorAll('video, audio');
+
+	for (var i = 0, total = mediaElements.length; i < total; i++) {
+		new MediaElementPlayer(mediaElements[i], {
+            markersRolls: {
+			    3: 'http://localhost/mediaelement-plugins/demo/end.html',
+                10: 'http://localhost/mediaelement-plugins/demo/index.html',
+                45: 'http://localhost/mediaelement-plugins/demo/end.html',
+                360: 'http://localhost/mediaelement-plugins/demo/index.html'
+            },
+			features: ['playpause', 'current', 'progress', 'duration', 'volume', 'fullscreen', 'markersrolls'],
+		});
+	}
+</script>
+</body>
+</html>
