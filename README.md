@@ -189,6 +189,7 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 * [Jump Forward](docs/jump-forward.md)
 * [Loop](docs/loop.md)
 * [Markers](docs/markers.md)
+* [Markers Rolls](docs/markersrolls.md)
 * [Playlist](docs/playlist.md)
 * [Postroll](docs/postroll.md)
 * [Preview](docs/preview.md)
