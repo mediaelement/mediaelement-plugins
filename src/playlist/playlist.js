@@ -16,7 +16,7 @@ mejs.i18n.en['mejs.playlist-shuffle'] = 'Shuffle';
 // Feature configuration
 Object.assign(mejs.MepDefaults, {
 	/**
-	 * List to be played; each object MUST have `src` and `title`; other items: `data-thumbnail`, `type`, `description`
+	 * List to be played; each object MUST have `src` and `title`; other items: `data-playlist-thumbnail`, `type`, `description`
 	 * @type {Object[]}
 	 */
 	playlist: [],
