@@ -116,8 +116,8 @@ if (mejs.i18n.ru !== undefined) {
 	mejs.i18n.ru['mejs.playlist'] = 'плейлист';
 	mejs.i18n.ru['mejs.playlist-prev'] = 'предыдущий';
 	mejs.i18n.ru['mejs.playlist-next'] = 'следующий';
-	mejs.i18n.ru['mejs.playlist-loop'] = 'петля';
-	mejs.i18n.ru['mejs.playlist-shuffle'] = 'шарканье';
+	mejs.i18n.ru['mejs.playlist-loop'] = 'зациклить';
+	mejs.i18n.ru['mejs.playlist-shuffle'] = 'перемешать';
 }
 if (mejs.i18n.sk !== undefined) {
 	mejs.i18n.sk['mejs.playlist'] = 'Playlist';
