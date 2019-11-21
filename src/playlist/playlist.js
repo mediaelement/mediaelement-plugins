@@ -348,12 +348,13 @@ Object.assign(MediaElementPlayer.prototype, {
 	},
 
 	createPlayList_ () {
-		const t = this;
+    		const t = this;
 
-		t.playlist = t.options.playlist.length ? t.options.playlist : [];
+		t.playlist = t.options.playlist.length ? t.options.playlist : 
+			t.mediaFiles && t.mediaFiles.length ? t.mediaFiles : [];
 
 		if (!t.playlist.length) {
-			const children = t.mediaFiles || t.media.originalNode.children;
+			const children = t.media.originalNode.children;
 
 			for (let i = 0, total = children.length; i < total; i++) {
 				const childNode = children[i];
