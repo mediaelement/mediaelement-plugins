@@ -57,6 +57,14 @@ Object.assign(MediaElementPlayer.prototype, {
 				});
 				player.postroll.style.display = 'block';
 			}, false);
+
+			t.media.addEventListener('seeked', () => {
+				player.postroll.style.display = 'none';
+			}, false);
+
+			t.media.addEventListener('playing', () => {
+				player.postroll.style.display = 'none';
+			}, false);
 		}
 	}
 });
