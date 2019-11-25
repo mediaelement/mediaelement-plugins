@@ -31,7 +31,11 @@ Object.assign(mejs.MepDefaults, {
 	/**
 	 * @type {boolean}
 	 */
-	autoHLS: false
+	autoHLS: false,
+	/**
+	 * @type Function
+     */
+    qualityChangeCallback: null
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -228,6 +232,9 @@ Object.assign(MediaElementPlayer.prototype, {
 						media.setCurrentTime(currentTime);
 						media.removeEventListener('canplay', canPlayAfterSourceSwitchHandler);
 					});
+				}
+				if (t.options.qualityChangeCallback) {
+					t.options.qualityChangeCallback(media, media.originalNode, newQuality)
 				}
 			});
 		}
