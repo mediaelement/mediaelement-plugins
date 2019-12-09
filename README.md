@@ -6,9 +6,9 @@
 
 This repository contains plugins built for MediaElementJS.
 
-* Author(s): John Dyer [http://j.hn/](http://j.hn/) and Rafael Miranda [https://github.com/ron666](https://github.com/ron666)
-* Website: [http://mediaelementjs.com/](http://mediaelementjs.com/)
-* License: [MIT](http://johndyer.mit-license.org/)
+* Author(s): John Dyer [https://j.hn/](https://j.hn/) and Rafael Miranda [https://github.com/ron666](https://github.com/ron666)
+* Website: [https://www.mediaelementjs.com](https://www.mediaelementjs.com)
+* License: [MIT](https://johndyer.mit-license.org/)
 * Contributors: [all contributors](https://github.com/johndyer/mediaelement-plugins/graphs/contributors)
 
 # Table of Contents
@@ -24,7 +24,7 @@ This repository contains plugins built for MediaElementJS.
 
 ## * IMPORTANT CHANGES on `2.3.0` version
 
-As part of the continuous improvements the player, we have decided to drop completely support for IE9 and IE10, since market share of those browsers together is 0.4%, according to http://caniuse.com/usage-table.
+As part of the continuous improvements the player, we have decided to drop completely support for IE9 and IE10, since market share of those browsers together is 0.4%, according to https://caniuse.com/usage-table.
  
 This change is for `MediaElement` and `MediaElement Plugins` repositories. 
 
@@ -71,7 +71,7 @@ Once installed, at the command prompt, type `npm install`, which will download a
 
 * Tab size is **8** for indentation.
 * **ALWAYS** make changes to the files in the `/src/` directory, and **NEVER** in `/dist/` directory. This is with the sole purpose of facilitating the merging (and further, the compiling) operation, and help people to see changes more easily.
-* Use [JSDoc](http://usejsdoc.org/) conventions to document code. This facilitates the contributions of other developers and ensures more quality in the product.
+* Use [JSDoc](https://jsdoc.app/) conventions to document code. This facilitates the contributions of other developers and ensures more quality in the product.
 * **BEFORE PUSHING** any changes, run `npm run eslint` to ensure code quality.
 * The file for the feature must be placed inside a folder matching its name, as well as any SVG/CSS elements needed (i.e, `loop/loop.js`).
 * Update `package.json` with a command under the `script` configuration to make sure it will be bundled and compiled properly. For more reference, [review the file](package.json).
