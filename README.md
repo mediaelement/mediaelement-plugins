@@ -6,7 +6,7 @@
 
 This repository contains plugins built for MediaElementJS.
 
-* Author(s): John Dyer [https://j.hn/](https://j.hn/) and Rafael Miranda [https://github.com/ron666](https://github.com/ron666)
+* Author(s): John Dyer [https://j.hn/](https://j.hn/) and Rafael Miranda [https://github.com/rafa8626](https://github.com/rafa8626)
 * Website: [https://www.mediaelementjs.com](https://www.mediaelementjs.com)
 * License: [MIT](https://johndyer.mit-license.org/)
 * Contributors: [all contributors](https://github.com/johndyer/mediaelement-plugins/graphs/contributors)
