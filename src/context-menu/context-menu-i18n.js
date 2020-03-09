@@ -96,9 +96,9 @@ if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.download-video'] = 'Ladda ner Video';
 }
 if (mejs.i18n.tr !== undefined) {
-    mejs.i18n.tr['mejs.fullscreen-off'] = 'Tam ekran modundan çık';
-    mejs.i18n.tr['mejs.fullscreen-on'] = 'Tam ekran moduna geç';
-    mejs.i18n.tr['mejs.download-video'] = 'Videoyu indir';
+	mejs.i18n.tr['mejs.fullscreen-off'] = 'Tam ekran modundan çık';
+	mejs.i18n.tr['mejs.fullscreen-on'] = 'Tam ekran moduna geç';
+	mejs.i18n.tr['mejs.download-video'] = 'Videoyu indir';
 }
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.fullscreen-off'] = 'Вимкнути повноекранний режим';
