@@ -58,7 +58,7 @@ if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.speed-rate'] = 'Hastighet';
 }
 if (mejs.i18n.tr !== undefined) {
-    mejs.i18n.tr['mejs.speed-rate'] = 'Hız oranı';
+	mejs.i18n.tr['mejs.speed-rate'] = 'Hız oranı';
 }
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.speed-rate'] = 'Швидкість відтворення';
