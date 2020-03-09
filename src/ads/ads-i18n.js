@@ -76,6 +76,10 @@ if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.ad-skip'] = 'Hoppa över reklam';
 	mejs.i18n.sv['mejs.ad-skip-info'] = ['Hoppa in 1 second', 'Hoppa in %1 sekunder'];
 }
+if (mejs.i18n.tr !== undefined) {
+	mejs.i18n.tr['mejs.ad-skip'] = 'Reklamı atla';
+	mejs.i18n.tr['mejs.ad-skip-info'] = ['1 saniye sonra atla', '%1 saniye sonra atla'];
+}
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.ad-skip'] = 'Пропустити рекламу';
 	mejs.i18n.uk['mejs.ad-skip-info'] = ['Пропустити через %1 секунду', 'Пропустити через %1 секунди', 'Пропустити через %1 секунд'];

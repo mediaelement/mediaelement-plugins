@@ -57,6 +57,9 @@ if (mejs.i18n.sk !== undefined) {
 if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.quality-chooser']= 'Kvalitetsvalare';
 }
+if (mejs.i18n.tr !== undefined) {
+	mejs.i18n.tr['mejs.quality-chooser']= 'Kalite';
+}
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.quality-chooser']= 'Вибір якості';
 }

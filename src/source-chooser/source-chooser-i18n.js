@@ -57,6 +57,9 @@ if (mejs.i18n.sk !== undefined) {
 if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.source-chooser']= 'Välj källa';
 }
+if (mejs.i18n.tr !== undefined) {
+	mejs.i18n.tr['mejs.source-chooser']= 'Kaynak Seçici';
+}
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.source-chooser']= 'Вибір джерела';
 }
