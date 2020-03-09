@@ -58,7 +58,7 @@ if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.loop'] = 'Repetera';
 }
 if (mejs.i18n.tr !== undefined) {
-    mejs.i18n.tr['mejs.loop'] = 'Döngü';
+	mejs.i18n.tr['mejs.loop'] = 'Döngü';
 }
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.loop'] = 'Повторювати';
