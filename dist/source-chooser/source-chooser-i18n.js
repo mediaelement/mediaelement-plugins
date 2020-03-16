@@ -33,6 +33,9 @@ if (mejs.i18n.ja !== undefined) {
 if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.source-chooser']= '소스 선택기';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.source-chooser']= 'Pilih sumber';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.source-chooser']= 'Bronkeuze';
 }
@@ -53,6 +56,9 @@ if (mejs.i18n.sk !== undefined) {
 }
 if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.source-chooser']= 'Välj källa';
+}
+if (mejs.i18n.tr !== undefined) {
+	mejs.i18n.tr['mejs.source-chooser']= 'Kaynak Seçici';
 }
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.source-chooser']= 'Вибір джерела';

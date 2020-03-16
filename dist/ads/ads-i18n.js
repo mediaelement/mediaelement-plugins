@@ -44,6 +44,10 @@ if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.ad-skip'] = '광고를 건너 뛸 수';
 	mejs.i18n.ko['mejs.ad-skip-info'] = '%1 초 후 건너 뛰기';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.ad-skip'] = 'Langkau Iklan';
+	mejs.i18n.ms['mejs.ad-skip-info'] = 'Langkau iklan dalam %1 saat';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.ad-skip'] = 'Ad overslaan';
 	mejs.i18n.nl['mejs.ad-skip-info'] = 'Overslaan in %1 seconden';
@@ -71,6 +75,10 @@ if (mejs.i18n.sk !== undefined) {
 if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.ad-skip'] = 'Hoppa över reklam';
 	mejs.i18n.sv['mejs.ad-skip-info'] = ['Hoppa in 1 second', 'Hoppa in %1 sekunder'];
+}
+if (mejs.i18n.tr !== undefined) {
+	mejs.i18n.tr['mejs.ad-skip'] = 'Reklamı atla';
+	mejs.i18n.tr['mejs.ad-skip-info'] = ['1 saniye sonra atla', '%1 saniye sonra atla'];
 }
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.ad-skip'] = 'Пропустити рекламу';

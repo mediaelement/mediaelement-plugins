@@ -33,6 +33,9 @@ if (mejs.i18n.ja !== undefined) {
 if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.time-skip-back'] = '%1초 를 뒤로 건너뛰세요';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.time-skip-back'] = 'Undur masa %1 saat';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.time-skip-back'] = ['Sla 1 seconde terug', 'Sla %1 seconden terug'];
 }
@@ -53,6 +56,9 @@ if (mejs.i18n.sk !== undefined) {
 }
 if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.time-skip-back'] = ['Hoppa tillbaka 1 sekund', 'Hoppa tillbaka %1 sekunder'];
+}
+if (mejs.i18n.tr !== undefined) {
+	mejs.i18n.tr['mejs.time-skip-back'] = ['1 saniye geri sar', '%1 saniye geri sar'];
 }
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.time-skip-back'] = ['Перейти назад на %1 секунду', 'Перейти назад на %1 секунди', 'Перейти назад на %1 секунд'];
