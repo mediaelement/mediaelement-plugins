@@ -1,8 +1,79 @@
-### Version History
+## Version History
 
-*2.5.1 (2019/05/28)*
+2.5.1 (2020/03/16)*
 
-* Add snapshot plugin
+NEW PLUGINS
+
+* Added snapshot plugin
+* Added Markers Rolls plugin (#155)
+* Added frame by frame navigation plugin (#130)
+  This plugin allows for forward and backward navigation in videos that support it in 30fps and 60fps
+
+TRANSLATIONS
+
+* Added Turkish translations (#154)
+* Added Malay translation (#113)
+* Added German translation to a11y/README.md
+* Fix ru and uk translations (#162)
+* Fix translations for Playlist
+* Accessibility plugin translations
+
+DOCUMENTATION
+
+* README.md: Fix link to the real Rafael Miranda :)
+* README.md: Fix outgoing links to use HTTPS, and fixed broken redirects (#165)
+* README.md: Added link to a11y plugin
+
+PIP PLUGIN
+
+* Added support for WICG PiP mode
+* Added picture-in-picture indenting / docs fix
+* Added full support for PiP in chrome 70
+* Added PiP plugin description
+* Added setting properties PiP plugin
+* Added basic picture-in-picture plugin
+* Pathfix in picture-in-picture.css
+* Improve picture-in-picture.md overview
+
+POSTROLL PLUGIN
+
+* Close postroll, when replaing video (#158)
+
+ADS PLUGIN
+
+* Added 'mejsprerollfinished' Event to detect end of last Ad-Preroll, Ads.js (#136)
+
+ACCESSIBILITY PLUGIN (#142)
+
+* Added support for sign language and audio description and stylings 
+ (tested on multiple devices e.g. IE11, Edge, Chrome, Firefox, Safari + iOS 10, iOS 11 + Android Chrome)
+* Added to plugin overview page
+* Ajust Gruntfile.js + task fixes
+
+QUALITY PLUGIN
+
+* Added callback on change quality (#140)
+* Fix focusout event triggered earlier than click and there is no visible clickable element
+* Implement automatic source creation from .m3u8 & .mpd playback (#114)
+* Select Quality From Single .mpd (Feature request #92)
+* Update to make auto generate quality source optional
+* Removed obsolete code.
+* Fix tabs and spaces
+* Fix css issue from grunt build
+* Fixed issue with the quality chooser being mis-aligned (css)
+* Fixed bug where if the first quality in the quality group is unsupported by the browser the video errors out...
+  (will now cycle through the quality source until a playable source is found)
+
+PLAYLIST PLUGIN
+
+* Fix playlist error in Safari (#129, #164)
+* Fix currentMessage null issue (#132)
+* Change incorrect comment of 'data-thumbnail' to 'data-playlist-thumbnail'
+
+SPEED KEYS PLUGIN 
+
+* Implement keyboard controls for changing playback speed using < and > keys like on YouTube.
+* Remove minified files from source
 
 *2.5.0 (2017/11/17)*
 
