@@ -48,6 +48,7 @@ module.exports = function (grunt) {
 					'dist/context-menu/context-menu.js': 'src/context-menu/context-menu.js',
 					'dist/facebook-pixel/facebook-pixel.js': 'src/facebook-pixel/facebook-pixel.js',
 					'dist/google-analytics/google-analytics.js': 'src/google-analytics/google-analytics.js',
+					'dist/google-tag-manager/google-tag-manager.js': 'src/google-tag-manager/google-tag-manager.js',
 					'dist/jump-forward/jump-forward.js': 'src/jump-forward/jump-forward.js',
 					'dist/loop/loop.js': 'src/loop/loop.js',
 					'dist/markers/markers.js': 'src/markers/markers.js',
