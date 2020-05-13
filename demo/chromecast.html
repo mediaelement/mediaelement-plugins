@@ -114,6 +114,7 @@ poster="/path/to/poster.jpg"&gt;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelement-and-player.min.js"></script>
     <script src="../dist/chromecast/chromecast.js"></script>
     <script>
+	window.onload = function() {
 	    var mediaElements = document.querySelectorAll('video, audio');
 
 	    for (var i = 0, total = mediaElements.length; i < total; i++) {
@@ -128,6 +129,7 @@ poster="/path/to/poster.jpg"&gt;
 			    features: features,
 		    });
 	    }
+	}
     </script>
 </body>
 </html>
