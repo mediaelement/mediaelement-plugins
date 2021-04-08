@@ -43,14 +43,14 @@ Object.assign(MediaElementPlayer.prototype, {
         return;
       }
 
-      this.initButton(media.hlsPlayer);
+      this.initButton(player.media.hlsPlayer);
+
+      player.media.hlsPlayer.audioTrack = 3;
       this.initiated = true;
     });
   },
 
   initButton(hlsPlayer) {
-    console.table(hlsPlayer.audioTrackController.tracks);
-    window.hlsPlayer = hlsPlayer;
     const defaultValue = 0;
     const classPrefix = this.options.classPrefix;
     const inputClass = `${classPrefix}audio-tracks-selector-input`;
@@ -65,8 +65,9 @@ Object.assign(MediaElementPlayer.prototype, {
     popover.appendChild(ul);
     popover.className = `${classPrefix}popover ${classPrefix}hls-audio-switcher-popover`;
 
+    // FIXME: only iterate relevant group.
     tracks.forEach((audioTrack, index) => {
-      const track = audioTrack.groupId + audioTrack.id;
+      const track = `${audioTrack.groupId}_${audioTrack.id}_${index}`;
       const isCurrentTrack = index === defaultValue;
       const inputName = `${this.id}_audio-tracks`;
       const selectedClass = isCurrentTrack
@@ -84,6 +85,14 @@ Object.assign(MediaElementPlayer.prototype, {
           ${audioTrack.name}
           </label>`;
       ul.appendChild(li);
+
+      const radio = li.querySelector("input[type=radio]");
+      radio.addEventListener('change', (event) => {
+        event.stopPropagation();
+        event.preventDefault();
+        hlsPlayer.audioTrack = parseInt(event.target.value, 10);
+        console.log("switched audio track", hlsPlayer.audioTrack);
+      });
     });
 
     button.append(popover);
@@ -91,21 +100,7 @@ Object.assign(MediaElementPlayer.prototype, {
     this.addControlElement(button, "hlsaudioswitcher");
 
     button.addEventListener("click", () => {
-      // console.log("switch audio");
       button.classList.toggle("js-active");
-    });
-
-    console.log(`ALL INPUTS with selector .${inputClass}`, document.querySelectorAll(`.${inputClass}`));
-
-    document.querySelectorAll(`.${inputClass}`).forEach((radio) => {
-      console.log("addeventlistener");
-      radio.addEventListener('change', (event) => {
-        console.log("change", "new André", event.target.value);
-        event.stopPropagation();
-        event.preventDefault();
-        hlsPlayer.audioTrack = parseInt(event.target.value, 10);
-        console.log("changed audio track", hlsPlayer.audioTrack);
-      });
     });
   },
 
