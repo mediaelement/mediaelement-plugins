@@ -52,7 +52,6 @@ Object.assign(MediaElementPlayer.prototype, {
   },
 
   initButton(hlsPlayer) {
-    const defaultValue = 0;
     const classPrefix = this.options.classPrefix;
     const inputClass = `${classPrefix}audio-tracks-selector-input`;
     const tracks = hlsPlayer.audioTrackController.tracks;
@@ -71,9 +70,8 @@ Object.assign(MediaElementPlayer.prototype, {
     // FIXME: only iterate relevant group.
     tracks.forEach((audioTrack, index) => {
       const track = `${audioTrack.groupId}_${audioTrack.id}_${index}`;
-      const isCurrentTrack = index === defaultValue;
       const inputName = `${this.id}_audio-tracks`;
-      const selectedClass = isCurrentTrack
+      const selectedClass = audioTrack.default
         ? ` ${classPrefix}audio-tracks-selected`
         : "";
       const labelClass = `${classPrefix}audio-tracks-selector-label
@@ -82,8 +80,8 @@ Object.assign(MediaElementPlayer.prototype, {
       const li = document.createElement("li");
       li.classList.add(`${classPrefix}audio-tracks-selector-list-item`);
       li.innerHTML = `<input class="${inputClass}" type="radio" name="${inputName}"
-          value="${index}" id="${track}"
-          ${isCurrentTrack ? ' checked="checked"' : ""}/>
+          value="${audioTrack.id}" id="${track}"
+          ${audioTrack.default ? ' checked="checked"' : ""}/>
           <label for="${track}" class="${labelClass}">
           ${audioTrack.name}
           </label>`;
