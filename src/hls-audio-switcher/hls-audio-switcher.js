@@ -66,6 +66,8 @@ Object.assign(MediaElementPlayer.prototype, {
     popover.appendChild(ul);
     popover.className = `${classPrefix}popover ${classPrefix}hls-audio-switcher-popover`;
 
+    console.table(tracks);
+
     // FIXME: only iterate relevant group.
     tracks.forEach((audioTrack, index) => {
       const track = `${audioTrack.groupId}_${audioTrack.id}_${index}`;
