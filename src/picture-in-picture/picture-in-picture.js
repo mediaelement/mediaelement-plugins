@@ -25,13 +25,8 @@ Object.assign(MediaElementPlayer.prototype, {
 
     /**
      * Feature constructor.
-     *
-     * @param {MediaElementPlayer} player
-     * @param {HTMLElement} controls
-     * @param {HTMLElement} layers
-     * @param {HTMLElement} media
      */
-    buildpictureInPicture (player, controls, layers, media) {
+    buildpictureInPicture () {
 
       const
         t = this,
@@ -52,13 +47,13 @@ Object.assign(MediaElementPlayer.prototype, {
 				button.addEventListener('click', () => {
 					if(!document.pictureInPictureElement) {
 						video.requestPictureInPicture()
-						.catch(error => {
+						.catch(() => {
 							// Handle error
 						});
 					}
 					else {
 						document.exitPictureInPicture()
-						.catch(error => {
+						.catch(() => {
 							// Handle error
 						});
 					}
@@ -68,7 +63,7 @@ Object.assign(MediaElementPlayer.prototype, {
             else if (video.webkitSupportsPresentationMode && typeof video.webkitSetPresentationMode === "function") {
 				// For more info https://developer.apple.com/documentation/webkitjs/adding_picture_in_picture_to_your_safari_media_controls?language=javascript
 				// Toggle PiP when the user clicks the button.
-				button.addEventListener("click", function(event) {
+				button.addEventListener("click", function() {
 					video.webkitSetPresentationMode(video.webkitPresentationMode === "picture-in-picture" ? "inline" : "picture-in-picture");
 				});
 			}

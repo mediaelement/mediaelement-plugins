@@ -207,13 +207,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			radio.disabled = false;
 			radio.addEventListener('change', function () {
 				if (t.options.autoDash) {
-					t.updateQualityButton(this, player, currentQuality);
+					t.updateQualityButton(this, player);
 					t.switchDashQuality(player, media);
 				} else if (t.options.autoHLS) {
-					t.updateQualityButton(this, player, currentQuality);
+					t.updateQualityButton(this, player);
 					t.switchHLSQuality(player, media);
 				} else {
-					t.updateQualityButton(this, player, currentQuality);
+					t.updateQualityButton(this, player);
 
 					let currentTime = media.currentTime;
 					const paused = media.paused;
@@ -393,14 +393,10 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Responsible for switching the video source when quality source was auto created from dash manifest
 	 * @param {Element} self the check quality radio button
 	 * @param {MediaElementPlayer} player
-	 * @param {String} currentQuality the label for the current quality selection
 	 */
-	updateQualityButton (self, player, currentQuality) {
+	updateQualityButton (self, player) {
 		const t = this;
-		const
-			newQuality = self.value
-		;
-		currentQuality = newQuality;
+		const newQuality = self.value;
 
 		const selected = player.qualitiesButton.querySelectorAll(`.${t.options.classPrefix}qualities-selected`);
 		for (let i = 0, total = selected.length; i < total; i++) {
