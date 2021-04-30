@@ -96,7 +96,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 
 		media.addEventListener('loadedmetadata', function () {
-			if (!!media.hlsPlayer) {
+			if (media.hlsPlayer) {
 				const levels = media.hlsPlayer.levels;
 				if (t.options.autoGenerate && levels.length > 1) {
 					levels.forEach(function (level) {
@@ -107,7 +107,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					t.options.autoHLS = true;
 					t.generateQualityButton(t, player, media, qualityMap, currentQuality);
 				}
-			} else if (!!media.dashPlayer) {
+			} else if (media.dashPlayer) {
 				const bitrates = media.dashPlayer.getBitrateInfoListFor("video");
 				if (t.options.autoGenerate && bitrates.length > 1) {
 					bitrates.forEach(function (level) {
