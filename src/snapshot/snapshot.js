@@ -51,14 +51,14 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		defaultTitle = mejs.i18n.t('mejs.snapshot'),
 
-		    // skipTitle = mejs.Utils.isString(t.options.skipBackText) ? t.options.skipBackText.replace('%1', t.options.skipBackInterval) : defaultTitle,
+        // skipTitle = mejs.Utils.isString(t.options.skipBackText) ? t.options.skipBackText.replace('%1', t.options.skipBackInterval) : defaultTitle,
 		// Get a handle on the 2d context of the canvas element
 		video = media.firstChild,
 		
 		canvas = document.querySelector('canvas'),
 		context = canvas.getContext('2d'),
 
-			// Define some vars required later
+        // Define some vars required later
 		w, h, ratio, button = document.createElement('div');
 
 		//var isSave = snapShot ? '<a href="#" id="save-snapshot"></a>': null;
@@ -69,7 +69,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		t.addControlElement(button, 'snapshot');
 
 		media.addEventListener('loadedmetadata', () => {
-				// Calculate the ratio of the video's width to height
+            // Calculate the ratio of the video's width to height
 			ratio = video.videoWidth / video.videoHeight;
 			// Define the required width as 100 pixels smaller than the actual video's width
 			w = t.options.snapWidth != null ? parseInt(t.options.snapWidth) : video.videoWidth - 100;
@@ -105,11 +105,11 @@ Object.assign(MediaElementPlayer.prototype, {
 				
 				if ( isFunction(snapSuccess) )
 
-				 	snapSuccess.call(this, snap(snapType, snapQuality) );
+                    snapSuccess.call(this, snap(snapType, snapQuality) );
 
 				if ( true === snapShot ) {
 
-					return saveSnap(snapType, snapQuality);
+                    return saveSnap(snapType, snapQuality);
 
 				}
 
@@ -132,28 +132,28 @@ Object.assign(MediaElementPlayer.prototype, {
 
 
 		/*
-		 * SO source: https://stackoverflow.com/a/7356528/3950681
+         * SO source: https://stackoverflow.com/a/7356528/3950681
 		 */
 		var isFunction = (funcfunction) => {
- 			return funcfunction && {}.toString.call(funcfunction) === '[object Function]';
+            return funcfunction && {}.toString.call(funcfunction) === '[object Function]';
 		}
 
 		var saveSnap = () => {
 
 			canvas.toBlob(function(blob){
 
-		     	var blobUrl = URL.createObjectURL(blob);
+                var blobUrl = URL.createObjectURL(blob);
 
-		     	var a = document.createElement("a");
-    			document.body.appendChild(a);
+                var a = document.createElement("a");
+                document.body.appendChild(a);
 
-			    a.setAttribute("href", blobUrl);
-			    a.className = 'snapshot-download';
-			    a.setAttribute("download", 'snapshot-' + Math.floor(media.currentTime) + '.' + t.options.snapType);
-			    a.click();
-			    URL.revokeObjectURL(blobUrl);
+                a.setAttribute("href", blobUrl);
+                a.className = 'snapshot-download';
+                a.setAttribute("download", 'snapshot-' + Math.floor(media.currentTime) + '.' + t.options.snapType);
+                a.click();
+                URL.revokeObjectURL(blobUrl);
 
-		    }, 'image/' + t.options.snapType, t.options.snapQuality );
+            }, 'image/' + t.options.snapType, t.options.snapQuality );
 
 				
 		};
