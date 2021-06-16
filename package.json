@@ -1,12 +1,12 @@
 {
-  "name": "@dpxgit/dpx-mediaelement-plugins",
-  "version": "1.0.0",
+  "name": "mediaelement-plugins",
+  "version": "2.5.1",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dpxgit/mediaelement-plugins.git"
+    "url": "https://github.com/mediaelement/mediaelement-plugins.git"
   },
   "bugs": {
-    "url": "https://github.com/dpxgit/mediaelement-plugins/issues"
+    "url": "https://github.com/mediaelement/mediaelement-plugins/issues"
   },
   "private": false,
   "devDependencies": {
@@ -70,17 +70,5 @@
         }
       ]
     ]
-  },
-  "description": "# fork from MediaElement.js Plugins",
-  "homepage": "https://github.com/mediaelement/mediaelement-plugins#readme",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "grunt",
-    "deploy": "npm publish"
-  },
-  "author": "dpxgit",
-  "license": "ISC",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/dpxgit"
   }
 }
