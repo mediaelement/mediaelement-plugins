@@ -174,6 +174,6 @@ module.exports = function (grunt) {
 		}
 	});
 
-	grunt.registerTask('default', ['browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy']);
+	grunt.registerTask('default', ['eslint', 'stylelint', 'browserify', 'concat', 'removelogging', 'uglify', 'postcss', 'copy']);
 	grunt.registerTask('debug', ['eslint', 'stylelint', 'browserify', 'concat', 'uglify', 'postcss', 'copy']);
 };
