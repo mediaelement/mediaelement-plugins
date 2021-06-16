@@ -74,7 +74,9 @@
   "description": "# fork from MediaElement.js Plugins",
   "homepage": "https://github.com/mediaelement/mediaelement-plugins#readme",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "grunt",
+    "deploy": "npm publish"
   },
   "author": "dpxgit",
   "license": "ISC",
