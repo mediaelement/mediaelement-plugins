@@ -73,10 +73,6 @@
   },
   "description": "# fork from MediaElement.js Plugins",
   "homepage": "https://github.com/mediaelement/mediaelement-plugins#readme",
-  "main": "Gruntfile.js",
-  "directories": {
-    "doc": "docs"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
