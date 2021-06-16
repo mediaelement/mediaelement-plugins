@@ -165,6 +165,7 @@ Object.assign(MediaElementPlayer.prototype, {
             audioVolume: t.options.videoVolume,
             startVolume: t.node.volume,
             pauseOtherPlayers: false,
+
             fakeNodeName: t.options.fakeNodeName || 'mediaelementwrapper'
         });
 

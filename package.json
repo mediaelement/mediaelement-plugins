@@ -1,5 +1,5 @@
 {
-  "name": "dpx-mediaelement-plugins",
+  "name": "@dpxgit/dpx-mediaelement-plugins",
   "version": "1.0.0",
   "repository": {
     "type": "git",
