@@ -221,9 +221,12 @@ Object.assign(MediaElementPlayer.prototype, {
 
         if (t.options.audioDescriptionToggled) {
             t.audioDescription.node.volume = t.volume;
-            if (t.options.isPlaying && t.audioDescription) t.audioDescription.node.play().catch(function (e) {
-                return console.error(e);
-            });
+            if (t.options.isPlaying && t.audioDescription) {
+                t.audioDescription.node.muted = false;
+                t.audioDescription.node.play().catch(function (e) {
+                    return console.error(e);
+                });
+            }
 
             if (!t.options.isVoiceover) {
                 t.muted = true;
@@ -237,6 +240,7 @@ Object.assign(MediaElementPlayer.prototype, {
         } else {
             t.volume = t.audioDescription.node.volume;
             t.audioDescription.node.pause();
+            t.audioDescription.node.muted = false;
 
             if (!t.options.isVoiceover) {
                 t.muted = false;
