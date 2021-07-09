@@ -240,7 +240,7 @@ Object.assign(MediaElementPlayer.prototype, {
         } else {
             t.volume = t.audioDescription.node.volume;
             t.audioDescription.node.pause();
-            t.audioDescription.node.muted = false;
+            t.audioDescription.node.muted = true;
 
             if (!t.options.isVoiceover) {
                 t.muted = false;
