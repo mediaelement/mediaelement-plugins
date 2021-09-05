@@ -69,6 +69,13 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		layers.appendChild(markersRollsLayer);
 
+		media.addEventListener('rendererready', function () {
+			if (media.vimeoPlayer) {
+				media.vimeoPlayer.getDuration().then(function (loadProgress) {
+					player.setmarkersrolls(controls, loadProgress);
+				});
+			}
+		});
 		media.addEventListener('durationchange', () => {
 			player.setmarkersrolls(controls);
 		});
@@ -108,9 +115,11 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Create markers in the progress bar.
 	 *
 	 * @param {HTMLElement} controls
+	 * @param {number} [duration] - Set the media duration coming from external source.
 	 */
-	setmarkersrolls(controls) {
+	setmarkersrolls(controls, duration) {
 		const markersRolls = controls.querySelectorAll(`.${this.options.classPrefix}time-marker`);
+		const mediaDuration = duration || this.media.getDuration();
 
 		let i = 0;
 
@@ -121,11 +130,11 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			position = parseInt(position);
 
-			if (position >= this.media.duration || position < 0) {
+			if (position >= mediaDuration || position < 0) {
 				continue;
 			}
 
-			const left = 100 * position / this.media.duration,
+			const left = 100 * position / mediaDuration,
 				marker = markersRolls[i];
 
 			marker.style.width = this.options.markersRollsWidth + 'px';
