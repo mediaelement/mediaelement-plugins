@@ -212,6 +212,8 @@ Object.assign(MediaElementPlayer.prototype, {
             audioVolume: t.options.videoVolume,
             startVolume: t.node.volume,
             pauseOtherPlayers: false,
+            // use same iconSprite as in video
+            iconSprite: t.options.iconSprite,
             // use same nodeName as in video
             fakeNodeName: t.options.fakeNodeName || 'mediaelementwrapper',
         });
