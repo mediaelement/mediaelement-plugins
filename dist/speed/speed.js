@@ -158,6 +158,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					if (radios[_i7].checked) {
 						var nextRadio = radios[_i7 + 1];
 						nextRadio.dispatchEvent(mejs.Utils.createEvent('click', nextRadio));
+						break;
 					}
 				}
 			}
@@ -170,6 +171,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					if (radios[_i8].checked) {
 						var prevRadio = radios[_i8 - 1];
 						prevRadio.dispatchEvent(mejs.Utils.createEvent('click', prevRadio));
+						break;
 					}
 				}
 			}
