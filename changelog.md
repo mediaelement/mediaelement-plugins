@@ -7,6 +7,7 @@
 * Added adoption of value for iconSprite from mediaelement player 5.0 to player for audio description
 * Change audio-description-icon for visibility reasons when using user defined color values
 * Added default iconSprite for mediaelement player 5.0 ('mejs-controls.svg') for a11y demo
+* compatible with MediaElementJS 5.x
 
 ## *2.5.1 (2020/03/16)*
 

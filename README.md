@@ -179,7 +179,7 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 <a id="plugins"></a>
 ## Available plugins
 
-* [A11y](docs/a11y.md)
+* [A11y](docs/a11y.md) - compatible with MediaElementJS 5.x
 * [Ads](docs/ads.md)
 * [AirPlay](docs/airplay.md)
 * [Chromecast](docs/chromecast.md)
@@ -194,7 +194,7 @@ See`src/` directory, and check how the files were written to ensure compatibilit
 * [Playlist](docs/playlist.md)
 * [Postroll](docs/postroll.md)
 * [Preview](docs/preview.md)
-* [Quality](docs/quality.md)
+* [Quality](docs/quality.md) - compatible with MediaElementJS 4.x
 * [Skip Back](docs/skip-back.md)
 * [Source Chooser](docs/source-chooser.md)
 * [Speed](docs/speed.md)
