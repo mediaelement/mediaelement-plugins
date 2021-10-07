@@ -151,7 +151,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		const generateId = Math.floor(Math.random() * 100);
 		player.qualitiesContainer = document.createElement('div');
 		player.qualitiesContainer.className = `${t.options.classPrefix}button ${t.options.classPrefix}qualities-button`;
-		player.qualitiesContainer.innerHTML = `<button type="button" title="${qualityTitle}" aria-label="${qualityTitle}" aria-controls="qualitieslist-${generateId}">${defaultValue}</button>` +
+		player.qualitiesContainer.innerHTML = `<button type="button" title="${qualityTitle}" aria-label="${qualityTitle}" aria-controls="qualitieslist-${generateId}" aria-expanded="false">${defaultValue}</button>` +
 			`<div class="${t.options.classPrefix}qualities-selector ${t.options.classPrefix}offscreen">` +
 			`<ul class="${t.options.classPrefix}qualities-selector-list" id="qualitieslist-${generateId}" tabindex="-1"></ul></div>`;
 
@@ -184,18 +184,15 @@ Object.assign(MediaElementPlayer.prototype, {
 		;
 
 		function hideSelector() {
-			setTimeout(() => {
-				mejs.Utils.addClass(qualitiesSelector, `${t.options.classPrefix}offscreen`);
-			}, 50);
+			mejs.Utils.addClass(qualitiesSelector, `${t.options.classPrefix}offscreen`);
 			qualityButton.removeAttribute('aria-expanded');
-			qualitiesList.style.display = `none`;
+			qualityButton.setAttribute('aria-expanded', 'false');
 			qualityButton.focus();
 			isOffScreen = true;
 		}
 
 		function showSelector() {
 			mejs.Utils.removeClass(qualitiesSelector, `${t.options.classPrefix}offscreen`);
-			qualitiesList.style.display = `block`;
 			qualitiesSelector.style.height = `${qualitiesSelector.querySelector('ul').offsetHeight}px`;
 			qualitiesSelector.style.top = `${(-1 * parseFloat(qualitiesSelector.offsetHeight))}px`;
 			qualityButton.setAttribute('aria-expanded', 'true');

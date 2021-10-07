@@ -1,3 +1,7 @@
+.mejs__qualities-selector.mejs__offscreen {
+    display: none;
+}
+
 .mejs__qualities-button,
 .mejs-qualities-button {
     position: relative;
