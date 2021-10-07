@@ -172,7 +172,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		});
 
-		let isOffScreen = true;
+		let isHidden = true;
 		const
 			qualityContainer = player.qualitiesContainer,
 			qualityButton = player.qualitiesContainer.querySelector(`button`),
@@ -188,7 +188,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			qualityButton.removeAttribute('aria-expanded');
 			qualityButton.setAttribute('aria-expanded', 'false');
 			qualityButton.focus();
-			isOffScreen = true;
+			isHidden = true;
 		}
 
 		function showSelector() {
@@ -197,11 +197,11 @@ Object.assign(MediaElementPlayer.prototype, {
 			qualitiesSelector.style.top = `${(-1 * parseFloat(qualitiesSelector.offsetHeight))}px`;
 			qualityButton.setAttribute('aria-expanded', 'true');
 			qualitiesList.focus();
-			isOffScreen = false;
+			isHidden = false;
 		}
 
 		qualityButton.addEventListener('click', () => {
-			if (isOffScreen === true) {
+			if (isHidden === true) {
 				showSelector();
 			} else {
 				hideSelector();
