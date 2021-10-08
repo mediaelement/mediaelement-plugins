@@ -1,5 +1,14 @@
 # Version History
 
+## *2.6.1 (2021/10/08)*
+
+### QUALITY  PLUGIN
+* Adds aria-controls and aria-expanded status.
+* Rewrites EventListeners to handle showing/hiding the flyout with keyboard and mouse events.
+* Adding focus highlighting
+* Converting px to rem
+* Removing unnecessary CSS
+
 ## *2.6.0 (2021/09/20)*
 
 ### ACCESSIBILITY PLUGIN
