@@ -119,44 +119,79 @@ Object.assign(MediaElementPlayer.prototype, {
 		    defaultValue = getQualityNameFromValue(t.options.defaultQuality);
 		currentQuality = defaultValue;
 
-		player.qualitiesButton = document.createElement('div');
-		player.qualitiesButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'qualities-button';
-		player.qualitiesButton.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + qualityTitle + '" ' + ('aria-label="' + qualityTitle + '" tabindex="0">' + defaultValue + '</button>') + ('<div class="' + t.options.classPrefix + 'qualities-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'qualities-selector-list"></ul>') + '</div>';
+		var generateId = Math.floor(Math.random() * 100);
+		player.qualitiesContainer = document.createElement('div');
+		player.qualitiesContainer.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'qualities-button';
+		player.qualitiesContainer.innerHTML = '<button type="button" title="' + qualityTitle + '" aria-label="' + qualityTitle + '" aria-controls="qualitieslist-' + generateId + '" aria-expanded="false">' + defaultValue + '</button>' + ('<div class="' + t.options.classPrefix + 'qualities-selector ' + t.options.classPrefix + 'offscreen">') + ('<ul class="' + t.options.classPrefix + 'qualities-selector-list" id="qualitieslist-' + generateId + '" tabindex="-1"></ul></div>');
 
-		t.addControlElement(player.qualitiesButton, 'qualities');
+		t.addControlElement(player.qualitiesContainer, 'qualities');
 
 		qualityMap.forEach(function (value, key) {
 			if (key !== 'map_keys_1') {
 				var src = value[0],
 				    quality = key,
 				    inputId = t.id + '-qualities-' + quality;
-				player.qualitiesButton.querySelector('ul').innerHTML += '<li class="' + t.options.classPrefix + 'qualities-selector-list-item">' + ('<input class="' + t.options.classPrefix + 'qualities-selector-input" type="radio" name="' + t.id + '_qualities"') + ('disabled="disabled" value="' + quality + '" id="' + inputId + '"  ') + ((quality === defaultValue ? ' checked="checked"' : '') + '/>') + ('<label for="' + inputId + '" class="' + t.options.classPrefix + 'qualities-selector-label') + ((quality === defaultValue ? ' ' + t.options.classPrefix + 'qualities-selected' : '') + '">') + ((src.title || quality) + '</label>') + '</li>';
+				player.qualitiesContainer.querySelector('ul').innerHTML += '<li class="' + t.options.classPrefix + 'qualities-selector-list-item">' + ('<input class="' + t.options.classPrefix + 'qualities-selector-input" type="radio" name="' + t.id + '_qualities" disabled="disabled"') + ('value="' + quality + '" id="' + inputId + '" ' + (quality === defaultValue ? ' checked="checked"' : '') + ' />') + ('<label for="' + inputId + '" class="' + t.options.classPrefix + 'qualities-selector-label ' + (quality === defaultValue ? ' ' + t.options.classPrefix + 'qualities-selected' : '') + '">') + ((src.title || quality) + ' </label></li>');
 			}
 		});
-		var inEvents = ['mouseenter', 'focusin'],
-		    outEvents = ['mouseleave', 'focusout'],
-		    radios = player.qualitiesButton.querySelectorAll('input[type="radio"]'),
-		    labels = player.qualitiesButton.querySelectorAll('.' + t.options.classPrefix + 'qualities-selector-label'),
-		    selector = player.qualitiesButton.querySelector('.' + t.options.classPrefix + 'qualities-selector');
 
-		for (var i = 0, total = inEvents.length; i < total; i++) {
-			player.qualitiesButton.addEventListener(inEvents[i], function () {
-				mejs.Utils.removeClass(selector, t.options.classPrefix + 'offscreen');
-				selector.style.height = selector.querySelector('ul').offsetHeight + 'px';
-				selector.style.top = -1 * parseFloat(selector.offsetHeight) + 'px';
-			});
+		var isHidden = true;
+		var qualityContainer = player.qualitiesContainer,
+		    qualityButton = player.qualitiesContainer.querySelector('button'),
+		    qualitiesSelector = player.qualitiesContainer.querySelector('.' + t.options.classPrefix + 'qualities-selector'),
+		    qualitiesList = player.qualitiesContainer.querySelector('.' + t.options.classPrefix + 'qualities-selector-list'),
+		    radios = player.qualitiesContainer.querySelectorAll('input[type="radio"]'),
+		    labels = player.qualitiesContainer.querySelectorAll('.' + t.options.classPrefix + 'qualities-selector-label');
+
+		function hideSelector() {
+			mejs.Utils.addClass(qualitiesSelector, t.options.classPrefix + 'offscreen');
+			qualityButton.removeAttribute('aria-expanded');
+			qualityButton.setAttribute('aria-expanded', 'false');
+			qualityButton.focus();
+			isHidden = true;
 		}
 
-		for (var _i = 0, _total = outEvents.length; _i < _total; _i++) {
-			player.qualitiesButton.addEventListener(outEvents[_i], function () {
-				setTimeout(function () {
-					mejs.Utils.addClass(selector, t.options.classPrefix + 'offscreen');
-				}, 50);
-			});
+		function showSelector() {
+			mejs.Utils.removeClass(qualitiesSelector, t.options.classPrefix + 'offscreen');
+			qualitiesSelector.style.height = qualitiesSelector.querySelector('ul').offsetHeight + 'px';
+			qualitiesSelector.style.top = -1 * parseFloat(qualitiesSelector.offsetHeight) + 'px';
+			qualityButton.setAttribute('aria-expanded', 'true');
+			qualitiesList.focus();
+			isHidden = false;
 		}
 
-		for (var _i2 = 0, _total2 = radios.length; _i2 < _total2; _i2++) {
-			var radio = radios[_i2];
+		qualityButton.addEventListener('click', function () {
+			if (isHidden === true) {
+				showSelector();
+			} else {
+				hideSelector();
+			}
+		});
+
+		qualitiesList.addEventListener('focusout', function (event) {
+			if (!qualityContainer.contains(event.relatedTarget)) {
+				hideSelector();
+			}
+		});
+
+		qualityButton.addEventListener('mouseenter', function () {
+			showSelector();
+		});
+
+		qualityContainer.addEventListener('mouseleave', function () {
+			hideSelector();
+		});
+
+		qualityContainer.addEventListener('keydown', function (event) {
+			if (event.key === "Escape") {
+				hideSelector();
+			}
+
+			event.stopPropagation();
+		});
+
+		for (var i = 0, total = radios.length; i < total; i++) {
+			var radio = radios[i];
 			radio.disabled = false;
 			radio.addEventListener('change', function () {
 				if (t.options.autoDash) {
@@ -191,8 +226,9 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 			});
 		}
-		for (var _i3 = 0, _total3 = labels.length; _i3 < _total3; _i3++) {
-			labels[_i3].addEventListener('click', function () {
+
+		for (var _i = 0, _total = labels.length; _i < _total; _i++) {
+			labels[_i].addEventListener('click', function () {
 				var radio = mejs.Utils.siblings(this, function (el) {
 					return el.tagName === 'INPUT';
 				})[0],
@@ -200,15 +236,11 @@ Object.assign(MediaElementPlayer.prototype, {
 				radio.dispatchEvent(event);
 			});
 		}
-
-		selector.addEventListener('keydown', function (e) {
-			e.stopPropagation();
-		});
 	},
 	cleanquality: function cleanquality(player) {
 		if (player) {
-			if (player.qualitiesButton) {
-				player.qualitiesButton.remove();
+			if (player.qualitiesContainer) {
+				player.qualitiesContainer.remove();
 			}
 		}
 	},
@@ -269,7 +301,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		return -1 < map.get('map_keys_1').indexOf(searchKey);
 	},
 	switchDashQuality: function switchDashQuality(player, media) {
-		var radios = player.qualitiesButton.querySelectorAll('input[type="radio"]');
+		var radios = player.qualitiesContainer.querySelectorAll('input[type="radio"]');
 		for (var index = 0; index < radios.length; index++) {
 			if (radios[index].checked) {
 				if (index === 0) {
@@ -282,7 +314,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 	},
 	switchHLSQuality: function switchHLSQuality(player, media) {
-		var radios = player.qualitiesButton.querySelectorAll('input[type="radio"]');
+		var radios = player.qualitiesContainer.querySelectorAll('input[type="radio"]');
 		for (var index = 0; index < radios.length; index++) {
 			if (radios[index].checked) {
 				if (index === 0) {
@@ -298,7 +330,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		var newQuality = self.value;
 		currentQuality = newQuality;
 
-		var selected = player.qualitiesButton.querySelectorAll('.' + t.options.classPrefix + 'qualities-selected');
+		var selected = player.qualitiesContainer.querySelectorAll('.' + t.options.classPrefix + 'qualities-selected');
 		for (var i = 0, total = selected.length; i < total; i++) {
 			mejs.Utils.removeClass(selected[i], t.options.classPrefix + 'qualities-selected');
 		}
@@ -307,11 +339,11 @@ Object.assign(MediaElementPlayer.prototype, {
 		var siblings = mejs.Utils.siblings(self, function (el) {
 			return mejs.Utils.hasClass(el, t.options.classPrefix + 'qualities-selector-label');
 		});
-		for (var j = 0, _total4 = siblings.length; j < _total4; j++) {
+		for (var j = 0, _total2 = siblings.length; j < _total2; j++) {
 			mejs.Utils.addClass(siblings[j], t.options.classPrefix + 'qualities-selected');
 		}
 
-		player.qualitiesButton.querySelector('button').innerHTML = newQuality;
+		player.qualitiesContainer.querySelector('button').innerHTML = newQuality;
 	},
 	getQualityFromHeight: function getQualityFromHeight(height) {
 		if (height >= 4320) {
