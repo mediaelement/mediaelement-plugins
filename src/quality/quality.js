@@ -165,7 +165,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					inputId = `${t.id}-qualities-${quality}`
 				;
 				player.qualitiesContainer.querySelector('ul').innerHTML += `<li class="${t.options.classPrefix}qualities-selector-list-item">` +
-					`<input class="${t.options.classPrefix}qualities-selector-input" type="radio" name="${t.id}_qualities" disabled="disabled"` +
+					`<input class="${t.options.classPrefix}qualities-selector-input ${(quality === defaultValue ? `${t.options.classPrefix}qualities-selected-input` : '')}" type="radio" name="${t.id}_qualities" disabled="disabled" ` +
 					`value="${quality}" id="${inputId}" ${(quality === defaultValue ? ' checked="checked"' : '')} />` +
 					`<label for="${inputId}" class="${t.options.classPrefix}qualities-selector-label ${(quality === defaultValue ? ` ${t.options.classPrefix}qualities-selected` : '')}">` +
 					`${src.title || quality} </label></li>`;
@@ -196,7 +196,9 @@ Object.assign(MediaElementPlayer.prototype, {
 			qualitiesSelector.style.height = `${qualitiesSelector.querySelector('ul').offsetHeight}px`;
 			qualitiesSelector.style.top = `${(-1 * parseFloat(qualitiesSelector.offsetHeight))}px`;
 			qualityButton.setAttribute('aria-expanded', 'true');
-			qualitiesList.focus();
+			const selectedLabel = qualitiesSelector.querySelector('.' + t.options.classPrefix + 'qualities-selected');
+			const selectedInput = selectedLabel.parentElement.querySelector('input');
+			selectedInput.focus();
 			isHidden = false;
 		}
 
@@ -429,15 +431,17 @@ Object.assign(MediaElementPlayer.prototype, {
 		;
 		currentQuality = newQuality;
 
-		const selected = player.qualitiesContainer.querySelectorAll(`.${t.options.classPrefix}qualities-selected`);
-		for (let i = 0, total = selected.length; i < total; i++) {
-			mejs.Utils.removeClass(selected[i], `${t.options.classPrefix}qualities-selected`);
+		const formerSelected = player.qualitiesContainer.querySelectorAll(`.${t.options.classPrefix}qualities-selected`);
+		for (let i = 0, total = formerSelected.length; i < total; i++) {
+			mejs.Utils.removeClass(formerSelected[i], `${t.options.classPrefix}qualities-selected`);
+			formerSelected[i].parentElement.querySelector('input').classList.remove(`${t.options.classPrefix}qualities-selected-input`);
 		}
 
 		self.checked = true;
-		const siblings = mejs.Utils.siblings(self, (el) => mejs.Utils.hasClass(el, `${t.options.classPrefix}qualities-selector-label`));
-		for (let j = 0, total = siblings.length; j < total; j++) {
-			mejs.Utils.addClass(siblings[j], `${t.options.classPrefix}qualities-selected`);
+		const currentSelected = mejs.Utils.siblings(self, (el) => mejs.Utils.hasClass(el, `${t.options.classPrefix}qualities-selector-label`));
+		for (let j = 0, total = currentSelected.length; j < total; j++) {
+			mejs.Utils.addClass(currentSelected[j], `${t.options.classPrefix}qualities-selected`);
+			currentSelected[j].parentElement.querySelector('input').classList.add(`${t.options.classPrefix}qualities-selected-input`);
 		}
 
 		player.qualitiesContainer.querySelector('button').innerHTML = newQuality;
