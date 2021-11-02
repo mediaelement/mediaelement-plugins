@@ -185,7 +185,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		function hideSelector() {
 			mejs.Utils.addClass(qualitiesSelector, `${t.options.classPrefix}offscreen`);
-			qualityButton.removeAttribute('aria-expanded');
 			qualityButton.setAttribute('aria-expanded', 'false');
 			qualityButton.focus();
 			isHidden = true;
@@ -196,9 +195,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			qualitiesSelector.style.height = `${qualitiesSelector.querySelector('ul').offsetHeight}px`;
 			qualitiesSelector.style.top = `${(-1 * parseFloat(qualitiesSelector.offsetHeight))}px`;
 			qualityButton.setAttribute('aria-expanded', 'true');
-			const selectedLabel = qualitiesSelector.querySelector('.' + t.options.classPrefix + 'qualities-selected');
-			const selectedInput = selectedLabel.parentElement.querySelector('input');
-			selectedInput.focus();
+			qualitiesSelector.querySelector('.' + t.options.classPrefix + 'qualities-selected-input').focus();
 			isHidden = false;
 		}
 
