@@ -1,8 +1,15 @@
 # Version History
 
+## *2.6.2 (2021/11/04)*
+
+### QUALITY PLUGIN
+Improvements to the last quality-plugin update:
+* Adds qualities-selected-input class to selected input element and removes it from formerly selected
+* Removes focus from the container for the input elements and now directly focuses the currently selected input element, reducing necessary tabs by one
+
 ## *2.6.1 (2021/10/08)*
 
-### QUALITY  PLUGIN
+### QUALITY PLUGIN
 * Adds aria-controls and aria-expanded status.
 * Rewrites EventListeners to handle showing/hiding the flyout with keyboard and mouse events.
 * Adding focus highlighting

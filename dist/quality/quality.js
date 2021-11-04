@@ -131,7 +131,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				var src = value[0],
 				    quality = key,
 				    inputId = t.id + '-qualities-' + quality;
-				player.qualitiesContainer.querySelector('ul').innerHTML += '<li class="' + t.options.classPrefix + 'qualities-selector-list-item">' + ('<input class="' + t.options.classPrefix + 'qualities-selector-input" type="radio" name="' + t.id + '_qualities" disabled="disabled"') + ('value="' + quality + '" id="' + inputId + '" ' + (quality === defaultValue ? ' checked="checked"' : '') + ' />') + ('<label for="' + inputId + '" class="' + t.options.classPrefix + 'qualities-selector-label ' + (quality === defaultValue ? ' ' + t.options.classPrefix + 'qualities-selected' : '') + '">') + ((src.title || quality) + ' </label></li>');
+				player.qualitiesContainer.querySelector('ul').innerHTML += '<li class="' + t.options.classPrefix + 'qualities-selector-list-item">' + ('<input class="' + t.options.classPrefix + 'qualities-selector-input ' + (quality === defaultValue ? t.options.classPrefix + 'qualities-selected-input' : '') + '" type="radio" name="' + t.id + '_qualities" disabled="disabled" ') + ('value="' + quality + '" id="' + inputId + '" ' + (quality === defaultValue ? ' checked="checked"' : '') + ' />') + ('<label for="' + inputId + '" class="' + t.options.classPrefix + 'qualities-selector-label ' + (quality === defaultValue ? ' ' + t.options.classPrefix + 'qualities-selected' : '') + '">') + ((src.title || quality) + ' </label></li>');
 			}
 		});
 
@@ -145,7 +145,6 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		function hideSelector() {
 			mejs.Utils.addClass(qualitiesSelector, t.options.classPrefix + 'offscreen');
-			qualityButton.removeAttribute('aria-expanded');
 			qualityButton.setAttribute('aria-expanded', 'false');
 			qualityButton.focus();
 			isHidden = true;
@@ -156,7 +155,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			qualitiesSelector.style.height = qualitiesSelector.querySelector('ul').offsetHeight + 'px';
 			qualitiesSelector.style.top = -1 * parseFloat(qualitiesSelector.offsetHeight) + 'px';
 			qualityButton.setAttribute('aria-expanded', 'true');
-			qualitiesList.focus();
+			qualitiesSelector.querySelector('.' + t.options.classPrefix + 'qualities-selected-input').focus();
 			isHidden = false;
 		}
 
@@ -330,17 +329,19 @@ Object.assign(MediaElementPlayer.prototype, {
 		var newQuality = self.value;
 		currentQuality = newQuality;
 
-		var selected = player.qualitiesContainer.querySelectorAll('.' + t.options.classPrefix + 'qualities-selected');
-		for (var i = 0, total = selected.length; i < total; i++) {
-			mejs.Utils.removeClass(selected[i], t.options.classPrefix + 'qualities-selected');
+		var formerSelected = player.qualitiesContainer.querySelectorAll('.' + t.options.classPrefix + 'qualities-selected');
+		for (var i = 0, total = formerSelected.length; i < total; i++) {
+			mejs.Utils.removeClass(formerSelected[i], t.options.classPrefix + 'qualities-selected');
+			formerSelected[i].parentElement.querySelector('input').classList.remove(t.options.classPrefix + 'qualities-selected-input');
 		}
 
 		self.checked = true;
-		var siblings = mejs.Utils.siblings(self, function (el) {
+		var currentSelected = mejs.Utils.siblings(self, function (el) {
 			return mejs.Utils.hasClass(el, t.options.classPrefix + 'qualities-selector-label');
 		});
-		for (var j = 0, _total2 = siblings.length; j < _total2; j++) {
-			mejs.Utils.addClass(siblings[j], t.options.classPrefix + 'qualities-selected');
+		for (var j = 0, _total2 = currentSelected.length; j < _total2; j++) {
+			mejs.Utils.addClass(currentSelected[j], t.options.classPrefix + 'qualities-selected');
+			currentSelected[j].parentElement.querySelector('input').classList.add(t.options.classPrefix + 'qualities-selected-input');
 		}
 
 		player.qualitiesContainer.querySelector('button').innerHTML = newQuality;
