@@ -31,10 +31,6 @@
     width: 3.75rem;
 }
 
-.mejs__qualities-selector:focus-within {
-    border-color: #fff;
-}
-
 .mejs__qualities-selector ul,
 .mejs-qualities-selector ul {
     display: block;
