@@ -96,7 +96,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 
 		media.addEventListener('loadedmetadata', function () {
-			if (!!media.hlsPlayer) {
+			if (media.hlsPlayer) {
 				const levels = media.hlsPlayer.levels;
 				if (t.options.autoGenerate && levels.length > 1) {
 					levels.forEach(function (level) {
@@ -107,7 +107,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					t.options.autoHLS = true;
 					t.generateQualityButton(t, player, media, qualityMap, currentQuality);
 				}
-			} else if (!!media.dashPlayer) {
+			} else if (media.dashPlayer) {
 				const bitrates = media.dashPlayer.getBitrateInfoListFor("video");
 				if (t.options.autoGenerate && bitrates.length > 1) {
 					bitrates.forEach(function (level) {
@@ -236,13 +236,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			radio.disabled = false;
 			radio.addEventListener('change', function () {
 				if (t.options.autoDash) {
-					t.updateQualityButton(this, player, currentQuality);
+					t.updateQualityButton(this, player);
 					t.switchDashQuality(player, media);
 				} else if (t.options.autoHLS) {
-					t.updateQualityButton(this, player, currentQuality);
+					t.updateQualityButton(this, player);
 					t.switchHLSQuality(player, media);
 				} else {
-					t.updateQualityButton(this, player, currentQuality);
+					t.updateQualityButton(this, player);
 
 					let currentTime = media.currentTime;
 					const paused = media.paused;
@@ -419,14 +419,10 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Responsible for switching the video source when quality source was auto created from dash manifest
 	 * @param {Element} self the check quality radio button
 	 * @param {MediaElementPlayer} player
-	 * @param {String} currentQuality the label for the current quality selection
 	 */
-	updateQualityButton (self, player, currentQuality) {
+	updateQualityButton (self, player) {
 		const t = this;
-		const
-			newQuality = self.value
-		;
-		currentQuality = newQuality;
+		const newQuality = self.value;
 
 		const formerSelected = player.qualitiesContainer.querySelectorAll(`.${t.options.classPrefix}qualities-selected`);
 		for (let i = 0, total = formerSelected.length; i < total; i++) {
