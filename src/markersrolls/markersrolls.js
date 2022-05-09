@@ -39,7 +39,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {HTMLElement} layers
 	 * @param {HTMLElement} media
 	 */
-	buildmarkersrolls (player, controls, layers, media)  {
+	buildmarkersrolls(player, controls, layers, media) {
 		let currentPosition = -1,
 			lastPlayedPosition = -1, // Track backward seek
 			lastMarkerRollCallback = -1, // Prevents successive firing of callbacks
@@ -58,16 +58,16 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		let markersRollsLayer = document.createElement('iframe');
 		markersRollsLayer.frameBorder = '0';
-        markersRollsLayer.className = `${this.options.classPrefix}markersrolls-layer` + ' '
+		markersRollsLayer.className = `${this.options.classPrefix}markersrolls-layer` + ' '
 			+ `${this.options.classPrefix}overlay` + ' '
 			+ `${this.options.classPrefix}layer`;
-        markersRollsLayer.style.display = 'none';
-        markersRollsLayer.style.backgroundColor = '#9F9F9F';
-        markersRollsLayer.style.border = '0 none';
-        markersRollsLayer.style.boxShadow = '#B0B0B0 0px 0px 20px -10px inset';
+		markersRollsLayer.style.display = 'none';
+		markersRollsLayer.style.backgroundColor = '#9F9F9F';
+		markersRollsLayer.style.border = '0 none';
+		markersRollsLayer.style.boxShadow = '#B0B0B0 0px 0px 20px -10px inset';
 		markersRollsLayer.style.paddingBottom = '40px';
 
-        layers.appendChild(markersRollsLayer);
+		layers.appendChild(markersRollsLayer);
 
 		media.addEventListener('durationchange', () => {
 			player.setmarkersrolls(controls);
@@ -94,8 +94,8 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			media.pause();
 
-            markersRollsLayer.src = player.options.markersRolls[currentPosition];
-            markersRollsLayer.style.display = 'block';
+			markersRollsLayer.src = player.options.markersRolls[currentPosition];
+			markersRollsLayer.style.display = 'block';
 		}, false);
 		media.addEventListener('play', () => {
 			markersRollsLayer.style.display = 'none';
@@ -109,7 +109,7 @@ Object.assign(MediaElementPlayer.prototype, {
 	 *
 	 * @param {HTMLElement} controls
 	 */
-	setmarkersrolls (controls)  {
+	setmarkersrolls(controls) {
 		const markersRolls = controls.querySelectorAll(`.${this.options.classPrefix}time-marker`);
 
 		let i = 0;
@@ -117,7 +117,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		for (let position in this.options.markersRolls) {
 			if (!this.options.markersRolls.hasOwnProperty(position)) {
 				continue;
-            }
+			}
 
 			position = parseInt(position);
 
