@@ -32,8 +32,6 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 * Feature constructor.
 	 *
-	 * Always has to be prefixed with `build` and the name that will be used in MepDefaults.features list.
-	 *
 	 * @param {MediaElementPlayer} player
 	 * @param {HTMLElement} controls
 	 * @param {HTMLElement} layers
@@ -102,10 +100,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			markersAreRendered = true;
 		}
 
-		media.addEventListener('loadedmetadata', () => {
+		player.markersRollsLoadedMetadata = () => {
 			tryRenderMarkers();
-		});
-		media.addEventListener('timeupdate', () => {
+		};
+		player.markersRollsTimeUpdate = () => {
 			currentPosition = Math.floor(media.currentTime);
 
 			if (lastPlayedPosition > currentPosition) {
@@ -129,12 +127,32 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			markersRollsLayer.src = player.options.markersRolls[currentPosition];
 			markersRollsLayer.style.display = 'block';
-		}, false);
-		media.addEventListener('play', () => {
+		};
+		player.markersRollsPlay = () => {
 			tryRenderMarkers();
 
 			markersRollsLayer.style.display = 'none';
 			markersRollsLayer.src = '';
-		}, false);
+		};
+
+		media.addEventListener('loadedmetadata', player.markersRollsLoadedMetadata);
+		media.addEventListener('timeupdate', player.markersRollsTimeUpdate);
+		media.addEventListener('play', player.markersRollsPlay);
+	},
+	/**
+	 * Feature destructor.
+	 *
+	 * @param {MediaElementPlayer} player
+	 * @param {HTMLElement} controls
+	 * @param {HTMLElement} layers
+	 * @param {HTMLElement} media
+	 */
+	cleanmarkersrolls(player, controls, layers, media) {
+		player.markersRollsLoadedMetadata = function () {
+
+		}
+		media.removeEventListener('loadedmetadata', player.markersRollsLoadedMetadata);
+		media.removeEventListener('timeupdate', player.markersRollsTimeUpdate);
+		media.removeEventListener('play', player.markersRollsPlay);
 	}
 });
