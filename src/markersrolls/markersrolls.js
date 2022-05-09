@@ -38,26 +38,54 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {HTMLElement} media
 	 */
 	buildmarkersrolls(player, controls, layers, media) {
+		const {markersRollsColor, markersRollsWidth, markersRolls, classPrefix} = player.options;
+		const controlsTotalTime = controls.querySelector(`.${classPrefix}time-total`);
+
 		let currentPosition = -1,
 			lastPlayedPosition = -1, // Track backward seek
 			lastMarkerRollCallback = -1, // Prevents successive firing of callbacks
-			markersAreRendered = false,
-			markersCount = Object.keys(player.options.markersRolls).length;
+			markersAreRendered = false;
+
+		const markersCount = Object.keys(markersRolls).length;
 
 		if (!markersCount) {
 			return;
 		}
 
-		let markersRollsLayer = document.createElement('iframe');
-		markersRollsLayer.frameBorder = '0';
-		markersRollsLayer.className = `${this.options.classPrefix}markersrolls-layer` + ' '
-			+ `${this.options.classPrefix}overlay` + ' '
-			+ `${this.options.classPrefix}layer`;
-		markersRollsLayer.style.display = 'none';
-		markersRollsLayer.style.backgroundColor = '#9F9F9F';
-		markersRollsLayer.style.border = '0 none';
-		markersRollsLayer.style.boxShadow = '#B0B0B0 0px 0px 20px -10px inset';
-		markersRollsLayer.style.paddingBottom = '40px';
+		/**
+		 * @returns {HTMLIFrameElement}
+		 */
+		function createIframeLayer() {
+			const layer = document.createElement('iframe');
+
+			layer.frameBorder = '0';
+			layer.className = `${classPrefix}markersrolls-layer ${classPrefix}overlay ${classPrefix}layer`;
+			layer.style.display = 'none';
+			layer.style.backgroundColor = '#9F9F9F';
+			layer.style.border = '0 none';
+			layer.style.boxShadow = '#B0B0B0 0px 0px 20px -10px inset';
+			layer.style.paddingBottom = '40px';
+
+			return layer;
+		}
+
+		/**
+		 * @param {Number} markerPosition
+		 * @param {Number} duration
+		 * @returns {HTMLSpanElement}
+		 */
+		function createMarker({markerPosition, duration}) {
+			const marker = document.createElement('span');
+
+			marker.className = `${classPrefix}time-marker`;
+			marker.style.width = `${markersRollsWidth}px`;
+			marker.style.left = `${100 * markerPosition / duration}%`;
+			marker.style.background = markersRollsColor;
+
+			return marker;
+		}
+
+		const markersRollsLayer = createIframeLayer();
 
 		layers.appendChild(markersRollsLayer);
 
@@ -75,26 +103,23 @@ Object.assign(MediaElementPlayer.prototype, {
 				return;
 			}
 
-			for (let position in player.options.markersRolls) {
-				if (!player.options.markersRolls.hasOwnProperty(position)) {
+			for (let markerPosition in markersRolls) {
+				if (!markersRolls.hasOwnProperty(markerPosition)) {
 					continue;
 				}
 
-				position = parseInt(position);
+				markerPosition = parseInt(markerPosition);
 
-				if (position >= duration || position < 0) {
+				if (markerPosition >= duration || markerPosition < 0) {
 					continue;
 				}
 
-				const left = 100 * position / duration;
+				const marker = createMarker({
+					markerPosition,
+					duration
+				});
 
-				const marker = document.createElement('span');
-				marker.className = `${player.options.classPrefix}time-marker`;
-				marker.style.width = player.options.markersRollsWidth + 'px';
-				marker.style.left = `${left}%`;
-				marker.style.background = player.options.markersRollsColor;
-
-				controls.querySelector(`.${player.options.classPrefix}time-total`).appendChild(marker);
+				controlsTotalTime.appendChild(marker);
 			}
 
 			markersAreRendered = true;
@@ -115,7 +140,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 
 			if (0 === markersCount ||
-				!player.options.markersRolls[currentPosition] ||
+				!markersRolls[currentPosition] ||
 				currentPosition === lastMarkerRollCallback
 			) {
 				return;
@@ -125,7 +150,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 			media.pause();
 
-			markersRollsLayer.src = player.options.markersRolls[currentPosition];
+			markersRollsLayer.src = markersRolls[currentPosition];
 			markersRollsLayer.style.display = 'block';
 		};
 		player.markersRollsPlay = () => {
@@ -148,9 +173,6 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {HTMLElement} media
 	 */
 	cleanmarkersrolls(player, controls, layers, media) {
-		player.markersRollsLoadedMetadata = function () {
-
-		}
 		media.removeEventListener('loadedmetadata', player.markersRollsLoadedMetadata);
 		media.removeEventListener('timeupdate', player.markersRollsTimeUpdate);
 		media.removeEventListener('play', player.markersRollsPlay);
