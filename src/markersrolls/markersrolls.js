@@ -43,17 +43,11 @@ Object.assign(MediaElementPlayer.prototype, {
 		let currentPosition = -1,
 			lastPlayedPosition = -1, // Track backward seek
 			lastMarkerRollCallback = -1, // Prevents successive firing of callbacks
+			markersAreRendered = false,
 			markersCount = Object.keys(player.options.markersRolls).length;
 
 		if (!markersCount) {
 			return;
-		}
-
-		for (let i = 0, total = markersCount; i < total; ++i) {
-			const marker = document.createElement('span');
-
-			marker.className = `${this.options.classPrefix}time-marker`;
-			controls.querySelector(`.${this.options.classPrefix}time-total`).appendChild(marker);
 		}
 
 		let markersRollsLayer = document.createElement('iframe');
@@ -69,8 +63,47 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		layers.appendChild(markersRollsLayer);
 
-		media.addEventListener('durationchange', () => {
-			player.setmarkersrolls(controls);
+		/**
+		 * Create markers in the progress bar.
+		 */
+		function tryRenderMarkers() {
+			if (markersAreRendered) {
+				return;
+			}
+
+			const duration = media.getDuration();
+
+			if (!duration) {
+				return;
+			}
+
+			for (let position in player.options.markersRolls) {
+				if (!player.options.markersRolls.hasOwnProperty(position)) {
+					continue;
+				}
+
+				position = parseInt(position);
+
+				if (position >= duration || position < 0) {
+					continue;
+				}
+
+				const left = 100 * position / duration;
+
+				const marker = document.createElement('span');
+				marker.className = `${player.options.classPrefix}time-marker`;
+				marker.style.width = player.options.markersRollsWidth + 'px';
+				marker.style.left = `${left}%`;
+				marker.style.background = player.options.markersRollsColor;
+
+				controls.querySelector(`.${player.options.classPrefix}time-total`).appendChild(marker);
+			}
+
+			markersAreRendered = true;
+		}
+
+		media.addEventListener('loadedmetadata', () => {
+			tryRenderMarkers();
 		});
 		media.addEventListener('timeupdate', () => {
 			currentPosition = Math.floor(media.currentTime);
@@ -98,41 +131,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			markersRollsLayer.style.display = 'block';
 		}, false);
 		media.addEventListener('play', () => {
+			tryRenderMarkers();
+
 			markersRollsLayer.style.display = 'none';
 			markersRollsLayer.src = '';
 		}, false);
-
-	},
-
-	/**
-	 * Create markers in the progress bar.
-	 *
-	 * @param {HTMLElement} controls
-	 */
-	setmarkersrolls(controls) {
-		const markersRolls = controls.querySelectorAll(`.${this.options.classPrefix}time-marker`);
-
-		let i = 0;
-
-		for (let position in this.options.markersRolls) {
-			if (!this.options.markersRolls.hasOwnProperty(position)) {
-				continue;
-			}
-
-			position = parseInt(position);
-
-			if (position >= this.media.duration || position < 0) {
-				continue;
-			}
-
-			const left = 100 * position / this.media.duration,
-				marker = markersRolls[i];
-
-			marker.style.width = this.options.markersRollsWidth + 'px';
-			marker.style.left = `${left}%`;
-			marker.style.background = this.options.markersRollsColor;
-
-			i++;
-		}
 	}
 });
