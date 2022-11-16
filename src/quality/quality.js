@@ -242,7 +242,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					t.updateQualityButton(this, player, currentQuality);
 					t.switchHLSQuality(player, media);
 				} else {
-					t.updateQualityButton(this, player, currentQuality);
+					currentQuality = t.updateQualityButton(this, player, currentQuality);
 
 					let currentTime = media.currentTime;
 					const paused = media.paused;
@@ -442,12 +442,14 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		player.qualitiesContainer.querySelector('button').innerHTML = newQuality;
+		return newQuality;
 	},
 
 	/**
-	* Returns the quality represnetaion base on the height of the loaded video
-	* @param {Number} height the pixel height of the video
-	**/
+	 * Returns the quality represnetaion base on the height of the loaded video
+	 * @param {Number} height the pixel height of the video
+	 * @param {Number} height the pixel height of the video
+	 **/
 	getQualityFromHeight (height) {
 		if (height >= 4320) {
 			return "8K UHD";
