@@ -448,7 +448,6 @@ Object.assign(MediaElementPlayer.prototype, {
 	/**
 	 * Returns the quality represnetaion base on the height of the loaded video
 	 * @param {Number} height the pixel height of the video
-	 * @param {Number} height the pixel height of the video
 	 **/
 	getQualityFromHeight (height) {
 		if (height >= 4320) {
