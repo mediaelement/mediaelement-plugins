@@ -235,6 +235,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			const radio = radios[i];
 			radio.disabled = false;
 			radio.addEventListener('change', function () {
+				let newQuality = this.value;
 				if (t.options.autoDash) {
 					t.updateQualityButton(this, player, currentQuality);
 					t.switchDashQuality(player, media);
@@ -250,8 +251,8 @@ Object.assign(MediaElementPlayer.prototype, {
 					if (!paused) {
 						media.pause();
 					}
-					t.updateVideoSource(media, qualityMap, currentQuality);
-					media.setSrc(qualityMap.get(currentQuality)[0].src);
+					t.updateVideoSource(media, qualityMap, newQuality);
+					media.setSrc(qualityMap.get(newQuality)[0].src);
 					media.load();
 					media.dispatchEvent(mejs.Utils.createEvent('seeking', media));
 					if (!paused) {
