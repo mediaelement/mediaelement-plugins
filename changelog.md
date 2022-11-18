@@ -1,5 +1,12 @@
 # Version History
 
+## *2.6.3 (2022/11/18)*
+
+### QUALITY PLUGIN
+Improvements to the last quality-plugin update:
+* Fixes the problem that it was not possible to switch between video qualities due to a bug (PR #229, Issue #196)
+* Fixes some linting errors
+
 ## *2.6.2 (2021/11/04)*
 
 ### QUALITY PLUGIN

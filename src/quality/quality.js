@@ -96,6 +96,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 
 		media.addEventListener('loadedmetadata', function () {
+			// eslint-disable-next-line
 			if (!!media.hlsPlayer) {
 				const levels = media.hlsPlayer.levels;
 				if (t.options.autoGenerate && levels.length > 1) {
@@ -107,6 +108,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					t.options.autoHLS = true;
 					t.generateQualityButton(t, player, media, qualityMap, currentQuality);
 				}
+				// eslint-disable-next-line
 			} else if (!!media.dashPlayer) {
 				const bitrates = media.dashPlayer.getBitrateInfoListFor("video");
 				if (t.options.autoGenerate && bitrates.length > 1) {
@@ -419,14 +421,12 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Responsible for switching the video source when quality source was auto created from dash manifest
 	 * @param {Element} self the check quality radio button
 	 * @param {MediaElementPlayer} player
-	 * @param {String} currentQuality the label for the current quality selection
 	 */
-	updateQualityButton (self, player, currentQuality) {
+	updateQualityButton (self, player) {
 		const t = this;
 		const
 			newQuality = self.value
 		;
-		currentQuality = newQuality;
 
 		const formerSelected = player.qualitiesContainer.querySelectorAll(`.${t.options.classPrefix}qualities-selected`);
 		for (let i = 0, total = formerSelected.length; i < total; i++) {

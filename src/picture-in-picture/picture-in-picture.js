@@ -17,7 +17,7 @@ Object.assign(mejs.MepDefaults, {
     /**
 	  * @type {?String} PiPTitle - Hover title of pip-button
 	  */
-	  PiPTitle: null
+	PiPTitle: null
 });
 
 
@@ -25,13 +25,8 @@ Object.assign(MediaElementPlayer.prototype, {
 
     /**
      * Feature constructor.
-     *
-     * @param {MediaElementPlayer} player
-     * @param {HTMLElement} controls
-     * @param {HTMLElement} layers
-     * @param {HTMLElement} media
      */
-    buildpictureInPicture (player, controls, layers, media) {
+    buildpictureInPicture () {
 
       const
         t = this,
@@ -45,30 +40,30 @@ Object.assign(MediaElementPlayer.prototype, {
 		buttonWrapper.className = `${t.options.classPrefix}button ${t.options.classPrefix}picture-in-picture-button`;
 		buttonWrapper.appendChild(button);
 
-      	if(video instanceof HTMLVideoElement) {
+		if(video instanceof HTMLVideoElement) {
 			// This is currently not a W3C standard (25-10-2018)
 			// https://wicg.github.io/picture-in-picture/
 			if(document.pictureInPictureEnabled && !video.disablePictureInPicture) {
 				button.addEventListener('click', () => {
 					if(!document.pictureInPictureElement) {
 						video.requestPictureInPicture()
-						.catch(error => {
+						.catch(() => {
 							// Handle error
 						});
 					}
 					else {
 						document.exitPictureInPicture()
-						.catch(error => {
+						.catch(() => {
 							// Handle error
 						});
 					}
 				});
 			}
 			// Safari implmentation
-        	else if (video.webkitSupportsPresentationMode && typeof video.webkitSetPresentationMode === "function") {
+			else if (video.webkitSupportsPresentationMode && typeof video.webkitSetPresentationMode === "function") {
 				// For more info https://developer.apple.com/documentation/webkitjs/adding_picture_in_picture_to_your_safari_media_controls?language=javascript
 				// Toggle PiP when the user clicks the button.
-				button.addEventListener("click", function(event) {
+				button.addEventListener("click", function() {
 					video.webkitSetPresentationMode(video.webkitPresentationMode === "picture-in-picture" ? "inline" : "picture-in-picture");
 				});
 			}

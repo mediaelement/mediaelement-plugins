@@ -200,7 +200,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					t.updateQualityButton(this, player, currentQuality);
 					t.switchHLSQuality(player, media);
 				} else {
-					t.updateQualityButton(this, player, currentQuality);
+					currentQuality = t.updateQualityButton(this, player, currentQuality);
 
 					var currentTime = media.currentTime;
 					var paused = media.paused;
@@ -324,10 +324,9 @@ Object.assign(MediaElementPlayer.prototype, {
 			}
 		}
 	},
-	updateQualityButton: function updateQualityButton(self, player, currentQuality) {
+	updateQualityButton: function updateQualityButton(self, player) {
 		var t = this;
 		var newQuality = self.value;
-		currentQuality = newQuality;
 
 		var formerSelected = player.qualitiesContainer.querySelectorAll('.' + t.options.classPrefix + 'qualities-selected');
 		for (var i = 0, total = formerSelected.length; i < total; i++) {
@@ -345,6 +344,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		player.qualitiesContainer.querySelector('button').innerHTML = newQuality;
+		return newQuality;
 	},
 	getQualityFromHeight: function getQualityFromHeight(height) {
 		if (height >= 4320) {

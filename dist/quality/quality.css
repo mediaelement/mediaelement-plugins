@@ -42,13 +42,13 @@
 
 .mejs__qualities-selector li,
 .mejs-qualities-selector li {
+    border: 0.06rem solid transparent;
     color: #fff;
     cursor: pointer;
     display: block;
     list-style-type: none!important;
     overflow: hidden;
     padding: 0 0.625rem;
-    border: 0.06rem solid transparent;
 }
 
 .mejs__qualities-selector li:hover,

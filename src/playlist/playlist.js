@@ -348,9 +348,9 @@ Object.assign(MediaElementPlayer.prototype, {
 	},
 
 	createPlayList_ () {
-    		const t = this;
+		const t = this;
 
-		t.playlist = t.options.playlist.length ? t.options.playlist : 
+		t.playlist = t.options.playlist.length ? t.options.playlist :
 			t.mediaFiles && t.mediaFiles.length ? t.mediaFiles : [];
 
 		if (!t.playlist.length) {
