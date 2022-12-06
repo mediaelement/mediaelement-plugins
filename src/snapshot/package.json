@@ -21,7 +21,7 @@
     "grunt": "^1.0.2",
     "grunt-contrib-uglify": "^3.3.0",
     "grunt-contrib-uglify-es": "git://github.com/gruntjs/grunt-contrib-uglify.git#harmony",
-    "grunt-contrib-watch": "^1.0.1",
+    "grunt-contrib-watch": "^1.1.0",
     "grunt-css": "^0.5.4"
   },
   "dependencies": {}
