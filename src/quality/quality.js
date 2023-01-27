@@ -96,6 +96,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		});
 
 		media.addEventListener('loadedmetadata', function () {
+			// eslint-disable-next-line
 			if (!!media.hlsPlayer) {
 				const levels = media.hlsPlayer.levels;
 				if (t.options.autoGenerate && levels.length > 1) {
@@ -107,6 +108,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					t.options.autoHLS = true;
 					t.generateQualityButton(t, player, media, qualityMap, currentQuality);
 				}
+				// eslint-disable-next-line
 			} else if (!!media.dashPlayer) {
 				const bitrates = media.dashPlayer.getBitrateInfoListFor("video");
 				if (t.options.autoGenerate && bitrates.length > 1) {
@@ -242,7 +244,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					t.updateQualityButton(this, player, currentQuality);
 					t.switchHLSQuality(player, media);
 				} else {
-					t.updateQualityButton(this, player, currentQuality);
+					currentQuality = t.updateQualityButton(this, player, currentQuality);
 
 					let currentTime = media.currentTime;
 					const paused = media.paused;
@@ -419,14 +421,12 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * Responsible for switching the video source when quality source was auto created from dash manifest
 	 * @param {Element} self the check quality radio button
 	 * @param {MediaElementPlayer} player
-	 * @param {String} currentQuality the label for the current quality selection
 	 */
-	updateQualityButton (self, player, currentQuality) {
+	updateQualityButton (self, player) {
 		const t = this;
 		const
 			newQuality = self.value
 		;
-		currentQuality = newQuality;
 
 		const formerSelected = player.qualitiesContainer.querySelectorAll(`.${t.options.classPrefix}qualities-selected`);
 		for (let i = 0, total = formerSelected.length; i < total; i++) {
@@ -442,12 +442,13 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		player.qualitiesContainer.querySelector('button').innerHTML = newQuality;
+		return newQuality;
 	},
 
 	/**
-	* Returns the quality represnetaion base on the height of the loaded video
-	* @param {Number} height the pixel height of the video
-	**/
+	 * Returns the quality represnetaion base on the height of the loaded video
+	 * @param {Number} height the pixel height of the video
+	 **/
 	getQualityFromHeight (height) {
 		if (height >= 4320) {
 			return "8K UHD";

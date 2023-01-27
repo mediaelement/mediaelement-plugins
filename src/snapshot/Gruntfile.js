@@ -9,7 +9,7 @@ module.exports = function(grunt) {
 		/**
 		 * Add tasks
 		 */
-		
+
 		watch: {
 			js:{
 				files: [
@@ -32,10 +32,10 @@ module.exports = function(grunt) {
 		uglify: {
 
 			js: {
-		      files: {
-		        'snapshot.min.js': ['snapshot.js']
-		      }
-		    }
+				files: {
+					'snapshot.min.js': ['snapshot.js']
+				}
+			}
 
 		},
 
@@ -53,12 +53,12 @@ module.exports = function(grunt) {
 
 
 	// Load modules
-	 grunt.loadNpmTasks('grunt-contrib-watch');
-	 grunt.loadNpmTasks('grunt-contrib-uglify-es');
-	 grunt.loadNpmTasks('grunt-css');
-  	 
+	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-contrib-uglify-es');
+	grunt.loadNpmTasks('grunt-css');
 
-  	 // Register the default tasks.
+
+	// Register the default tasks.
 	grunt.registerTask('default', ['watch']);
 
 };
