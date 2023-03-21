@@ -33,6 +33,9 @@ if (mejs.i18n.ja !== undefined) {
 if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.speed-rate'] = '속도 속도';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.speed-rate'] = 'Kelajuan';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.speed-rate'] = 'Snelheidsgraad';
 }
@@ -53,6 +56,9 @@ if (mejs.i18n.sk !== undefined) {
 }
 if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.speed-rate'] = 'Hastighet';
+}
+if (mejs.i18n.tr !== undefined) {
+	mejs.i18n.tr['mejs.speed-rate'] = 'Hız oranı';
 }
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.speed-rate'] = 'Швидкість відтворення';

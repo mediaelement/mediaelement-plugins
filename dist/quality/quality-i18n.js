@@ -33,6 +33,9 @@ if (mejs.i18n.ja !== undefined) {
 if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.quality-chooser']= '품질 선택자';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.quality-chooser']= 'Pilih kualiti';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.quality-chooser']= 'Kwaliteit kiezer';
 }
@@ -54,8 +57,11 @@ if (mejs.i18n.sk !== undefined) {
 if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.quality-chooser']= 'Kvalitetsvalare';
 }
+if (mejs.i18n.tr !== undefined) {
+	mejs.i18n.tr['mejs.quality-chooser']= 'Kalite';
+}
 if (mejs.i18n.uk !== undefined) {
-	mejs.i18n.uk['mejs.quality-chooser']= 'Якісний вибір';
+	mejs.i18n.uk['mejs.quality-chooser']= 'Вибір якості';
 }
 if (mejs.i18n.zh !== undefined) {
 	mejs.i18n.zh['mejs.quality-chooser']= '質量選擇';

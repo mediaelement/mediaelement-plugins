@@ -279,6 +279,8 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (t.options.indexPreroll < t.options.adsPrerollMediaUrl.length) {
 				t.adsStartPreroll();
 			} else {
+				const event = mejs.Utils.createEvent('mejsprerollfinished', t.container);
+				t.container.dispatchEvent(event);
 				t.adRestoreMainMedia();
 			}
 
@@ -360,6 +362,10 @@ Object.assign(MediaElementPlayer.prototype, {
 		if (t.options.indexPreroll < t.options.adsPrerollMediaUrl.length) {
 			t.adsStartPreroll();
 		} else {
+			
+			event = mejs.Utils.createEvent('mejsprerollfinished', t.container);
+			t.container.dispatchEvent(event);
+			
 			t.adRestoreMainMedia();
 		}
 

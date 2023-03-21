@@ -49,16 +49,16 @@ Object.assign(MediaElementPlayer.prototype, {
         if (t.options.audioDescriptionSource) t._createAudioDescription();
         if (t.options.videoDescriptionSource) t._createVideoDescription();
 
-        t.node.addEventListener('play', function () {
+        t.media.addEventListener('play', function () {
             return t.options.isPlaying = true;
         });
-        t.node.addEventListener('playing', function () {
+        t.media.addEventListener('playing', function () {
             return t.options.isPlaying = true;
         });
-        t.node.addEventListener('pause', function () {
+        t.media.addEventListener('pause', function () {
             return t.options.isPlaying = false;
         });
-        t.node.addEventListener('ended', function () {
+        t.media.addEventListener('ended', function () {
             return t.options.isPlaying = false;
         });
     },
@@ -164,39 +164,43 @@ Object.assign(MediaElementPlayer.prototype, {
             features: ['volume'],
             audioVolume: t.options.videoVolume,
             startVolume: t.node.volume,
-            pauseOtherPlayers: false
+            pauseOtherPlayers: false,
+
+            iconSprite: t.options.iconSprite,
+
+            fakeNodeName: t.options.fakeNodeName || 'mediaelementwrapper'
         });
 
         t.audioDescription.node.addEventListener('canplay', function () {
             return t.options.audioDescriptionCanPlay = true;
         });
-        t.node.addEventListener('play', function () {
+        t.media.addEventListener('play', function () {
             return t.audioDescription.node.play().catch(function (e) {
                 return console.error(e);
             });
         });
-        t.node.addEventListener('playing', function () {
+        t.media.addEventListener('playing', function () {
             return t.audioDescription.node.play().catch(function (e) {
                 return console.error(e);
             });
         });
-        t.node.addEventListener('pause', function () {
+        t.media.addEventListener('pause', function () {
             return t.audioDescription.node.pause();
         });
-        t.node.addEventListener('waiting', function () {
+        t.media.addEventListener('waiting', function () {
             return t.audioDescription.node.pause();
         });
-        t.node.addEventListener('ended', function () {
+        t.media.addEventListener('ended', function () {
             return t.audioDescription.node.pause();
         });
-        t.node.addEventListener('timeupdate', function () {
-            var shouldSync = Math.abs(t.node.currentTime - t.audioDescription.node.currentTime) > 0.35;
+        t.media.addEventListener('timeupdate', function () {
+            var shouldSync = Math.abs(t.currentTime - t.audioDescription.node.currentTime) > 0.35;
             var canPlay = t.options.audioDescriptionCanPlay;
-            if (shouldSync && canPlay) t.audioDescription.node.currentTime = t.node.currentTime;
+            if (shouldSync && canPlay) t.audioDescription.node.currentTime = t.currentTime;
         });
 
         if (t.options.isVoiceover) {
-            t.node.addEventListener('volumechange', function () {
+            t.media.addEventListener('volumechange', function () {
                 return t.audioDescription.node.volume = t.node.volume;
             });
         } else {
@@ -218,13 +222,16 @@ Object.assign(MediaElementPlayer.prototype, {
         if (!t.audioDescription) t._createAudioDescriptionPlayer();
 
         if (t.options.audioDescriptionToggled) {
-            t.audioDescription.node.volume = t.node.volume;
-            if (t.options.isPlaying && t.audioDescription) t.audioDescription.node.play().catch(function (e) {
-                return console.error(e);
-            });
+            t.audioDescription.node.volume = t.volume;
+            if (t.options.isPlaying && t.audioDescription) {
+                t.audioDescription.node.muted = false;
+                t.audioDescription.node.play().catch(function (e) {
+                    return console.error(e);
+                });
+            }
 
             if (!t.options.isVoiceover) {
-                t.node.muted = true;
+                t.muted = true;
                 t.audioDescription.node.muted = false;
             }
 
@@ -233,11 +240,12 @@ Object.assign(MediaElementPlayer.prototype, {
                 mejs.Utils.removeClass(t.descriptiveVolumeButton, 'hidden');
             }
         } else {
-            t.node.volume = t.audioDescription.node.volume;
+            t.volume = t.audioDescription.node.volume;
             t.audioDescription.node.pause();
+            t.audioDescription.node.muted = true;
 
             if (!t.options.isVoiceover) {
-                t.node.muted = false;
+                t.muted = false;
                 t.audioDescription.node.muted = true;
             }
 

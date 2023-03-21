@@ -33,6 +33,9 @@ if (mejs.i18n.ja !== undefined) {
 if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.loop'] = '루프 토글';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.loop'] = 'Togol ulangan';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.loop'] = 'Schakellus';
 }
@@ -53,6 +56,9 @@ if (mejs.i18n.sk !== undefined) {
 }
 if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.loop'] = 'Repetera';
+}
+if (mejs.i18n.tr !== undefined) {
+	mejs.i18n.tr['mejs.loop'] = 'Döngü';
 }
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.loop'] = 'Повторювати';

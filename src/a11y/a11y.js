@@ -69,10 +69,10 @@ Object.assign(MediaElementPlayer.prototype, {
         if (t.options.audioDescriptionSource) t._createAudioDescription();
         if (t.options.videoDescriptionSource) t._createVideoDescription();
 
-        t.node.addEventListener('play', () => t.options.isPlaying = true);
-        t.node.addEventListener('playing', () => t.options.isPlaying = true);
-        t.node.addEventListener('pause', () => t.options.isPlaying = false);
-        t.node.addEventListener('ended', () => t.options.isPlaying = false);
+        t.media.addEventListener('play', () => t.options.isPlaying = true);
+        t.media.addEventListener('playing', () => t.options.isPlaying = true);
+        t.media.addEventListener('pause', () => t.options.isPlaying = false);
+        t.media.addEventListener('ended', () => t.options.isPlaying = false);
     },
 
     /**
@@ -211,25 +211,29 @@ Object.assign(MediaElementPlayer.prototype, {
             features: ['volume'],
             audioVolume: t.options.videoVolume,
             startVolume: t.node.volume,
-            pauseOtherPlayers: false
+            pauseOtherPlayers: false,
+            // use same iconSprite as in video
+            iconSprite: t.options.iconSprite,
+            // use same nodeName as in video
+            fakeNodeName: t.options.fakeNodeName || 'mediaelementwrapper',
         });
 
         t.audioDescription.node.addEventListener('canplay', () => t.options.audioDescriptionCanPlay = true);
-        t.node.addEventListener('play', () => t.audioDescription.node.play().catch(e => console.error(e)));
-        t.node.addEventListener('playing', () => t.audioDescription.node.play().catch(e => console.error(e)));
-        t.node.addEventListener('pause', () => t.audioDescription.node.pause());
-        t.node.addEventListener('waiting', () => t.audioDescription.node.pause());
-        t.node.addEventListener('ended', () => t.audioDescription.node.pause());
-        t.node.addEventListener('timeupdate', () => {
-            const shouldSync = Math.abs(t.node.currentTime - t.audioDescription.node.currentTime) > 0.35;
+        t.media.addEventListener('play', () => t.audioDescription.node.play().catch(e => console.error(e)));
+        t.media.addEventListener('playing', () => t.audioDescription.node.play().catch(e => console.error(e)));
+        t.media.addEventListener('pause', () => t.audioDescription.node.pause());
+        t.media.addEventListener('waiting', () => t.audioDescription.node.pause());
+        t.media.addEventListener('ended', () => t.audioDescription.node.pause());
+        t.media.addEventListener('timeupdate', () => {
+            const shouldSync = Math.abs(t.currentTime - t.audioDescription.node.currentTime) > 0.35;
             const canPlay = t.options.audioDescriptionCanPlay;
-            if (shouldSync && canPlay) t.audioDescription.node.currentTime = t.node.currentTime;
+            if (shouldSync && canPlay) t.audioDescription.node.currentTime = t.currentTime;
         });
 
         // if audio description is voice over, map volume slider to both players
         // otherwise move the audio players volume slider inside the movie player to simulate normal volume handling
         if(t.options.isVoiceover) {
-            t.node.addEventListener('volumechange', () => t.audioDescription.node.volume = t.node.volume);
+            t.media.addEventListener('volumechange', () => t.audioDescription.node.volume = t.node.volume);
         } else {
             const volumeButtonClass = `${t.options.classPrefix}volume-button`;
             const videoVolumeButton = t._getFirstChildNodeByClassName(t.controls, volumeButtonClass);
@@ -255,11 +259,16 @@ Object.assign(MediaElementPlayer.prototype, {
         if (!t.audioDescription) t._createAudioDescriptionPlayer();
 
         if (t.options.audioDescriptionToggled) {
-            t.audioDescription.node.volume = t.node.volume;
-            if (t.options.isPlaying && t.audioDescription) t.audioDescription.node.play().catch(e => console.error(e));
+            t.audioDescription.node.volume = t.volume;
+            if (t.options.isPlaying && t.audioDescription) {
+                t.audioDescription.node.muted = false;
+                t.audioDescription.node.play().catch(function (e) {
+                    return console.error(e);
+                });
+            }
 
             if(!t.options.isVoiceover) {
-                t.node.muted = true;
+                t.muted = true;
                 t.audioDescription.node.muted = false;
             }
 
@@ -268,11 +277,12 @@ Object.assign(MediaElementPlayer.prototype, {
                 mejs.Utils.removeClass(t.descriptiveVolumeButton, 'hidden');
             }
         } else {
-            t.node.volume = t.audioDescription.node.volume;
+            t.volume = t.audioDescription.node.volume;
             t.audioDescription.node.pause();
+            t.audioDescription.node.muted = true;
 
             if(!t.options.isVoiceover) {
-                t.node.muted = false;
+                t.muted = false;
                 t.audioDescription.node.muted = true;
             }
 

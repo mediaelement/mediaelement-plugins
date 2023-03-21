@@ -77,6 +77,13 @@ if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.playlist-loop'] = '고리';
 	mejs.i18n.ko['mejs.playlist-shuffle'] = '혼합';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.playlist'] = 'Senarai main';
+	mejs.i18n.ms['mejs.playlist-prev'] = 'Sebelum';
+	mejs.i18n.ms['mejs.playlist-next'] = 'Selepas';
+	mejs.i18n.ms['mejs.playlist-loop'] = 'Ulang senarai';
+	mejs.i18n.ms['mejs.playlist-shuffle'] = 'Kocok senarai';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.playlist'] = 'Afspeellijst';
 	mejs.i18n.nl['mejs.playlist-prev'] = 'Voorgaand';
@@ -109,8 +116,8 @@ if (mejs.i18n.ru !== undefined) {
 	mejs.i18n.ru['mejs.playlist'] = 'плейлист';
 	mejs.i18n.ru['mejs.playlist-prev'] = 'предыдущий';
 	mejs.i18n.ru['mejs.playlist-next'] = 'следующий';
-	mejs.i18n.ru['mejs.playlist-loop'] = 'петля';
-	mejs.i18n.ru['mejs.playlist-shuffle'] = 'шарканье';
+	mejs.i18n.ru['mejs.playlist-loop'] = 'зациклить';
+	mejs.i18n.ru['mejs.playlist-shuffle'] = 'перемешать';
 }
 if (mejs.i18n.sk !== undefined) {
 	mejs.i18n.sk['mejs.playlist'] = 'Playlist';
@@ -125,6 +132,13 @@ if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.playlist-next'] = 'Nästa';
 	mejs.i18n.sv['mejs.playlist-loop'] = 'Slinga';
 	mejs.i18n.sv['mejs.playlist-shuffle'] = 'Blanda';
+}
+if (mejs.i18n.tr !== undefined) {
+	mejs.i18n.tr['mejs.playlist'] = 'Oynatma Listesi';
+	mejs.i18n.tr['mejs.playlist-prev'] = 'Önceki';
+	mejs.i18n.tr['mejs.playlist-next'] = 'Sonraki';
+	mejs.i18n.tr['mejs.playlist-loop'] = 'Döngü';
+	mejs.i18n.tr['mejs.playlist-shuffle'] = 'Karıştır';
 }
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.playlist'] = 'Плейлист';

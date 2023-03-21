@@ -33,6 +33,9 @@ if (mejs.i18n.ja !== undefined) {
 if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.time-jump-forward'] = '%1 초 앞으로 뛰어 오르십시오';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.time-jump-forward'] = 'Lompat masa %1 saat';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.time-jump-forward'] = '%1 seconden vooruit springen';
 }
@@ -53,6 +56,9 @@ if (mejs.i18n.sk !== undefined) {
 }
 if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.time-jump-forward'] = ['Hoppa fram 1 sekund', 'Hoppa fram %1 sekunder'];
+}
+if (mejs.i18n.tr !== undefined) {
+	mejs.i18n.tr['mejs.time-jump-forward'] = ['1 saniye ileri atla', '%1 saniye ileri atla'];
 }
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.time-jump-forward'] = ['Перейти вперед на %1 секунду', 'Перейти вперед на %1 секунди', 'Перейти вперед на %1 секунд'];

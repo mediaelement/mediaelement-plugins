@@ -1,0 +1,10 @@
+#picture-in-picture-button {
+    background-color: transparent;
+    background-image: url(picture-in-picture.svg);
+    background-position:center;
+    background-repeat: no-repeat;
+    background-size: auto;
+    border: none;
+    color: #fff;
+    width: 30px;
+}

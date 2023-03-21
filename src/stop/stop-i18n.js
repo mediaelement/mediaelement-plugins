@@ -33,6 +33,9 @@ if (mejs.i18n.ja !== undefined) {
 if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.stop'] = '중지';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.stop'] = 'Berhenti';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.stop'] = 'Hou op';
 }
@@ -53,6 +56,9 @@ if (mejs.i18n.sk !== undefined) {
 }
 if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.stop'] = 'Stoppa';
+}
+if (mejs.i18n.tr !== undefined) {
+	mejs.i18n.tr['mejs.stop'] = 'Durdur';
 }
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.stop'] = 'Зупинити';

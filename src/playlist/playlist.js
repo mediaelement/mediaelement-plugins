@@ -16,7 +16,7 @@ mejs.i18n.en['mejs.playlist-shuffle'] = 'Shuffle';
 // Feature configuration
 Object.assign(mejs.MepDefaults, {
 	/**
-	 * List to be played; each object MUST have `src` and `title`; other items: `data-thumbnail`, `type`, `description`
+	 * List to be played; each object MUST have `src` and `title`; other items: `data-playlist-thumbnail`, `type`, `description`
 	 * @type {Object[]}
 	 */
 	playlist: [],
@@ -101,7 +101,7 @@ Object.assign(MediaElementPlayer.prototype, {
 						currentItem.innerHTML += `<img tabindex="-1" src="${player.playlist[player.currentPlaylistItem]['data-playlist-thumbnail']}">`;
 					}
 
-					currentItem.innerHTML += `<p>${player.options.currentMessage} <span class="${player.options.classPrefix}playlist-current-title">${player.playlist[player.currentPlaylistItem].title}</span>`;
+					currentItem.innerHTML += `<p>${player.options.currentMessage || ''} <span class="${player.options.classPrefix}playlist-current-title">${player.playlist[player.currentPlaylistItem].title}</span>`;
 					if (typeof player.playlist[player.currentPlaylistItem].description !== 'undefined') {
 						currentItem.innerHTML += ` - <span class="${player.options.classPrefix}playlist-current-description">${player.playlist[player.currentPlaylistItem].description}</span>`;
 					}
@@ -350,10 +350,11 @@ Object.assign(MediaElementPlayer.prototype, {
 	createPlayList_ () {
 		const t = this;
 
-		t.playlist = t.options.playlist.length ? t.options.playlist : [];
+		t.playlist = t.options.playlist.length ? t.options.playlist :
+			t.mediaFiles && t.mediaFiles.length ? t.mediaFiles : [];
 
 		if (!t.playlist.length) {
-			const children = t.mediaFiles || t.media.originalNode.children;
+			const children = t.media.originalNode.children;
 
 			for (let i = 0, total = children.length; i < total; i++) {
 				const childNode = children[i];

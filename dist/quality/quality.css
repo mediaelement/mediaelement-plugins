@@ -1,3 +1,7 @@
+.mejs__qualities-selector.mejs__offscreen {
+    display: none;
+}
+
 .mejs__qualities-button,
 .mejs-qualities-button {
     position: relative;
@@ -7,24 +11,24 @@
 .mejs-qualities-button > button {
     background: transparent;
     color: #fff;
-    font-size: 11px;
-    line-height: normal;
-    margin: 11px 0 0;
-    width: 36px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    margin: 0.563rem 0 0;
+    width: 2.25rem;
 }
 
 .mejs__qualities-selector,
 .mejs-qualities-selector {
     background: rgba(50, 50, 50, 0.7);
-    border: solid 1px transparent;
+    border: 0.063rem solid transparent;
     border-radius: 0;
-    height: 100px;
-    left: -10px;
+    height: 6.25rem;
+    left: -0.625rem;
     overflow: hidden;
     padding: 0;
     position: absolute;
-    top: -100px;
-    width: 60px;
+    top: -6.25rem;
+    width: 3.75rem;
 }
 
 .mejs__qualities-selector ul,
@@ -38,26 +42,32 @@
 
 .mejs__qualities-selector li,
 .mejs-qualities-selector li {
+    border: 0.06rem solid transparent;
     color: #fff;
     cursor: pointer;
     display: block;
     list-style-type: none!important;
-    margin: 0 0 6px;
     overflow: hidden;
-    padding: 0 10px;
+    padding: 0 0.625rem;
 }
+
 .mejs__qualities-selector li:hover,
 .mejs-qualities-selector li:hover {
     background-color: rgba(255, 255, 255, 0.2);
     cursor: pointer;
 }
 
+.mejs__qualities-selector li:focus-within,
+.mejs-qualities-selector li:focus-within {
+    border-color: #fff;
+}
+
 .mejs__qualities-selector input,
 .mejs-qualities-selector input {
     clear: both;
     float: left;
-    left: -1000px;
-    margin: 3px 3px 0 5px;
+    left: -62.5rem;
+    margin: 0.188rem 0.188rem 0 0.313rem;
     position: absolute;
 }
 
@@ -65,10 +75,9 @@
 .mejs-qualities-selector label {
     cursor: pointer;
     float: left;
-    font-size: 10px;
-    line-height: 15px;
-    padding: 4px 0 0;
-    width: 55px;
+    font-size: 0.625rem;
+    padding: 0.375rem 0;
+    width: 3.438rem;
 }
 
 .mejs__qualities-selected,

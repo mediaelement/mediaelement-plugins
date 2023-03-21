@@ -55,6 +55,11 @@ if (mejs.i18n.ko !== undefined) {
 	mejs.i18n.ko['mejs.fullscreen-on'] = '전체화면 가기';
 	mejs.i18n.ko['mejs.download-video'] = '비디오 다운로드';
 }
+if (mejs.i18n.ms !== undefined) {
+	mejs.i18n.ms['mejs.fullscreen-off'] = 'Keluar dari mod skrin penuh';
+	mejs.i18n.ms['mejs.fullscreen-on'] = 'Masuk ke mod skrin penuh';
+	mejs.i18n.ms['mejs.download-video'] = 'Muat turun video';
+}
 if (mejs.i18n.nl !== undefined) {
 	mejs.i18n.nl['mejs.fullscreen-off'] = 'Volledig scherm uitschakelen';
 	mejs.i18n.nl['mejs.fullscreen-on'] = 'Volledig scherm';
@@ -89,6 +94,11 @@ if (mejs.i18n.sv !== undefined) {
 	mejs.i18n.sv['mejs.fullscreen-off'] = 'Stäng av Fullskärmläge';
 	mejs.i18n.sv['mejs.fullscreen-on'] = 'Visa i Fullskärmsläge';
 	mejs.i18n.sv['mejs.download-video'] = 'Ladda ner Video';
+}
+if (mejs.i18n.tr !== undefined) {
+	mejs.i18n.tr['mejs.fullscreen-off'] = 'Tam ekran modundan çık';
+	mejs.i18n.tr['mejs.fullscreen-on'] = 'Tam ekran moduna geç';
+	mejs.i18n.tr['mejs.download-video'] = 'Videoyu indir';
 }
 if (mejs.i18n.uk !== undefined) {
 	mejs.i18n.uk['mejs.fullscreen-off'] = 'Вимкнути повноекранний режим';

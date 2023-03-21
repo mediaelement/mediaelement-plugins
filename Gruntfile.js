@@ -48,6 +48,7 @@ module.exports = function (grunt) {
 					'dist/context-menu/context-menu.js': 'src/context-menu/context-menu.js',
 					'dist/facebook-pixel/facebook-pixel.js': 'src/facebook-pixel/facebook-pixel.js',
 					'dist/google-analytics/google-analytics.js': 'src/google-analytics/google-analytics.js',
+					'dist/google-tag-manager/google-tag-manager.js': 'src/google-tag-manager/google-tag-manager.js',
 					'dist/jump-forward/jump-forward.js': 'src/jump-forward/jump-forward.js',
 					'dist/loop/loop.js': 'src/loop/loop.js',
 					'dist/markers/markers.js': 'src/markers/markers.js',
@@ -60,6 +61,7 @@ module.exports = function (grunt) {
 					'dist/speed/speed.js': 'src/speed/speed.js',
 					'dist/stop/stop.js': 'src/stop/stop.js',
 					'dist/vrview/vrview.js': 'src/vrview/vrview.js',
+					'dist/markersrolls/markersrolls.js': 'src/markersrolls/markersrolls.js',
 				},
 				options: {
 					plugin: [
@@ -164,8 +166,18 @@ module.exports = function (grunt) {
 					{
 						cwd: 'src',
 						expand: true,
-						src: ['**/*.png', '**/*.svg', '**/*-i18n.js'],
+						src: ['**/*.png', '**/*.svg', '**/*-i18n.js', '!**/demo/**'],
 						dest: 'dist/'
+					}
+				]
+			},
+			demo: {
+				files: [
+					{
+						cwd: 'src/demo',
+						expand: true,
+						src: ['mejs-controls.svg'],
+						dest: 'demo/'
 					}
 				]
 			}
