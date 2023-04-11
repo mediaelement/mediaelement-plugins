@@ -5,20 +5,16 @@
 .mejs__qualities-button,
 .mejs-qualities-button {
     position: relative;
-    width: auto;
 }
 
 .mejs__qualities-button > button,
 .mejs-qualities-button > button {
     background: transparent;
     color: #fff;
-    display: block;
     font-size: 0.6875rem;
     font-weight: 700;
     margin: 0.563rem 0 0;
-    min-width: 2.25rem;
-    position: static;
-    width: auto;
+    width: 2.25rem;
 }
 
 .mejs__qualities-selector,
