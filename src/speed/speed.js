@@ -107,10 +107,11 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		player.speedButton = document.createElement('div');
 		player.speedButton.className = `${t.options.classPrefix}button ${t.options.classPrefix}speed-button`;
+		player.speedButton.id = `speed-button-${Math.random()}`;
 		player.speedButton.innerHTML = `<button type="button" aria-controls="${t.id}" title="${speedTitle}" ` +
 			`aria-label="${speedTitle}" tabindex="0">${getSpeedNameFromValue(t.options.defaultSpeed)}</button>` +
 			`<div class="${t.options.classPrefix}speed-selector ${t.options.classPrefix}offscreen">` +
-				`<ul class="${t.options.classPrefix}speed-selector-list"></ul>` +
+				`<ul class="${t.options.classPrefix}speed-selector-list" role="radiogroup" aria-labelledby="${player.speedButton.id}"></ul>` +
 			`</div>`;
 
 		t.addControlElement(player.speedButton, 'speed');
