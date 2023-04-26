@@ -1,6 +1,19 @@
 # Version History
 
+## *2.6.6 (2022/04/26)*
+
+### QUALITY PLUGIN
+Improvements to the last quality-plugin update:
+* Fixes Release 2.6.5
+
 ## *2.6.5 (2022/04/25)*
+
+### QUALITY PLUGIN
+Improvements to the last quality-plugin update:
+* Fixes Release 2.6.4
+
+## *2.6.4 (2022/04/24)*
+
 ### QUALITY PLUGIN
 Improvements to the last quality-plugin update:
 * Add flexible width for Quality-Button Content
