@@ -343,9 +343,10 @@ Object.assign(MediaElementPlayer.prototype, {
 		for (let i = 0; i < media.children.length; i++) {
 			let mediaNode = media.children[i];
 			if (mediaNode.tagName === 'VIDEO') {
-				while (mediaNode.firstChild) {
-					mediaNode.removeChild(mediaNode.firstChild);
-				}
+				const sourceNodes = mediaNode.querySelectorAll('source');
+				Array.from(sourceNodes).forEach((sourceNode) => {
+					mediaNode.removeChild(sourceNode);
+				});
 			}
 		}
 	},
