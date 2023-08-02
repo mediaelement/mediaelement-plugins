@@ -274,13 +274,18 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 	},
 	cleanMediaSource: function cleanMediaSource(media) {
-		for (var i = 0; i < media.children.length; i++) {
-			var _mediaNode = media.children[i];
-			if (_mediaNode.tagName === 'VIDEO') {
-				while (_mediaNode.firstChild) {
-					_mediaNode.removeChild(_mediaNode.firstChild);
-				}
+		var _loop2 = function _loop2(i) {
+			var mediaNode = media.children[i];
+			if (mediaNode.tagName === 'VIDEO') {
+				var sourceNodes = mediaNode.querySelectorAll('source');
+				Array.from(sourceNodes).forEach(function (sourceNode) {
+					mediaNode.removeChild(sourceNode);
+				});
 			}
+		};
+
+		for (var i = 0; i < media.children.length; i++) {
+			_loop2(i);
 		}
 	},
 	getMapIndex: function getMapIndex(map, index) {

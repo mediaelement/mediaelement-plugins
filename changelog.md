@@ -1,5 +1,10 @@
 # Version History
 
+## *2.6.7 (2023/08/02)*
+### QUALITY PLUGIN
+* The `cleanMediaSource` function was updated to avoid captions being 
+deleted when the quality of video is changed.
+
 ## *2.6.6 (2022/04/26)*
 
 ### QUALITY PLUGIN
