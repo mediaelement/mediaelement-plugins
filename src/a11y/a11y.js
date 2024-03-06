@@ -51,6 +51,12 @@ Object.assign(mejs.MepDefaults, {
      * @type {Boolean}
      */
     audioDescriptionCanPlay: false,
+
+    /**
+	 * The path where the icon sprite is located
+	 * @type {String}
+	 */
+	iconSpritePath: 'mejs-a11y-icons.svg',
 });
 
 
@@ -87,17 +93,31 @@ Object.assign(MediaElementPlayer.prototype, {
     },
 
     /**
+     * Generates an HTML for an SVG icon. 
+     * @private
+     * @param {String} id
+     * @param {String} classPrefix
+     * @param {String} iconSpritePath
+     * @param {String} iconId
+     * @returns {String}
+     */
+    _generateIconHtml(id, classPrefix, iconSpritePath, iconId) {
+        return `<svg xmlns="http://www.w3.org/2000/svg" id="${id}" class="${classPrefix}${iconId}" aria-hidden="true" focusable="false">
+            <use xlink:href="${iconSpritePath}#${iconId}"></use></svg>`;
+    },
+
+    /**
      * Create audio description button and bind events
      * @private
      * @returns {Undefined}
      */
     _createAudioDescription() {
         const t = this;
-
+        const iconHtml = t._generateIconHtml(t.id, t.options.classPrefix, t.options.iconSpritePath, 'icon-audio');
         const audioDescriptionTitle = mejs.i18n.t('mejs.a11y-audio-description');
         const audioDescriptionButton = document.createElement('div');
         audioDescriptionButton.className = `${t.options.classPrefix}button ${t.options.classPrefix}audio-description-button`;
-        audioDescriptionButton.innerHTML = `<button type="button" aria-controls="${t.id}" title="${audioDescriptionTitle}" aria-label="${audioDescriptionTitle}" tabindex="0"></button>`;
+        audioDescriptionButton.innerHTML = `<button type="button" aria-controls="${t.id}" title="${audioDescriptionTitle}" aria-label="${audioDescriptionTitle}" tabindex="0">${iconHtml}</button>`;
 
         t.addControlElement(audioDescriptionButton, 'audio-description');
 
@@ -116,10 +136,11 @@ Object.assign(MediaElementPlayer.prototype, {
      */
     _createVideoDescription() {
         const t = this;
+        const iconHtml = t._generateIconHtml(t.id, t.options.classPrefix, t.options.iconSpritePath, 'icon-video');
         const videoDescriptionTitle = mejs.i18n.t('mejs.a11y-video-description');
         const videoDescriptionButton = document.createElement('div');
         videoDescriptionButton.className = `${t.options.classPrefix}button ${t.options.classPrefix}video-description-button`;
-        videoDescriptionButton.innerHTML = `<button type="button" aria-controls="${t.id}" title="${videoDescriptionTitle}" aria-label="${videoDescriptionTitle}" tabindex="0"></button>`;
+        videoDescriptionButton.innerHTML = `<button type="button" aria-controls="${t.id}" title="${videoDescriptionTitle}" aria-label="${videoDescriptionTitle}" tabindex="0">${iconHtml}</button>`;
         t.addControlElement(videoDescriptionButton, 'video-description');
 
         videoDescriptionButton.addEventListener('click', () => {

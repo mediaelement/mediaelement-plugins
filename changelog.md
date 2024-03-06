@@ -1,5 +1,16 @@
 # Version History
 
+## *3.0.0 (2024/03/06)*
+### QUALITY PLUGIN
+#### New Feature: Inline SVG icons for quality button
+* Using `iconSpritePath`: By setting the `iconSpritePath` option, you can specify the path to your SVG icon sprite. Once set, an inline SVG icon will be dynamically generated and displayed on the quality button. Further information can be found [here](docs/quality.md).
+* Default Behavior: If you choose not to utilize the `iconSpritePath` option, the quality button will continue to operate as before, displaying the default quality value as its text.
+
+### A11Y PLUGIN
+#### New Feature: Inline SVG icons for audio and video description buttons
+* Setting `iconSpritePath`: This option enables you to define the path to your SVG icon sprite. When specified, it allows for dynamic generation of inline SVG icons, which will be displayed on the audio and/or video description buttons. Further information can be found [here](docs/a11y.md).
+* Important CSS Adjustment: If you're planning to use `iconSpritePath` and your current setup includes background icons defined in CSS, you'll need to make a small but crucial update to your CSS file. Please remove any CSS rules that apply background icons to these buttons. This step is necessary to prevent the display of both SVG and background icons simultaneously.
+
 ## *2.6.7 (2023/08/02)*
 ### QUALITY PLUGIN
 * The `cleanMediaSource` function was updated to avoid captions being 
