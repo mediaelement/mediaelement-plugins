@@ -95,11 +95,11 @@ Object.assign(MediaElementPlayer.prototype, {
     /**
      * Generates an HTML for an SVG icon. 
      * @private
-     * @param {String} id
-     * @param {String} classPrefix
-     * @param {String} iconSpritePath
-     * @param {String} iconId
-     * @returns {String}
+     * @param {String} id - ID of the MediaElement player
+     * @param {String} classPrefix - Prefix for the class attribute
+     * @param {String} iconSpritePath - Path to the SVG sprite containing icons
+     * @param {String} iconId - Specific ID of the icon within the SVG sprite
+     * @returns {String} The complete HTML string for the SVG element
      */
     _generateIconHtml(id, classPrefix, iconSpritePath, iconId) {
         return `<svg xmlns="http://www.w3.org/2000/svg" id="${id}" class="${classPrefix}${iconId}" aria-hidden="true" focusable="false">

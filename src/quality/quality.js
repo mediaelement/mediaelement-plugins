@@ -37,10 +37,10 @@ Object.assign(mejs.MepDefaults, {
 	 */
 	qualityChangeCallback: null,
 	/**
-	 * The path where the icon sprite is located
+	 * The path where the icon file is located
 	 * @type {String}
 	 */
-	iconSpritePath: 'mejs-quality.svg',
+	iconPath: 'mejs-quality.svg',
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -157,11 +157,11 @@ Object.assign(MediaElementPlayer.prototype, {
 		// Get initial quality
 		const generateId = Math.floor(Math.random() * 100);
 		const iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" id="${generateId}" class="${t.options.classPrefix}" aria-hidden="true" focusable="false">
-			<use xlink:href="${t.options.iconSpritePath}#default-icon"></use></svg>`;
+			<use xlink:href="${t.options.iconPath}#default-icon"></use></svg>`;
 		player.qualitiesContainer = document.createElement('div');
 		player.qualitiesContainer.className = `${t.options.classPrefix}button ${t.options.classPrefix}qualities-button`;
 		player.qualitiesContainer.innerHTML = `<button type="button" title="${qualityTitle}" aria-label="${qualityTitle}" aria-controls="qualitieslist-${generateId}" aria-expanded="false">
-		${t.options.iconSpritePath ? iconHtml : defaultValue}</button>` +
+		${t.options.iconPath ? iconHtml : defaultValue}</button>` +
 			`<div class="${t.options.classPrefix}qualities-selector ${t.options.classPrefix}offscreen">` +
 			`<ul class="${t.options.classPrefix}qualities-selector-list" id="qualitieslist-${generateId}" tabindex="-1"></ul></div>`;
 

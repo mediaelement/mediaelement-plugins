@@ -3,8 +3,8 @@
 ## *3.0.0 (2024/03/06)*
 ### QUALITY PLUGIN
 #### New Feature: Inline SVG icons for quality button
-* Using `iconSpritePath`: By setting the `iconSpritePath` option, you can specify the path to your SVG icon sprite. Once set, an inline SVG icon will be dynamically generated and displayed on the quality button. Further information can be found [here](docs/quality.md).
-* Default Behavior: If you choose not to utilize the `iconSpritePath` option, the quality button will continue to operate as before, displaying the default quality value as its text.
+* Using `iconPath`: By setting the `iconPath` option, you can specify the path to your SVG icon. Once set, an inline SVG icon will be dynamically generated and displayed on the quality button. Further information can be found [here](docs/quality.md).
+* Default Behavior: If you choose not to utilize the `iconPath` option, the quality button will continue to operate as before, displaying the default quality value as its text.
 
 ### A11Y PLUGIN
 #### New Feature: Inline SVG icons for audio and video description buttons
