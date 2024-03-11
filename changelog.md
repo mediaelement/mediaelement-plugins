@@ -1,5 +1,12 @@
 # Version History
 
+## *4.0.0 (2024/03/11)*
+This release marks a major version update to address and correct previous versioning inaccuracies. The transition from version 3.0.0 to 3.0.1 introduced changes that, upon further review, have been identified as breaking. These changes warranted a more significant version increment to reflect their impact accurately.
+
+### Updated Option Names:
+* Quality Plugin: Replace `iconPath` to `iconPathQuality`
+* A11y Plugin: Replace `iconSpritePath` to `iconSpritePathA11y`
+
 ## *3.0.1 (2024/03/11)*
 ### QUALITY PLUGIN
 * Icon Visibility Fix: The quality icon will now remain visible and functional across all quality adjustments.
