@@ -56,7 +56,7 @@ Object.assign(mejs.MepDefaults, {
 	 * The path where the icon sprite is located
 	 * @type {String}
 	 */
-	iconSpritePath: 'mejs-a11y-icons.svg',
+	iconSpritePathA11y: 'mejs-a11y-icons.svg',
 });
 
 
@@ -97,13 +97,13 @@ Object.assign(MediaElementPlayer.prototype, {
      * @private
      * @param {String} id - ID of the MediaElement player
      * @param {String} classPrefix - Prefix for the class attribute
-     * @param {String} iconSpritePath - Path to the SVG sprite containing icons
+     * @param {String} iconSpritePathA11y - Path to the SVG sprite containing icons
      * @param {String} iconId - Specific ID of the icon within the SVG sprite
      * @returns {String} The complete HTML string for the SVG element
      */
-    _generateIconHtml(id, classPrefix, iconSpritePath, iconId) {
+    _generateIconHtml(id, classPrefix, iconSpritePathA11y, iconId) {
         return `<svg xmlns="http://www.w3.org/2000/svg" id="${id}" class="${classPrefix}${iconId}" aria-hidden="true" focusable="false">
-            <use xlink:href="${iconSpritePath}#${iconId}"></use></svg>`;
+            <use xlink:href="${iconSpritePathA11y}#${iconId}"></use></svg>`;
     },
 
     /**
@@ -113,7 +113,7 @@ Object.assign(MediaElementPlayer.prototype, {
      */
     _createAudioDescription() {
         const t = this;
-        const iconHtml = t._generateIconHtml(t.id, t.options.classPrefix, t.options.iconSpritePath, 'icon-audio');
+        const iconHtml = t._generateIconHtml(t.id, t.options.classPrefix, t.options.iconSpritePathA11y, 'icon-audio');
         const audioDescriptionTitle = mejs.i18n.t('mejs.a11y-audio-description');
         const audioDescriptionButton = document.createElement('div');
         audioDescriptionButton.className = `${t.options.classPrefix}button ${t.options.classPrefix}audio-description-button`;
@@ -136,7 +136,7 @@ Object.assign(MediaElementPlayer.prototype, {
      */
     _createVideoDescription() {
         const t = this;
-        const iconHtml = t._generateIconHtml(t.id, t.options.classPrefix, t.options.iconSpritePath, 'icon-video');
+        const iconHtml = t._generateIconHtml(t.id, t.options.classPrefix, t.options.iconSpritePathA11y, 'icon-video');
         const videoDescriptionTitle = mejs.i18n.t('mejs.a11y-video-description');
         const videoDescriptionButton = document.createElement('div');
         videoDescriptionButton.className = `${t.options.classPrefix}button ${t.options.classPrefix}video-description-button`;
