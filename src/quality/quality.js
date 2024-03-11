@@ -40,7 +40,7 @@ Object.assign(mejs.MepDefaults, {
 	 * The path where the icon file is located
 	 * @type {String}
 	 */
-	iconPath: 'mejs-quality.svg',
+	iconPathQuality: 'mejs-quality.svg',
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -130,6 +130,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.generateQualityButton(t, player, media, qualityMap, currentQuality);
 	},
+
 	generateQualityButton (t, player, media, qualityMap, currentQuality) {
 		t.cleanquality(player);
 
@@ -157,11 +158,11 @@ Object.assign(MediaElementPlayer.prototype, {
 		// Get initial quality
 		const generateId = Math.floor(Math.random() * 100);
 		const iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" id="${generateId}" class="${t.options.classPrefix}" aria-hidden="true" focusable="false">
-			<use xlink:href="${t.options.iconPath}#default-icon"></use></svg>`;
+			<use xlink:href="${t.options.iconPathQuality}#default-icon"></use></svg>`;
 		player.qualitiesContainer = document.createElement('div');
 		player.qualitiesContainer.className = `${t.options.classPrefix}button ${t.options.classPrefix}qualities-button`;
 		player.qualitiesContainer.innerHTML = `<button type="button" title="${qualityTitle}" aria-label="${qualityTitle}" aria-controls="qualitieslist-${generateId}" aria-expanded="false">
-		${t.options.iconPath ? iconHtml : defaultValue}</button>` +
+		${t.options.iconPathQuality ? iconHtml : defaultValue}</button>` +
 			`<div class="${t.options.classPrefix}qualities-selector ${t.options.classPrefix}offscreen">` +
 			`<ul class="${t.options.classPrefix}qualities-selector-list" id="qualitieslist-${generateId}" tabindex="-1"></ul></div>`;
 
@@ -436,7 +437,6 @@ Object.assign(MediaElementPlayer.prototype, {
 		const
 			newQuality = self.value
 		;
-
 		const formerSelected = player.qualitiesContainer.querySelectorAll(`.${t.options.classPrefix}qualities-selected`);
 		for (let i = 0, total = formerSelected.length; i < total; i++) {
 			mejs.Utils.removeClass(formerSelected[i], `${t.options.classPrefix}qualities-selected`);
@@ -450,7 +450,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			currentSelected[j].parentElement.querySelector('input').classList.add(`${t.options.classPrefix}qualities-selected-input`);
 		}
 
-		player.qualitiesContainer.querySelector('button').innerHTML = newQuality;
+		if (!t.options.iconPathQuality) {
+			player.qualitiesContainer.querySelector('button').innerHTML = newQuality;
+		}
+
 		return newQuality;
 	},
 
