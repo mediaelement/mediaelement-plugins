@@ -1,5 +1,13 @@
 # Version History
 
+## *3.0.1 (2024/03/11)*
+### QUALITY PLUGIN
+* Icon Visibility Fix: The quality icon will now remain visible and functional across all quality adjustments.
+* Improved Option Naming: The option `iconPath` has been renamed to `iconPathQuality` to enhance clarity and consistency.
+
+### A11Y PLUGIN
+* Improved Option Naming: The option `iconSpritePath` has been renamed to `iconSpritePathA11y` to enhance clarity and consistency.
+
 ## *3.0.0 (2024/03/06)*
 ### QUALITY PLUGIN
 #### New Feature: Inline SVG icons for quality button
