@@ -33,7 +33,7 @@ Object.assign(mejs.MepDefaults, {
 
     audioDescriptionCanPlay: false,
 
-    iconSpritePath: 'mejs-a11y-icons.svg'
+    iconSpritePathA11y: 'mejs-a11y-icons.svg'
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -69,12 +69,12 @@ Object.assign(MediaElementPlayer.prototype, {
             return node.className.indexOf(className) > -1;
         });
     },
-    _generateIconHtml: function _generateIconHtml(id, classPrefix, iconSpritePath, iconId) {
-        return '<svg xmlns="http://www.w3.org/2000/svg" id="' + id + '" class="' + classPrefix + iconId + '" aria-hidden="true" focusable="false">\n            <use xlink:href="' + iconSpritePath + '#' + iconId + '"></use></svg>';
+    _generateIconHtml: function _generateIconHtml(id, classPrefix, iconSpritePathA11y, iconId) {
+        return '<svg xmlns="http://www.w3.org/2000/svg" id="' + id + '" class="' + classPrefix + iconId + '" aria-hidden="true" focusable="false">\n            <use xlink:href="' + iconSpritePathA11y + '#' + iconId + '"></use></svg>';
     },
     _createAudioDescription: function _createAudioDescription() {
         var t = this;
-        var iconHtml = t._generateIconHtml(t.id, t.options.classPrefix, t.options.iconSpritePath, 'icon-audio');
+        var iconHtml = t._generateIconHtml(t.id, t.options.classPrefix, t.options.iconSpritePathA11y, 'icon-audio');
         var audioDescriptionTitle = mejs.i18n.t('mejs.a11y-audio-description');
         var audioDescriptionButton = document.createElement('div');
         audioDescriptionButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'audio-description-button';
@@ -91,7 +91,7 @@ Object.assign(MediaElementPlayer.prototype, {
     },
     _createVideoDescription: function _createVideoDescription() {
         var t = this;
-        var iconHtml = t._generateIconHtml(t.id, t.options.classPrefix, t.options.iconSpritePath, 'icon-video');
+        var iconHtml = t._generateIconHtml(t.id, t.options.classPrefix, t.options.iconSpritePathA11y, 'icon-video');
         var videoDescriptionTitle = mejs.i18n.t('mejs.a11y-video-description');
         var videoDescriptionButton = document.createElement('div');
         videoDescriptionButton.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'video-description-button';
