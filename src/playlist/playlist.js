@@ -80,8 +80,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		controls.style.zIndex = 5;
 
 		player.endedCallback = () => {
-			if (player.currentPlaylistItem < player.listItems.length) {
-				player.setSrc(player.playlist[++player.currentPlaylistItem]);
+			if (player.currentPlaylistItem < player.listItems.length - 1) {
+				player.setSrc(player.playlist[++player.currentPlaylistItem].src);
 				player.load();
 				setTimeout(() => {
 					player.play();
