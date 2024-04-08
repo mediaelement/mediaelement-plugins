@@ -25,6 +25,10 @@ Object.assign(mejs.MepDefaults, {
 	 */
 	autoGenerate: false,
 	/**
+	 * @type {String}
+	 */
+	hslQualityChangeStrategy: 'nextLevel',
+	/**
 	 * @type {boolean}
 	 */
 	autoDash: false,
@@ -415,13 +419,14 @@ Object.assign(MediaElementPlayer.prototype, {
 	 * @param {MediaElement} media
 	 */
 	switchHLSQuality (player, media) {
+		const t = this;
 		const radios = player.qualitiesContainer.querySelectorAll('input[type="radio"]');
 		for (let index = 0; index < radios.length; index++) {
 			if (radios[index].checked) {
 				if (index === 0 ) {
-					media.hlsPlayer.currentLevel = -1;
+					media.hlsPlayer[t.options.hslQualityChangeStrategy] = -1;
 				} else {
-					media.hlsPlayer.currentLevel = index - 1;
+					media.hlsPlayer[t.options.hslQualityChangeStrategy] = index - 1;
 				}
 			}
 		}
