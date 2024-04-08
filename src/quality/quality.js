@@ -21,6 +21,30 @@ Object.assign(mejs.MepDefaults, {
 	 */
 	qualityText: null,
 	/**
+	 * @type {autoQualityLabelTextGenerator} cb
+	 * @param {object} level - contains at least a width and height field with the resolution of that stream
+	 */
+	autoQualityLabelTextGenerator (level) {
+		// Return it as named qualities
+		const height = level.height
+		if (height >= 4320) {
+		    return "8K UHD";
+		} else if (height >= 2160) {
+		    return "UHD";
+		} else if (height >= 1440) {
+		    return "QHD";
+		} else if (height >= 1080) {
+		    return "FHD";
+		} else if (height >= 720) {
+		    return "HD";
+		} else {
+		    return "SD";
+		}
+		
+		// return it as 1080p, 720p etc.
+		// return level.height + 'p'
+	},
+	/**
 	 * @type {boolean}
 	 */
 	autoGenerate: false,
@@ -106,8 +130,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				const levels = media.hlsPlayer.levels;
 				if (t.options.autoGenerate && levels.length > 1) {
 					levels.forEach(function (level) {
-						const height = level.height;
-						const quality = t.getQualityFromHeight(height);
+						const quality = t.options.autoQualityLabelTextGenerator(level);
 						t.addValueToKey(qualityMap, quality, '');
 					});
 					t.options.autoHLS = true;
@@ -118,8 +141,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				const bitrates = media.dashPlayer.getBitrateInfoListFor("video");
 				if (t.options.autoGenerate && bitrates.length > 1) {
 					bitrates.forEach(function (level) {
-						const height = level.height;
-						const quality = t.getQualityFromHeight(height);
+						const quality = t.options.autoQualityLabelTextGenerator(level);
 						t.addValueToKey(qualityMap, quality, '');
 					});
 					t.options.autoDash = true;
@@ -455,25 +477,5 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		return newQuality;
-	},
-
-	/**
-	 * Returns the quality represnetaion base on the height of the loaded video
-	 * @param {Number} height the pixel height of the video
-	 **/
-	getQualityFromHeight (height) {
-		if (height >= 4320) {
-			return "8K UHD";
-		} else if (height >= 2160) {
-			return "UHD";
-		} else if (height >= 1440) {
-			return "QHD";
-		} else if (height >= 1080) {
-			return "FHD";
-		} else if (height >= 720) {
-			return "HD";
-		} else {
-			return "SD";
-		}
 	}
 });
