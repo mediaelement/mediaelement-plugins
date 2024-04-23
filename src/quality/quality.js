@@ -194,7 +194,15 @@ Object.assign(MediaElementPlayer.prototype, {
 			labels = player.qualitiesContainer.querySelectorAll(`.${t.options.classPrefix}qualities-selector-label`)
 		;
 
+		let lastShowChange = Date.now();
 		function hideSelector() {
+			const now = Date.now();
+			const diff = now - lastShowChange;
+			if(diff < 16) {
+				return;
+			}
+			lastShowChange = now;
+			
 			mejs.Utils.addClass(qualitiesSelector, `${t.options.classPrefix}offscreen`);
 			qualityButton.setAttribute('aria-expanded', 'false');
 			qualityButton.focus();
@@ -202,6 +210,13 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		function showSelector() {
+			const now = Date.now();
+			const diff = now - lastShowChange;
+			if(diff < 16) {
+				return;
+			}
+			lastShowChange = now;
+			
 			mejs.Utils.removeClass(qualitiesSelector, `${t.options.classPrefix}offscreen`);
 			qualitiesSelector.style.height = `${qualitiesSelector.querySelector('ul').offsetHeight}px`;
 			qualitiesSelector.style.top = `${(-1 * parseFloat(qualitiesSelector.offsetHeight))}px`;
