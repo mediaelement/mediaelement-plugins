@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>MediaElement.js 3.0 - Speed Plugin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/5.0.1/mediaelementplayer.css">
+    <link rel="stylesheet" href="../dist/speed/speed.css">
+    <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div id="container">
+
+    <h1>Speed Plugin</h1>
+    <p><a href="index.html">Back to Main</a></p>
+
+    <p>This plugin allows the generation of a menu with different video/audio speed.</p>
+
+    <h2>Video Player</h2>
+
+    <div class="media-wrapper">
+        <h3>Video Player 1</h3>
+        <video id="player1" width="750" height="421" controls preload="none" poster="http://mediaelementjs.com/images/big_buck_bunny.jpg">
+            <source type="video/mp4" src="http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_native_60fps_normal.mp4">
+        </video>
+        <h3>Video Player 2</h3>
+        <video id="player2" width="750" height="421" controls preload="none" poster="http://mediaelementjs.com/images/big_buck_bunny.jpg">
+            <source type="video/mp4" src="http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_native_60fps_normal.mp4">
+        </video>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/5.0.1/mediaelement-and-player.min.js"></script>
+<script src="../dist/speed/speed.js"></script>
+<script>
+	var mediaElements = document.querySelectorAll('video, audio');
+
+	for (var i = 0, total = mediaElements.length; i < total; i++) {
+		new MediaElementPlayer(mediaElements[i], {
+			features: ['playpause', 'current', 'progress', 'duration', 'speed'],
+		});
+	}
+</script>
+</body>
+</html>
