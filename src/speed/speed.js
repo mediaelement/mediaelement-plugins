@@ -143,7 +143,7 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		/**
 		 * Store a reference to the radio buttons to prevent a scope bug in keyboard events
-		 * with multiple MediaElement players are on the same page. Otherwise these keyboard
+		 * when multiple MediaElement players are on the same page. Otherwise these keyboard
 		 * events would always control the first speed button instance on the page.
 		 */
 		player.speedRadioButtons = radios;
