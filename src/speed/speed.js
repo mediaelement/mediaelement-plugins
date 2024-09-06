@@ -141,6 +141,13 @@ Object.assign(MediaElementPlayer.prototype, {
 			labels = player.speedButton.querySelectorAll(`.${t.options.classPrefix}speed-selector-label`)
 		;
 
+		/**
+		 * Store a reference to the radio buttons to prevent a scope bug in keyboard events
+		 * when multiple MediaElement players are on the same page. Otherwise these keyboard
+		 * events would always control the first speed button instance on the page.
+		 */
+		player.speedRadioButtons = radios;
+
 		// hover or keyboard focus
 		for (let i = 0, total = inEvents.length; i < total; i++) {
 			player.speedButton.addEventListener(inEvents[i], () => {
@@ -202,9 +209,10 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (event.key != '<')
 					return;
 
-				for (let i = 0; i < radios.length - 1; i++) {
-					if (radios[i].checked) {
-						const nextRadio = radios[i+1];
+				const _radios = player.speedRadioButtons;
+				for (let i = 0; i < _radios.length - 1; i++) {
+					if (_radios[i].checked) {
+						const nextRadio = _radios[i+1];
 						nextRadio.dispatchEvent(mejs.Utils.createEvent('click', nextRadio));
 						break;
 					}
@@ -216,9 +224,10 @@ Object.assign(MediaElementPlayer.prototype, {
 				if (event.key != '>')
 					return;
 
-				for (let i = 1; i < radios.length; i++) {
-					if (radios[i].checked) {
-						const prevRadio = radios[i-1];
+				const _radios = player.speedRadioButtons;
+				for (let i = 1; i < _radios.length; i++) {
+					if (_radios[i].checked) {
+						const prevRadio = _radios[i-1];
 						prevRadio.dispatchEvent(mejs.Utils.createEvent('click', prevRadio));
 						break;
 					}
