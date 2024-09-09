@@ -100,6 +100,8 @@ Object.assign(MediaElementPlayer.prototype, {
 		    radios = player.speedButton.querySelectorAll('input[type="radio"]'),
 		    labels = player.speedButton.querySelectorAll('.' + t.options.classPrefix + 'speed-selector-label');
 
+		player.speedRadioButtons = radios;
+
 		for (var _i2 = 0, _total2 = inEvents.length; _i2 < _total2; _i2++) {
 			player.speedButton.addEventListener(inEvents[_i2], function () {
 				mejs.Utils.removeClass(player.speedSelector, t.options.classPrefix + 'offscreen');
@@ -154,9 +156,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			action: function action(player, media, key, event) {
 				if (event.key != '<') return;
 
-				for (var _i7 = 0; _i7 < radios.length - 1; _i7++) {
-					if (radios[_i7].checked) {
-						var nextRadio = radios[_i7 + 1];
+				var _radios = player.speedRadioButtons;
+				for (var _i7 = 0; _i7 < _radios.length - 1; _i7++) {
+					if (_radios[_i7].checked) {
+						var nextRadio = _radios[_i7 + 1];
 						nextRadio.dispatchEvent(mejs.Utils.createEvent('click', nextRadio));
 						break;
 					}
@@ -167,9 +170,10 @@ Object.assign(MediaElementPlayer.prototype, {
 			action: function action(player, media, key, event) {
 				if (event.key != '>') return;
 
-				for (var _i8 = 1; _i8 < radios.length; _i8++) {
-					if (radios[_i8].checked) {
-						var prevRadio = radios[_i8 - 1];
+				var _radios = player.speedRadioButtons;
+				for (var _i8 = 1; _i8 < _radios.length; _i8++) {
+					if (_radios[_i8].checked) {
+						var prevRadio = _radios[_i8 - 1];
 						prevRadio.dispatchEvent(mejs.Utils.createEvent('click', prevRadio));
 						break;
 					}

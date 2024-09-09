@@ -32,10 +32,11 @@ Instructions for the Maintainer
 
 - add/commit/push all including build/
 
-  git add --all
-  git commit -am "release 4.X.X"
-  git push
-
+```
+git add --all
+git commit -am "release 4.X.X"
+git push
+```
 
 **********************
  PREPARING A RELEASE - second step on github.com
