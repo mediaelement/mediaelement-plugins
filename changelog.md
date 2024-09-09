@@ -1,5 +1,9 @@
 # Version History
 
+## *4.0.1 (2024/09/09)*
+### SPEED PLUGIN
+* Fix always controlling the first player on the page via keyboard when multiple players exist.
+
 ## *4.0.0 (2024/03/11)*
 This release marks a major version update to address and correct previous versioning inaccuracies. The transition from version 3.0.0 to 3.0.1 introduced changes that, upon further review, have been identified as breaking. These changes warranted a more significant version increment to reflect their impact accurately.
 
