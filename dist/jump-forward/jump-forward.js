@@ -16,7 +16,9 @@ mejs.i18n.en['mejs.time-jump-forward'] = ['Jump forward 1 second', 'Jump forward
 Object.assign(mejs.MepDefaults, {
 	jumpForwardInterval: 30,
 
-	jumpForwardText: null
+	jumpForwardText: null,
+
+	iconSpritePathJumpForward: 'mejs-jump-forward.svg'
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -28,7 +30,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		    button = document.createElement('div');
 
 		button.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'jump-forward-button';
-		button.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + forwardTitle + '" aria-label="' + forwardTitle + '" tabindex="0">' + t.options.jumpForwardInterval + '</button>';
+		button.innerHTML = mejs.Utils.generateControlButton(t.id, forwardTitle, forwardTitle, t.media.options.iconSpritePathJumpForward, ['icon-jump-forward'], t.options.classPrefix);
 
 		t.addControlElement(button, 'jumpforward');
 
@@ -37,7 +39,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (duration) {
 				var current = media.currentTime === Infinity ? 0 : media.currentTime;
 				media.setCurrentTime(Math.min(current + t.options.jumpForwardInterval, duration));
-				this.querySelector('button').blur();
 			}
 		});
 	}

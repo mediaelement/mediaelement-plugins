@@ -17,3 +17,4 @@ Parameter | Type | Default | Description
 ------ | --------- | ------- | --------
 skipBackInterval | number | `30` | Seconds to skip back media
 skipBackText | string | `null` | Title for Skip Back button for WARIA purposes
+iconSpritePathSkipBack | string | `mejs-skip-back.svg` | Path for the SVG icon sprite file.

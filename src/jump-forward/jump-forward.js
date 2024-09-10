@@ -17,7 +17,12 @@ Object.assign(mejs.MepDefaults, {
 	/**
 	 * @type {?String}
 	 */
-	jumpForwardText: null
+	jumpForwardText: null,
+	/**
+	 * The path where the icon sprite is located
+	 * @type {String}
+	 */
+	iconSpritePathJumpForward: 'mejs-jump-forward.svg',
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -40,7 +45,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		;
 
 		button.className = `${t.options.classPrefix}button ${t.options.classPrefix}jump-forward-button`;
-		button.innerHTML = `<button type="button" aria-controls="${t.id}" title="${forwardTitle}" aria-label="${forwardTitle}" tabindex="0">${t.options.jumpForwardInterval}</button>`;
+		button.innerHTML = mejs.Utils.generateControlButton(t.id, forwardTitle, forwardTitle, t.media.options.iconSpritePathJumpForward, ['icon-jump-forward'], t.options.classPrefix);
 
 		t.addControlElement(button, 'jumpforward');
 
@@ -50,7 +55,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (duration) {
 				const current = media.currentTime === Infinity ? 0 : media.currentTime;
 				media.setCurrentTime(Math.min(current + t.options.jumpForwardInterval, duration));
-				this.querySelector('button').blur();
 			}
 		});
 	}
