@@ -1,6 +1,6 @@
 # Version History
 
-## *5.0.0 (2024/09/11)*
+## *5.0.0 (2024/09/12)*
 ### JUMP FORWARD PLUGIN
 #### New Feature: Inline SVG icon for jump forward button
 * Setting `iconSpritePathJumpForward`: This option enables you to define the path to your SVG icon sprite. When specified, it allows for dynamic generation of inline SVG icons, which will be displayed on the jump forward button. Further information can be found [here](docs/jump-forward.md).
