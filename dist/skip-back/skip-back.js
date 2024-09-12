@@ -16,7 +16,9 @@ mejs.i18n.en['mejs.time-skip-back'] = ['Skip back 1 second', 'Skip back %1 secon
 Object.assign(mejs.MepDefaults, {
 	skipBackInterval: 30,
 
-	skipBackText: null
+	skipBackText: null,
+
+	iconSpritePathSkipBack: 'mejs-skip-back.svg'
 });
 
 Object.assign(MediaElementPlayer.prototype, {
@@ -27,7 +29,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		    button = document.createElement('div');
 
 		button.className = t.options.classPrefix + 'button ' + t.options.classPrefix + 'skip-back-button';
-		button.innerHTML = '<button type="button" aria-controls="' + t.id + '" title="' + skipTitle + '" aria-label="' + skipTitle + '" tabindex="0">' + t.options.skipBackInterval + '</button>';
+		button.innerHTML = mejs.Utils.generateControlButton(t.id, skipTitle, skipTitle, t.media.options.iconSpritePathSkipBack, ['icon-skip-back'], t.options.classPrefix);
 
 		t.addControlElement(button, 'skipback');
 
@@ -36,7 +38,6 @@ Object.assign(MediaElementPlayer.prototype, {
 			if (duration) {
 				var current = media.currentTime === Infinity ? 0 : media.currentTime;
 				media.setCurrentTime(Math.max(current - t.options.skipBackInterval, 0));
-				this.querySelector('button').blur();
 			}
 		});
 	}
