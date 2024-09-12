@@ -7,7 +7,7 @@ if (mejs.i18n.cs !== undefined) {
 	mejs.i18n.cs['mejs.time-jump-forward'] = ['Přeskočte o 1 sekundu dopředu', 'Přeskočte %1 vteřiny dopředu', 'Jump forward %1 seconds'];
 }
 if (mejs.i18n.de !== undefined) {
-	mejs.i18n.de['mejs.time-jump-forward'] = ['1 Sekunde vorspulen', 'Přeskočte %1 vteřiny dopředu', 'Skok %1 vteřin'];
+	mejs.i18n.de['mejs.time-jump-forward'] = ['1 Sekunde vorspulen', '%1 Sekunden vorspulen'];
 }
 if (mejs.i18n.es !== undefined) {
 	mejs.i18n.es['mejs.time-jump-forward'] = ['Adelantar 1 segundo', 'Adelantar %1 segundos'];
