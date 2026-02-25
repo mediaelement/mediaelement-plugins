@@ -23,7 +23,7 @@ Object.assign(mejs.MepDefaults, {
 	/**
 	 * @type {boolean}
 	 */
-	autoGenerate: false,
+	autoGenerateQualityOptionsFromManifest: false,
 	/**
 	 * @type {boolean}
 	 */
@@ -61,13 +61,17 @@ Object.assign(MediaElementPlayer.prototype, {
 			qualityMap = new Map()
 		;
 
+		if(t.options.autoGenerate !== undefined) {
+			t.options.autoGenerateQualityOptionsFromManifest = t.options.autoGenerate;
+		}
+
 		for (let i = 0, total = children.length; i < total; i++) {
 			const mediaNode = children[i];
 			let quality = mediaNode instanceof HTMLElement ? mediaNode.getAttribute('data-quality') : mediaNode['data-quality'];
 
 			if (quality === 'undefined') {
 				quality = 'Auto';
-				t.options.autoGenerate = true;
+				t.options.autoGenerateQualityOptionsFromManifest = true;
 			}
 
 			if (t.mediaFiles) {
@@ -104,7 +108,7 @@ Object.assign(MediaElementPlayer.prototype, {
 			// eslint-disable-next-line
 			if (!!media.hlsPlayer) {
 				const levels = media.hlsPlayer.levels;
-				if (t.options.autoGenerate && levels.length > 1) {
+				if (t.options.autoGenerateQualityOptionsFromManifest && levels.length > 1) {
 					levels.forEach(function (level) {
 						const height = level.height;
 						const quality = t.getQualityFromHeight(height);
@@ -116,7 +120,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				// eslint-disable-next-line
 			} else if (!!media.dashPlayer) {
 				const bitrates = media.dashPlayer.getBitrateInfoListFor("video");
-				if (t.options.autoGenerate && bitrates.length > 1) {
+				if (t.options.autoGenerateQualityOptionsFromManifest && bitrates.length > 1) {
 					bitrates.forEach(function (level) {
 						const height = level.height;
 						const quality = t.getQualityFromHeight(height);
