@@ -403,7 +403,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					media.dashPlayer.setAutoSwitchQuality(true);
 				} else {
 					media.dashPlayer.setAutoSwitchQuality(false);
-					media.dashPlayer.setQualityFor("video", index - 1);
+					media.dashPlayer.setRepresentationForTypeByIndex("video", index - 1);
 				}
 			}
 		}
