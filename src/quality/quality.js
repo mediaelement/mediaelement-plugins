@@ -115,7 +115,7 @@ Object.assign(MediaElementPlayer.prototype, {
 				}
 				// eslint-disable-next-line
 			} else if (!!media.dashPlayer) {
-				const bitrates = media.dashPlayer.getBitrateInfoListFor("video");
+				const bitrates = media.dashPlayer.getRepresentationsByType("video");
 				if (t.options.autoGenerate && bitrates.length > 1) {
 					bitrates.forEach(function (level) {
 						const height = level.height;
