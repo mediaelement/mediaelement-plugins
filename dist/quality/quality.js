@@ -84,7 +84,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					t.generateQualityButton(t, player, media, qualityMap, currentQuality);
 				}
 			} else if (!!media.dashPlayer) {
-				var bitrates = media.dashPlayer.getBitrateInfoListFor("video");
+				var bitrates = media.dashPlayer.getRepresentationsByType("video");
 				if (t.options.autoGenerate && bitrates.length > 1) {
 					bitrates.forEach(function (level) {
 						var height = level.height;
@@ -315,7 +315,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					media.dashPlayer.setAutoSwitchQuality(true);
 				} else {
 					media.dashPlayer.setAutoSwitchQuality(false);
-					media.dashPlayer.setQualityFor("video", index - 1);
+					media.dashPlayer.setRepresentationForTypeByIndex("video", index - 1);
 				}
 			}
 		}
