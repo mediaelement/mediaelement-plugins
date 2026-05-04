@@ -1,5 +1,10 @@
 # Version History
 
+## *5.2.0 (2026/04/16)*
+### QUALITY PLUGIN
+* Updated dash.js function call `getBitrateInfoListFor` to `getRepresentationsByType` so it fits to the newest [dash.js syntax](https://dashif.org/dash.js/pages/developers/migration-guides/4-to-5.html#getbitrateinfolistfor)  
+* Updated dash.js function call `setQualityFor` to `setRepresentationForTypeByIndex` so it fits the newest [dash.js syntax](https://dashif.org/dash.js/pages/developers/migration-guides/4-to-5.html#setqualityfor)  
+
 ## *5.1.0 (2026/01/30)*
 * `mediaelement` is now a `peerDependency` of this project. This will prevent multiple installations of `mediaelement` in your project.
 ### A11Y PLUGIN

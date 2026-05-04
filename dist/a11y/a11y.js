@@ -226,10 +226,10 @@ Object.assign(MediaElementPlayer.prototype, {
             return canPlayType(getMimeFromType(file.type));
         };
 
-        var propablySource = sources.find(function (file) {
+        var probablySource = sources.find(function (file) {
             return matchesBrowser(file) === 'probably';
         });
-        if (propablySource) return propablySource;
+        if (probablySource) return probablySource;
 
         var alternativeSource = sources.find(function (file) {
             return matchesBrowser(file) === 'maybe';
