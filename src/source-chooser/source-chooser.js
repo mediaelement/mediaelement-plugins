@@ -168,7 +168,11 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		// Handle click so that screen readers can toggle the menu
 		player.sourcechooserButton.querySelector('button').addEventListener('click', function() {
-			if (mejs.Utils.hasClass(mejs.Utils.siblings(this, `.${t.options.classPrefix}sourcechooser-selector`), `${t.options.classPrefix}offscreen`)) {
+			var sourcechooser = mejs.Utils.siblings(this, function(el) {
+				return mejs.Utils.hasClass(el, `${t.options.classPrefix}sourcechooser-selector`);
+			})[0];
+
+			if (mejs.Utils.hasClass(sourcechooser, `${t.options.classPrefix}offscreen`)) {
 				player.showSourcechooserSelector();
 				player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
 			} else {
