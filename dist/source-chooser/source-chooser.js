@@ -21,9 +21,9 @@ Object.assign(MediaElementPlayer.prototype, {
 	buildsourcechooser: function buildsourcechooser(player, controls, layers, media) {
 
 		var t = this,
-		    sourceTitle = mejs.Utils.isString(t.options.sourcechooserText) ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
-		    sources = [],
-		    children = t.mediaFiles ? t.mediaFiles : t.node.children;
+			sourceTitle = mejs.Utils.isString(t.options.sourcechooserText) ? t.options.sourcechooserText : mejs.i18n.t('mejs.source-chooser'),
+			sources = [],
+			children = t.mediaFiles ? t.mediaFiles : t.node.children;
 
 		var hoverTimeout = void 0;
 
@@ -66,30 +66,85 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		player.sourcechooserButton.addEventListener('keydown', function (e) {
 
+			function focusNext(dir = 1) {
+				let radioEls = Array.from(player.sourcechooserButton.querySelectorAll('input[type="radio"]'));
+				let index = radioEls.indexOf(document.activeElement);
+				let next = dir === 1 ? 1 : radioEls.length - 1;
+				let nextIndex = (index + next) % radioEls.length;
+				radioEls[nextIndex].focus();
+			}
+
 			if (t.options.keyActions.length) {
 				var keyCode = e.which || e.keyCode || 0;
 
+				let stopPropagation = false;
 				switch (keyCode) {
-					case 32:
-						if (!mejs.MediaFeatures.isFirefox) {
+					case 13: // Enter
+					case 32: // Space Bar
+						if (!player.isSourcechooserSelectorOpen()) {
 							player.showSourcechooserSelector();
+							player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
+							stopPropagation = true;
+						} else if (
+							document.activeElement.matches('input[type="radio"]') &&
+							player.sourcechooserButton.contains(document.activeElement)
+						) {
+							// Handle keyboard selection of radio inputs
+							document.activeElement.click();
+							player.hideSourcechooserSelector();
+							player.sourcechooserButton.querySelector('button').focus();
+							stopPropagation = true;
 						}
-						player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
 						break;
-					case 13:
-						player.showSourcechooserSelector();
-						player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
-						break;
-					case 27:
+					case 27: // Escape
 						player.hideSourcechooserSelector();
 						player.sourcechooserButton.querySelector('button').focus();
+						stopPropagation = true;
+						break;
+					case 9: // Tab
+						if (player.isSourcechooserSelectorOpen()) {
+							// Get focused element
+							let checked = document.activeElement;
+							// Focus next radio element
+							if (
+								checked.matches('input[type="radio"]') &&
+								player.sourcechooserButton.contains(checked)
+							) {
+								focusNext(e.shiftKey ? -1 : 1);
+								stopPropagation = true;
+							}
+						}
+						break;
+
+					// Handle keyboard selection of radio inputs
+					case 37: // Left Arrow
+					case 38: // Up Arrow
+					case 39: // Right Arrow
+					case 40: // Down Arrow
+						if (!player.isSourcechooserSelectorOpen()) {
+							break;
+						}
+
+						if (
+							document.activeElement.matches('input[type="radio"]') &&
+							player.sourcechooserButton.contains(document.activeElement)
+						) {
+							let dir = keyCode === 37 || keyCode === 38 ? -1 : 1;
+							focusNext(dir);
+							stopPropagation = true;
+						}
 						break;
 					default:
 						return true;
 				}
 
-				e.preventDefault();
-				e.stopPropagation();
+				if (stopPropagation) {
+					e.preventDefault();
+					e.stopPropagation();
+					return false;
+				}
+
+				return true;
 			}
 		});
 
@@ -124,7 +179,7 @@ Object.assign(MediaElementPlayer.prototype, {
 					var currentTime = media.currentTime;
 
 					var paused = media.paused,
-					    canPlayAfterSourceSwitchHandler = function canPlayAfterSourceSwitchHandler() {
+						canPlayAfterSourceSwitchHandler = function canPlayAfterSourceSwitchHandler() {
 						if (!paused) {
 							media.setCurrentTime(currentTime);
 							media.play();
@@ -141,7 +196,14 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		player.sourcechooserButton.querySelector('button').addEventListener('click', function () {
-			if (mejs.Utils.hasClass(mejs.Utils.siblings(this, '.' + t.options.classPrefix + 'sourcechooser-selector'), t.options.classPrefix + 'offscreen')) {
+
+			var t = this;
+
+			if (t.sourcechooserButton === undefined || !t.sourcechooserButton.querySelector('input[type=radio]')) {
+				return false;
+			}
+
+			if (!player.isSourcechooserSelectorOpen()) {
 				player.showSourcechooserSelector();
 				player.sourcechooserButton.querySelector('input[type=radio]:checked').focus();
 			} else {
@@ -165,6 +227,20 @@ Object.assign(MediaElementPlayer.prototype, {
 
 		t.sourcechooserButton.querySelector('.' + t.options.classPrefix + 'sourcechooser-selector').style.height = parseFloat(t.sourcechooserButton.querySelector('.' + t.options.classPrefix + 'sourcechooser-selector ul').offsetHeight) + 'px';
 	},
+	/**
+	 * @returns {boolean}
+	 */
+	isSourcechooserSelectorOpen: function isSourcechooserSelectorOpen() {
+
+		var t = this;
+
+		if (t.sourcechooserButton === undefined || !t.sourcechooserButton.querySelector('input[type=radio]')) {
+			return false;
+		}
+
+		var selectorEl = t.sourcechooserButton.querySelector('.' + t.options.classPrefix + 'sourcechooser-selector');
+		return mejs.Utils.hasClass(selectorEl, t.options.classPrefix + 'offscreen') === false;
+	},
 	hideSourcechooserSelector: function hideSourcechooserSelector() {
 
 		var t = this;
@@ -174,7 +250,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		var selector = t.sourcechooserButton.querySelector('.' + t.options.classPrefix + 'sourcechooser-selector'),
-		    radios = selector.querySelectorAll('input[type=radio]');
+			radios = selector.querySelectorAll('input[type=radio]');
 		selector.setAttribute('aria-expanded', 'false');
 		selector.setAttribute('aria-hidden', 'true');
 		mejs.Utils.addClass(selector, t.options.classPrefix + 'offscreen');
@@ -192,7 +268,7 @@ Object.assign(MediaElementPlayer.prototype, {
 		}
 
 		var selector = t.sourcechooserButton.querySelector('.' + t.options.classPrefix + 'sourcechooser-selector'),
-		    radios = selector.querySelectorAll('input[type=radio]');
+			radios = selector.querySelectorAll('input[type=radio]');
 		selector.setAttribute('aria-expanded', 'true');
 		selector.setAttribute('aria-hidden', 'false');
 		mejs.Utils.removeClass(selector, t.options.classPrefix + 'offscreen');
