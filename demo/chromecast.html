@@ -114,19 +114,21 @@ poster="/path/to/poster.jpg"&gt;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/mediaelement-and-player.min.js"></script>
     <script src="../dist/chromecast/chromecast.js"></script>
     <script>
-	    var mediaElements = document.querySelectorAll('video, audio');
+	    window.onload = function() {
+		    var mediaElements = document.querySelectorAll('video, audio');
 
-	    for (var i = 0, total = mediaElements.length; i < total; i++) {
+		    for (var i = 0, total = mediaElements.length; i < total; i++) {
 
-		    var features = ['playpause', 'current', 'progress', 'duration', 'volume', 'chromecast', 'fullscreen'];
+			    var features = ['playpause', 'current', 'progress', 'duration', 'volume', 'chromecast', 'fullscreen'];
 
-		    new MediaElementPlayer(mediaElements[i], {
-			    // This is needed to make Jump Forward to work correctly
-			    pluginPath: 'https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/',
-			    shimScriptAccess: 'always',
-			    autoRewind: false,
-			    features: features,
-		    });
+			    new MediaElementPlayer(mediaElements[i], {
+				    // This is needed to make Jump Forward to work correctly
+				    pluginPath: 'https://cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.6/',
+				    shimScriptAccess: 'always',
+				    autoRewind: false,
+				    features: features,
+			    });
+		    }
 	    }
     </script>
 </body>
